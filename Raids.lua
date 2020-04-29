@@ -9,5 +9,4 @@ end
 
 function handleCommand(playerIndex, Command, Env, RconPassword ) --number, string, number, string
     say(playerIndex, "Welcome to the server!")
-    return false
 end
