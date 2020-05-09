@@ -6,5 +6,11 @@ table = {
 
 table['goodbye'] = function(name) print("Goodbye, " .. name .. "!") end
 
+anotherTable = {
+    [table] = 10
+}
+
 table.hello('Nick')
 table.goodbye('Nick')
+
+print(anotherTable[table])
