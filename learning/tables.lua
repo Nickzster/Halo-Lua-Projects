@@ -1,18 +1,37 @@
-print("Hello, lua!")
 
-table = {
-    ['hello'] = function(name) print("Hello, " .. name .."!") end,
+
+Table = {
+    ['hello'] = function() print("Hello, " .. self.name .."!") end,
 }
 
-goodbyeFunction = function(name) print ("Goodbye, " .. name .."!") end
 
-table['goodbye'] = goodbyeFunction
 
-anotherTable = {
-    [table] = 10
-}
+function Table:new(instance)
+    local newInstance = instance or {}
+    setmetatable(newInstance, self)
+    self.__index = self
+    return newInstance
+end
 
-table.hello('Nick')
-table.goodbye('Nick')
+function Table:newField(k, v)
+    -- setmetatable(self, v)
+    self[k] = v
+end
 
-print(anotherTable[table])
+goodbyeFunction = function() print ("Goodbye, " .. self.name .. "!" ) end
+
+myTable = Table:new(Table)
+
+myTable:newField('goodbye', goodbyeFunction)
+myTable:newField('name', 'Nick')
+
+print(myTable.goodbye)
+print(goodbyeFunction)
+print(myTable.name)
+myTable.goodbye()
+
+
+-- table.hello()
+-- table.goodbye()
+
+
