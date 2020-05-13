@@ -17,7 +17,7 @@ function Queue:peek()
 end
 
 function Queue:pop()
-    if self.last == -1 then return nil end
+    if self.last == -1 then return end
     local val = self[self.first]
     self[self.first] = nil
     self.first = self.first + 1
@@ -25,15 +25,5 @@ function Queue:pop()
     return val
 end
 
---tests
-
-myQueue = Queue:new()
-
-myQueue:push(1)
-myQueue:push(2)
-myQueue:push(3)
-print(myQueue:peek())
-myQueue:pop()
-print(myQueue:peek())
-myQueue.pop()
-print(myQueue:peek())
+--for testing
+return Queue
