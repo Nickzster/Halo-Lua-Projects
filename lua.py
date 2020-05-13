@@ -2,9 +2,9 @@ import sys
 import os
 import shutil
 
-projectName = "project"
+projectName = "Raids"
 sappApiVersion = "1.10.1.0"
-projectDirName = "example-one"
+projectDirName = "Raids"
 sharedDir = "shared"
 sourceDir = "src"
 entryFile = "main.lua"
