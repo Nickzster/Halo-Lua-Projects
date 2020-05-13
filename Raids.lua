@@ -1,3 +1,5 @@
+api_version= "1.10.1.0"
+
 Queue = {}
 
 function Queue:new()
@@ -95,14 +97,11 @@ PlayerSchema['new'] = new
 PlayerSchema['getClass'] = getClass
 PlayerSchema['setClass'] = setClass
 
-HealerSchema = {
-    weapons={
-        primary='lightbringer',
-        secondary='faithful',
-        third='',
-        fourth=''
-    }
- }
+PlayerSchema = {
+    name = "",
+    hash = "",
+    class=nil
+}
 
 DpsSchema = {
     weapons={
@@ -113,6 +112,15 @@ DpsSchema = {
     }
 }
 
+HealerSchema = {
+    weapons={
+        primary='lightbringer',
+        secondary='faithful',
+        third='',
+        fourth=''
+    }
+ }
+
 TankSchema = {
     weapons= {
     primary='brassknucle',
@@ -122,13 +130,9 @@ TankSchema = {
     }
 }
 
-PlayerSchema = {
-    name = "",
-    hash = "",
-    class=nil
-}
 
-api_version = "1.10.1.0"
+
+
 --Callbacks
 
 function OnScriptLoad()

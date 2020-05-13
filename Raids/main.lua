@@ -1,4 +1,4 @@
-api_version = "1.10.1.0"
+
 --Callbacks
 
 function OnScriptLoad()

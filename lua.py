@@ -134,7 +134,8 @@ def constructFileWithDir(dirname):
 
 def build():
     projectDir = os.getcwd()
-    output = constructFileWithDir(os.path.join(
+    output = "api_version= " + "\"" + sappApiVersion + "\"" + "\n\n"
+    output += constructFileWithDir(os.path.join(
         os.getcwd(), projectDirName, sharedDir))
     os.chdir(projectDir)
     output += constructFileWithDir(os.path.join(os.getcwd(),
