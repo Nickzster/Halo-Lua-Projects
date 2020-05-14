@@ -1,0 +1,31 @@
+-- BEGIN_IMPORT
+-- import Raids.classes.Schemas.Dps end
+-- import Raids.classes.Schemas.Healer end
+-- import Raids.classes.Schemas.Tank end
+-- END_IMPORT
+
+CLASS_LIST = {
+    ["dps"] = DpsSchema,
+    ["healer"] = HealerSchema,
+    ["tank"] = TankSchema
+}
+
+WEAPON_DIR_LIST = {
+    ["piercer"]="zteam\\objects\\weapons\\single\\battle_rifle\\h3\\piercer",
+    ["reliable"]="zteam\\objects\\weapons\\single\\assault_rifle\\h3\\reliable"
+}
+
+BIPED_TAG_LIST = {}
+
+BIPED_DIR_LIST = { 
+    ["dps"]="characters\\cyborg_mp\\dps",
+    ["healer"]="characters\\cyborg_mp\\healer",
+    ["tank"]="zteam\\objects\\characters\\spartan\\h3\\tank"
+}
+
+ACTIVE_PLAYER_LIST = {}
+
+EVENT_TABLE = {}
+
+
+

@@ -3,11 +3,12 @@
 EventTable = {
     time=nil,
     cb=nil,
-    player=nil
+    player=nil,
+    object=nil
 }
 
 function EventTable.execute(self)
-    self.cb(self.player)
+    self.cb(self.object, self.player)
     return true
 end
 
@@ -17,15 +18,16 @@ function EventTable.isTimedOut(self)
     return false
 end
 
-function EventTable.set(self, time, cb, playerIndex)
+function EventTable.set(self, object, time, cb, playerIndex)
+    self.object = object
     self.time = time
     self.cb = cb
     self.player = playerIndex
 end
 
 function EventTable.new(self)
-    newEventTableInstance = {}
-    setmetatable(newEventTableInstance, EventTable)
+    local newEventTableInstance = {}
+    setmetatable(newEventTableInstance, self)
     self.__index = self
     return newEventTableInstance
 end
