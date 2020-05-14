@@ -1,3 +1,5 @@
+-- NO_IMPORTS
+
 DpsSchema = {
     weapons={
     primary='piercer',

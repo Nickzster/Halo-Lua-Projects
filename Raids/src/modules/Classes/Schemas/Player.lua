@@ -1,3 +1,5 @@
+-- NO_IMPORTS
+
 PlayerSchema = {
     name = "",
     hash = "",

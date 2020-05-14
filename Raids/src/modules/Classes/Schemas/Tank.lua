@@ -1,7 +1,9 @@
+-- NO_IMPORTS
+
 TankSchema = {
     weapons= {
     primary='brassknucle',
-    secondary='ramart',
+    secondary='rampart',
     third='',
     fourth=''
     }

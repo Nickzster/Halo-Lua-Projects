@@ -1,3 +1,10 @@
+-- BEGIN_IMPORT
+-- import Raids.src.modules.Classes.Schemas.Player end
+-- import Raids.src.modules.Classes.Schemas.Healer end
+-- import Raids.src.modules.Classes.Schemas.DPS end
+-- import Raids.src.modules.Classes.Schemas.Tank end
+-- END_IMPORT
+
 --function definitions
 new = function(self)
     local newClassInstance = {}

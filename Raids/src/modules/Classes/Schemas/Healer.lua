@@ -1,3 +1,5 @@
+-- NO_IMPORTS
+
 HealerSchema = {
     weapons={
         primary='lightbringer',

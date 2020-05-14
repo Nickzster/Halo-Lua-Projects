@@ -1,3 +1,5 @@
+-- NO_IMPORTS
+
 EventTable = {
     time=nil,
     cb=nil,
@@ -28,4 +30,6 @@ function EventTable.new(self)
     return newEventTableInstance
 end
 
+-- BEGIN_IGNORE
 return EventTable
+-- END_IGNORE

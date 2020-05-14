@@ -4,9 +4,9 @@ import os
 import shutil
 
 # configuration
-projectName = "example-one"
+projectName = "Raids"
 sappApiVersion = "1.10.1.0"
-projectDirName = "example-one"
+projectDirName = "Raids"
 entryFile = "main.lua"
 # DO NOT MODIFY ANYTHING UNDER THIS LINE UNLESS YOU KNOW WHAT YOU ARE DOING
 # Data Structs

@@ -1,3 +1,5 @@
+-- NO_IMPORTS
+
 Queue = {}
 
 function Queue:new()
@@ -25,5 +27,6 @@ function Queue:pop()
     return val
 end
 
---for testing
+-- BEGIN_IGNORE
 return Queue
+-- END_IGNORE
