@@ -25,7 +25,12 @@ function OnScriptUnload()
 
 end
 
-function handleDamage(playerIndex, damagerPlayerIndex, damageTagId, Damage, CollisionMaterial, Backtap) end
+function handleDamage(playerIndex, damagerPlayerIndex, damageTagId, Damage, CollisionMaterial, Backtap) 
+    if player_present(playerIndex) then
+        say(playerIndex, "You are taking " .. Damage .. " from player with index " .. damagerPlayerIndex)
+        say(damagerPlayerIndex, "You are dealing " .. Damage .. " to player with index " .. playerIndex)
+    end
+end
 
 function handleTick()
     for key,_ in pairs(EVENT_TABLE) do

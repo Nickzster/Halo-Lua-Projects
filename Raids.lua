@@ -11,7 +11,11 @@ BIPED_TAG_LIST = {}
 BIPED_DIR_LIST = { 
     ["dps"]="characters\\cyborg_mp\\dps",
     ["healer"]="characters\\cyborg_mp\\healer",
-    ["tank"]="zteam\\objects\\characters\\spartan\\h3\\tank"
+    ["tank"]="zteam\\objects\\characters\\spartan\\h3\\tank",
+    ["scourge"]="h2spp\\characters\\flood\\juggernaut\\scourge",
+    ["torres"]="rangetest\\cmt\\characters\\evolved_h1-spirit\\cyborg\\bipeds\\torres",
+    ["eliminator"]="rangetest\\cmt\\characters\\spv3\\forerunner\\enforcer\\bipeds\\eliminator",
+    ["kreyul"]="shdwslyr\\reach_elite\\ultra\\kreyul",
 }
 
 ACTIVE_PLAYER_LIST = {}
@@ -185,6 +189,32 @@ HealerSchema['coolDownMessage'] = coolDownMessage
 HealerSchema['endCoolDown'] = endCoolDown
 HealerSchema['getWeapons'] = getWeapons
 HealerSchema['new'] = new
+BossSchema = {
+    name="DEFAULT",
+    boss=true
+}
+
+BossSchema['new'] = new
+BossSchema['changeBoss'] = function(self, newBiped)
+    self.name = newBiped
+end
+function FindBipedTag(TagName)
+    local tag_array = read_dword(0x40440000)
+    for i=0,read_word(0x4044000C)-1 do
+        local tag = tag_array + i * 0x20
+        if(read_dword(tag) == 1651077220 and read_string(read_dword(tag + 0x10)) == TagName) then
+            return read_dword(tag + 0xC)
+        end
+    end
+end
+function GetPlayerDistance(index1, index2)
+	local p1 = get_dynamic_player(index1)
+	local p2 = get_dynamic_player(index2)
+	
+	return math.sqrt((read_float(p2+0x5C  ) - read_float(p1+0x5C  ))^2
+	                +(read_float(p2+0x5C+4) - read_float(p1+0x5C+4))^2
+	                +(read_float(p2+0x5C+8) - read_float(p1+0x5C+8))^2)
+end
 TANK_COOLDOWN_IN_SECONDS = 127
 
 TankSchema = {
@@ -217,23 +247,6 @@ TankSchema['getWeapons'] = getWeapons
 TankSchema['new'] = new
 
 
-function GetPlayerDistance(index1, index2)
-	local p1 = get_dynamic_player(index1)
-	local p2 = get_dynamic_player(index2)
-	
-	return math.sqrt((read_float(p2+0x5C  ) - read_float(p1+0x5C  ))^2
-	                +(read_float(p2+0x5C+4) - read_float(p1+0x5C+4))^2
-	                +(read_float(p2+0x5C+8) - read_float(p1+0x5C+8))^2)
-end
-function FindBipedTag(TagName)
-    local tag_array = read_dword(0x40440000)
-    for i=0,read_word(0x4044000C)-1 do
-        local tag = tag_array + i * 0x20
-        if(read_dword(tag) == 1651077220 and read_string(read_dword(tag + 0x10)) == TagName) then
-            return read_dword(tag + 0xC)
-        end
-    end
-end
 function activateUltimateAbility(hash, playerIndex)
     if ACTIVE_PLAYER_LIST[hash]:getClass().cooldown == false then
         ACTIVE_PLAYER_LIST[hash]:getClass():ultimate(playerIndex)
@@ -246,10 +259,35 @@ function parseCommand(playerIndex, command)
     local hash = get_var(playerIndex, "$hash")
     for w in command:gmatch("%w+") do args[#args+1] = w end
         if args[1] == "class" then 
-            changePlayerClass(playerIndex, args[2])
+            if args[2] == "boss" and tonumber(get_var(playerIndex, "$lvl")) ~= 4 then
+                say(playerIndex, "You must be an admin to become a boss!")
+            else
+                changePlayerClass(playerIndex, args[2])
+            end
             return true
-        elseif args[1] == "ultimate" then
-            activateUltimateAbility(hash, playerIndex)
+        elseif args[1] == "ult" or args[1] == "ultimate" then
+            if ACTIVE_PLAYER_LIST[hash]:getClass().boss == nil then
+                activateUltimateAbility(hash, playerIndex)
+            else
+                say(playerIndex, "Bosses cannot do that!")
+            end
+            return true
+        elseif args[1] == "sp" then
+            spawn_object("weap", "halo reach\\objects\\weapons\\support_high\\spartan_laser\\savant", 105.62, 342.36, -3)
+            return true
+        elseif args[1] == "boss" then
+            if tonumber(get_var(playerIndex, "$lvl")) == 4 and ACTIVE_PLAYER_LIST[hash]:getClass().boss ~= nil then
+                if BIPED_TAG_LIST[args[2]] ~= nil then
+                    kill(playerIndex)
+                    local playerClass = ACTIVE_PLAYER_LIST[hash]:getClass()
+                    playerClass:changeBoss(args[2])
+                else
+                    say(playerIndex, "That boss does not exist!")
+                end
+                return true
+            else
+                say(playerIndex, "You cannot do that!")
+            end
             return true
         elseif args[1] == "whoami" then
             say(playerIndex, "You are a " .. ACTIVE_PLAYER_LIST[hash]:getClass().name)
@@ -289,12 +327,12 @@ end
 CLASS_LIST = {
     ["dps"] = DpsSchema,
     ["healer"] = HealerSchema,
-    ["tank"] = TankSchema
+    ["tank"] = TankSchema,
+    ["boss"] = BossSchema
 }
 
 function changePlayerClass(playerIndex, newClass)
-    say(playerIndex, newClass)
-    if CLASS_LIST[newClass] ~= nil then
+    if CLASS_LIST[newClass] ~= nil or newClass == "boss" then
         kill(playerIndex)
         ACTIVE_PLAYER_LIST[get_var(playerIndex, "$hash")]:setClass(CLASS_LIST[newClass]:new())
         return true
@@ -320,7 +358,12 @@ function OnScriptUnload()
 
 end
 
-function handleDamage(playerIndex, damagerPlayerIndex, damageTagId, Damage, CollisionMaterial, Backtap) end
+function handleDamage(playerIndex, damagerPlayerIndex, damageTagId, Damage, CollisionMaterial, Backtap) 
+    if player_present(playerIndex) then
+        say(playerIndex, "You are taking " .. Damage .. " from player with index " .. damagerPlayerIndex)
+        say(damagerPlayerIndex, "You are dealing " .. Damage .. " to player with index " .. playerIndex)
+    end
+end
 
 function handleTick()
     for key,_ in pairs(EVENT_TABLE) do

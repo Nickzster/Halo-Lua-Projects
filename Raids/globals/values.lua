@@ -10,7 +10,11 @@ BIPED_TAG_LIST = {}
 BIPED_DIR_LIST = { 
     ["dps"]="characters\\cyborg_mp\\dps",
     ["healer"]="characters\\cyborg_mp\\healer",
-    ["tank"]="zteam\\objects\\characters\\spartan\\h3\\tank"
+    ["tank"]="zteam\\objects\\characters\\spartan\\h3\\tank",
+    ["scourge"]="h2spp\\characters\\flood\\juggernaut\\scourge",
+    ["torres"]="rangetest\\cmt\\characters\\evolved_h1-spirit\\cyborg\\bipeds\\torres",
+    ["eliminator"]="rangetest\\cmt\\characters\\spv3\\forerunner\\enforcer\\bipeds\\eliminator",
+    ["kreyul"]="shdwslyr\\reach_elite\\ultra\\kreyul",
 }
 
 ACTIVE_PLAYER_LIST = {}
