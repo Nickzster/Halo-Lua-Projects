@@ -21,4 +21,3 @@ function loadBipeds()
         end
     end
 end
-

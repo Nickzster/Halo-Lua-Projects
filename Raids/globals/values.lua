@@ -1,14 +1,4 @@
--- BEGIN_IMPORT
--- import Raids.classes.Schemas.Dps end
--- import Raids.classes.Schemas.Healer end
--- import Raids.classes.Schemas.Tank end
--- END_IMPORT
-
-CLASS_LIST = {
-    ["dps"] = DpsSchema,
-    ["healer"] = HealerSchema,
-    ["tank"] = TankSchema
-}
+-- NO_IMPORTS
 
 WEAPON_DIR_LIST = {
     ["piercer"]="zteam\\objects\\weapons\\single\\battle_rifle\\h3\\piercer",

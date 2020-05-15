@@ -1,58 +1,6 @@
 api_version="1.10.1.0"
 
 
-TANK_COOLDOWN_IN_SECONDS = 25
-
-TankSchema = {
-    name="tank",
-    cooldown=false,
-    cooldownTime = TANK_COOLDOWN_IN_SECONDS * 30,
-    weapons= {
-    primary='brassknucle',
-    secondary='rampart',
-    third='',
-    fourth=''
-    }
-}
-
-
-HEALER_COOLDOWN_IN_SECONDS = 25
-
-HealerSchema = {
-    name="healer",
-    cooldown=false,
-    cooldownTime = HEALER_COOLDOWN_IN_SECONDS * 30,
-    weapons={
-        primary='lightbringer',
-        secondary='faithful',
-        third='',
-        fourth=''
-    }
- }
-DPS_COOLDOWN_IN_SECONDS = 25
-
-DpsSchema = {
-    name="dps",
-    cooldown=false,
-    cooldownTime = DPS_COOLDOWN_IN_SECONDS * 30,
-    weapons={
-    primary='piercer',
-    secondary='reliable',
-    third='',
-    fourth=''
-    }
-}
-PlayerSchema = {
-    name = "",
-    hash = "",
-    class=nil
-}
-CLASS_LIST = {
-    ["dps"] = DpsSchema,
-    ["healer"] = HealerSchema,
-    ["tank"] = TankSchema
-}
-
 WEAPON_DIR_LIST = {
     ["piercer"]="zteam\\objects\\weapons\\single\\battle_rifle\\h3\\piercer",
     ["reliable"]="zteam\\objects\\weapons\\single\\assault_rifle\\h3\\reliable"
@@ -75,27 +23,27 @@ EVENT_TABLE = {}
 
 EventTable = {
     time=nil,
-    cb=nil,
-    player=nil,
-    object=nil
+    completedCb=nil,
+    eachTickCb=nil,
+    props=nil
 }
 
-function EventTable.execute(self)
-    self.cb(self.object, self.player)
-    return true
-end
-
 function EventTable.isTimedOut(self)
-    if self.time == 0 then return true end
-    self.time = self.time - 1
-    return false
+    if self.time == 0 then 
+        self.completedCb(self.props)
+        return true
+    else
+        self.time = self.time - 1
+        if eachTickCb ~= nil then self.eachTickCb(self.props, self.time) end
+        return false
+    end
 end
 
-function EventTable.set(self, object, time, cb, playerIndex)
-    self.object = object
+function EventTable.set(self, props, eachTickCb, completedCb, time)
     self.time = time
-    self.cb = cb
-    self.player = playerIndex
+    self.props = props
+    self.completedCb = completedCb
+    self.eachTickCb = eachTickCb 
 end
 
 function EventTable.new(self)
@@ -130,49 +78,153 @@ end
 startCoolDown = function(self, playerIndex)
     self.cooldown = true
     key = self.name .. playerIndex
+    self.cooldownStatus = key
     newEventTable = EventTable:new()
-    newEventTable:set(self, self.cooldownTime, self.endCoolDown, playerIndex)
+    newEventTable:set({
+        ['self']=self,
+        ['playerIndex']=playerIndex
+    }, self.coolDownMessage, self.endCoolDown, self.cooldownTime)
     EVENT_TABLE[key]=newEventTable
 end
 
-endCoolDown = function(self, playerIndex)
-    self.cooldown = false
-    say(playerIndex, "Your cool down has ended!")
+coolDownMessage = function(props, time)
+    local playerIndex = props.playerIndex
+    if playerIndex ~= nil then
+        if time == 10 * 30 then
+            say(playerIndex, "Ultimate ability will be ready in 10 seconds!")
+        end
+    end
 end
 
---function bindings
-TankSchema['ultimate'] = function(self, playerIndex)
-    say(playerIndex, "You executed your ultimate!")
+endCoolDown = function(props)
+    local obj = props.self
+    local playerIndex = props.playerIndex
+    obj.cooldown = false
+    obj.cooldownStatus = nil
+    if playerIndex ~= nil then
+        say(playerIndex, "Ultimate ability is ready to use again!")
+    end
+end
+
+
+
+
+
+
+
+
+
+
+PlayerSchema = {
+    name = "",
+    hash = "",
+    class=nil
+}
+
+PlayerSchema['new'] = new
+PlayerSchema['getClass'] = getClass
+PlayerSchema['setClass'] = setClass
+DPS_COOLDOWN_IN_SECONDS = 130
+
+DpsSchema = {
+    name="dps",
+    cooldown=false,
+    cooldownTime = DPS_COOLDOWN_IN_SECONDS * 30,
+    weapons={
+    primary='piercer',
+    secondary='reliable',
+    third='',
+    fourth=''
+    }
+}
+
+DpsSchema['ultimate'] = function(self, playerIndex)
+    say(playerIndex, "You now have bottomless clip for your current weapon!")
+    execute_command("mag " .. playerIndex .. " 999")
+    self:startCoolDown(playerIndex)
+    local key = "PLAYER_" .. playerIndex .. "_IS_EXECUTING_DPS_ULTIMATE"
+    local newEvent = EventTable:new()
+    newEvent:set({
+        ['playerIndex']=playerIndex
+    }, nil, function(props) say(props.playerIndex, "Your weapon is now back to normal.") execute_command("mag " .. props.playerIndex .. " 0") end, 10 * 30)
+    EVENT_TABLE[key] = newEvent
+end
+DpsSchema['startCoolDown'] = startCoolDown
+DpsSchema['coolDownMessage'] = coolDownMessage
+DpsSchema['endCoolDown'] = endCoolDown
+DpsSchema['getWeapons'] = getWeapons
+DpsSchema['new'] = new
+HEALER_COOLDOWN_IN_SECONDS = 90
+
+HealerSchema = {
+    name="healer",
+    cooldown=false,
+    cooldownTime = HEALER_COOLDOWN_IN_SECONDS * 30,
+    weapons={
+        primary='lightbringer',
+        secondary='faithful',
+        third='',
+        fourth=''
+    }
+ }
+
+ HealerSchema['ultimate'] = function(self, playerIndex)
+    say(playerIndex, "Healing nearby players!")
+    execute_command("hp " .. playerIndex .. " 1.0")
+    for i=0,16 do 
+        if i ~= playerIndex then
+            if player_present(i) and GetPlayerDistance(playerIndex, i) <= 5 then
+                execute_command("hp " .. i .. " 1.0")
+            end
+        end
+    end
     self:startCoolDown(playerIndex)
 end
+HealerSchema['startCoolDown'] = startCoolDown
+HealerSchema['coolDownMessage'] = coolDownMessage
+HealerSchema['endCoolDown'] = endCoolDown
+HealerSchema['getWeapons'] = getWeapons
+HealerSchema['new'] = new
+TANK_COOLDOWN_IN_SECONDS = 127
+
+TankSchema = {
+    name="tank",
+    cooldown=false,
+    cooldownTime = TANK_COOLDOWN_IN_SECONDS * 30,
+    weapons= {
+    primary='brassknucle',
+    secondary='rampart',
+    third='',
+    fourth=''
+    }
+}
+
+TankSchema['ultimate'] = function(self, playerIndex)
+    say(playerIndex, "You are now temporarly invincible!")
+    execute_command("god " .. playerIndex)
+    local key = "PLAYER_" .. playerIndex .. "_IS_EXECUTING_TANK_ULTIMATE"
+    self:startCoolDown(playerIndex)
+    local ungodEvent = EventTable:new()
+    ungodEvent:set({
+        ['playerIndex']=playerIndex
+    }, nil, function(props) execute_command("ungod " .. props.playerIndex) say(props.playerIndex, "You are no longer invincible!") end, 7 * 30)
+    EVENT_TABLE[key] = ungodEvent
+end
 TankSchema['startCoolDown'] = startCoolDown
+TankSchema['coolDownMessage'] = coolDownMessage
 TankSchema['endCoolDown'] = endCoolDown
 TankSchema['getWeapons'] = getWeapons
 TankSchema['new'] = new
 
 
-HealerSchema['ultimate'] = function(self, playerIndex)
-    say(playerIndex, "You executed your ultimate!")
-    execute_command("battery " .. playerIndex .. " 100")
-    self:startCoolDown(playerIndex)
+function GetPlayerDistance(index1, index2)
+	local p1 = get_dynamic_player(index1)
+	local p2 = get_dynamic_player(index2)
+	
+	return math.sqrt((read_float(p2+0x5C  ) - read_float(p1+0x5C  ))^2
+	                +(read_float(p2+0x5C+4) - read_float(p1+0x5C+4))^2
+	                +(read_float(p2+0x5C+8) - read_float(p1+0x5C+8))^2)
 end
-HealerSchema['startCoolDown'] = startCoolDown
-HealerSchema['endCoolDown'] = endCoolDown
-HealerSchema['getWeapons'] = getWeapons
-HealerSchema['new'] = new
-
-DpsSchema['ultimate'] = function(self, playerIndex)
-    say(playerIndex, "You executed your ultimate!")
-    self:startCoolDown(playerIndex)
-end
-DpsSchema['startCoolDown'] = startCoolDown
-DpsSchema['endCoolDown'] = endCoolDown
-DpsSchema['getWeapons'] = getWeapons
-DpsSchema['new'] = new
-
-PlayerSchema['new'] = new
-PlayerSchema['getClass'] = getClass
-PlayerSchema['setClass'] = setClass
 function FindBipedTag(TagName)
     local tag_array = read_dword(0x40440000)
     for i=0,read_word(0x4044000C)-1 do
@@ -182,43 +234,22 @@ function FindBipedTag(TagName)
         end
     end
 end
-function loadPlayer(playerIndex) 
-    local hash = get_var(playerIndex, "$hash")
-    local newPlayer = PlayerSchema:new()
-    newPlayer:setClass(CLASS_LIST["dps"]:new())
-    ACTIVE_PLAYER_LIST[hash] = newPlayer
+function activateUltimateAbility(hash, playerIndex)
+    if ACTIVE_PLAYER_LIST[hash]:getClass().cooldown == false then
+        ACTIVE_PLAYER_LIST[hash]:getClass():ultimate(playerIndex)
+    else
+        say(playerIndex, "You can use your ultimate ability in " .. math.ceil(EVENT_TABLE[ACTIVE_PLAYER_LIST[hash]:getClass().cooldownStatus].time / 30) .. " seconds!")
+    end
 end
-
-function changePlayerClass(playerIndex, newClass)
-    kill(playerIndex)
-    ACTIVE_PLAYER_LIST[get_var(playerIndex, "$hash")]:setClass(CLASS_LIST[newClass]:new())
-end
-
-
-
-function unloadPlayer(playerIndex) 
-    local hash = get_var(playerIndex, "$hash")
-    ACTIVE_PLAYER_LIST[hash] = nil
-end
-
-
 function parseCommand(playerIndex, command)
     args = {} 
     local hash = get_var(playerIndex, "$hash")
     for w in command:gmatch("%w+") do args[#args+1] = w end
         if args[1] == "class" then 
-            if CLASS_LIST[args[2]] ~= nil then
-                changePlayerClass(playerIndex, args[2])
-            else
-                say(playerIndex, "That class does not exist!")
-            end
+            changePlayerClass(playerIndex, args[2])
             return true
         elseif args[1] == "ultimate" then
-            if ACTIVE_PLAYER_LIST[hash]:getClass().cooldown == false then
-                ACTIVE_PLAYER_LIST[hash]:getClass():ultimate(playerIndex)
-            else
-                say(playerIndex, "This ability is on cooldown!")
-            end
+            activateUltimateAbility(hash, playerIndex)
             return true
         elseif args[1] == "whoami" then
             say(playerIndex, "You are a " .. ACTIVE_PLAYER_LIST[hash]:getClass().name)
@@ -244,7 +275,34 @@ function loadBipeds()
         end
     end
 end
+function loadPlayer(playerIndex) 
+    local hash = get_var(playerIndex, "$hash")
+    local newPlayer = PlayerSchema:new()
+    newPlayer:setClass(DpsSchema:new())
+    ACTIVE_PLAYER_LIST[hash] = newPlayer
+end
+function unloadPlayer(playerIndex) 
+    local hash = get_var(playerIndex, "$hash")
+    ACTIVE_PLAYER_LIST[hash] = nil
+end
 
+CLASS_LIST = {
+    ["dps"] = DpsSchema,
+    ["healer"] = HealerSchema,
+    ["tank"] = TankSchema
+}
+
+function changePlayerClass(playerIndex, newClass)
+    say(playerIndex, newClass)
+    if CLASS_LIST[newClass] ~= nil then
+        kill(playerIndex)
+        ACTIVE_PLAYER_LIST[get_var(playerIndex, "$hash")]:setClass(CLASS_LIST[newClass]:new())
+        return true
+    else
+        say(playerIndex, "That class does not exist!")
+        return false
+    end
+end
 
 
 --Callbacks
@@ -267,7 +325,6 @@ function handleDamage(playerIndex, damagerPlayerIndex, damageTagId, Damage, Coll
 function handleTick()
     for key,_ in pairs(EVENT_TABLE) do
         if EVENT_TABLE[key]:isTimedOut() == true then
-            EVENT_TABLE[key]:execute()
             EVENT_TABLE[key] = nil 
         end
     end

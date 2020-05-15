@@ -1,11 +1,12 @@
 -- BEGIN_IMPORT
 -- import Raids.globals.values end
--- import Raids.classes.functions end
--- import Raids.util.LoadTags end
--- import Raids.util.PlayerEvents end
--- import Raids.modules.ParseCommand end
+-- import Raids.classes.Player end
+-- import Raids.sapp.Loaders.LoadBipeds end
+-- import Raids.sapp.PlayerEvents.LoadPlayer end
+-- import Raids.sapp.PlayerEvents.UnloadPlayer end
+-- import Raids.sapp.PlayerEvents.ParseCommand end
 -- import Raids.util.FindBipedTag end
--- import Raids.modules.EventQueue.EventTable end
+-- import Raids.modules.Events.EventTable end
 -- END_IMPORT
 
 
@@ -29,7 +30,6 @@ function handleDamage(playerIndex, damagerPlayerIndex, damageTagId, Damage, Coll
 function handleTick()
     for key,_ in pairs(EVENT_TABLE) do
         if EVENT_TABLE[key]:isTimedOut() == true then
-            EVENT_TABLE[key]:execute()
             EVENT_TABLE[key] = nil 
         end
     end
