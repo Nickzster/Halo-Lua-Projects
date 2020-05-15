@@ -20,37 +20,46 @@ BIPED_DIR_LIST = {
 
 ACTIVE_PLAYER_LIST = {}
 
+ACTIVE_BOSSES = {}
+
 EVENT_TABLE = {}
 
 
 
 
-EventTable = {
+EventItem = {
     time=nil,
     completedCb=nil,
     eachTickCb=nil,
     props=nil
 }
 
-function EventTable.isTimedOut(self)
-    if self.time == 0 then 
+
+function EventItem.isTimedOut(self)
+    if self.time == -1 then --conditional event
+        if self.eachTickCb == nil and self.eachTickCb(self.props, self.time) then
+            self.completedCb(self.props)
+            return true 
+        end
+        return false
+    elseif self.time == 0 then -- timed event expires
         self.completedCb(self.props)
         return true
-    else
+    else --timed event has not expired
         self.time = self.time - 1
-        if eachTickCb ~= nil then self.eachTickCb(self.props, self.time) end
+        if self.eachTickCb ~= nil then self.eachTickCb(self.props, self.time) end
         return false
     end
 end
 
-function EventTable.set(self, props, eachTickCb, completedCb, time)
+function EventItem.set(self, props, eachTickCb, completedCb, time)
     self.time = time
     self.props = props
     self.completedCb = completedCb
     self.eachTickCb = eachTickCb 
 end
 
-function EventTable.new(self)
+function EventItem.new(self)
     local newEventTableInstance = {}
     setmetatable(newEventTableInstance, self)
     self.__index = self
@@ -83,12 +92,12 @@ startCoolDown = function(self, playerIndex)
     self.cooldown = true
     key = self.name .. playerIndex
     self.cooldownStatus = key
-    newEventTable = EventTable:new()
-    newEventTable:set({
+    newEventItem = EventItem:new()
+    newEventItem:set({
         ['self']=self,
         ['playerIndex']=playerIndex
     }, self.coolDownMessage, self.endCoolDown, self.cooldownTime)
-    EVENT_TABLE[key]=newEventTable
+    EVENT_TABLE[key]=newEventItem
 end
 
 coolDownMessage = function(props, time)
@@ -128,6 +137,21 @@ PlayerSchema = {
 PlayerSchema['new'] = new
 PlayerSchema['getClass'] = getClass
 PlayerSchema['setClass'] = setClass
+BossHealthValues = {
+    ["DEFAULT"] = 1000
+}
+
+BossSchema = {
+    name="DEFAULT",
+    boss=true,
+    maxHealth=100
+}
+
+BossSchema['new'] = new
+BossSchema['changeBoss'] = function(self, newBiped)
+    self.name = newBiped
+    self.maxHealth = BossHealthValues['DEFAULT']
+end
 DPS_COOLDOWN_IN_SECONDS = 130
 
 DpsSchema = {
@@ -143,14 +167,14 @@ DpsSchema = {
 }
 
 DpsSchema['ultimate'] = function(self, playerIndex)
-    say(playerIndex, "You now have bottomless clip for your current weapon!")
-    execute_command("mag " .. playerIndex .. " 999")
+    say(playerIndex, "All of your weapons now have bottomless clip!")
+    execute_command("mag " .. playerIndex .. " 999 5")
     self:startCoolDown(playerIndex)
     local key = "PLAYER_" .. playerIndex .. "_IS_EXECUTING_DPS_ULTIMATE"
-    local newEvent = EventTable:new()
+    local newEvent = EventItem:new()
     newEvent:set({
         ['playerIndex']=playerIndex
-    }, nil, function(props) say(props.playerIndex, "Your weapon is now back to normal.") execute_command("mag " .. props.playerIndex .. " 0") end, 10 * 30)
+    }, nil, function(props) say(props.playerIndex, "Your weapons are now back to normal.") execute_command("mag " .. props.playerIndex .. " 0 5") end, 10 * 30)
     EVENT_TABLE[key] = newEvent
 end
 DpsSchema['startCoolDown'] = startCoolDown
@@ -189,24 +213,6 @@ HealerSchema['coolDownMessage'] = coolDownMessage
 HealerSchema['endCoolDown'] = endCoolDown
 HealerSchema['getWeapons'] = getWeapons
 HealerSchema['new'] = new
-BossSchema = {
-    name="DEFAULT",
-    boss=true
-}
-
-BossSchema['new'] = new
-BossSchema['changeBoss'] = function(self, newBiped)
-    self.name = newBiped
-end
-function FindBipedTag(TagName)
-    local tag_array = read_dword(0x40440000)
-    for i=0,read_word(0x4044000C)-1 do
-        local tag = tag_array + i * 0x20
-        if(read_dword(tag) == 1651077220 and read_string(read_dword(tag + 0x10)) == TagName) then
-            return read_dword(tag + 0xC)
-        end
-    end
-end
 function GetPlayerDistance(index1, index2)
 	local p1 = get_dynamic_player(index1)
 	local p2 = get_dynamic_player(index2)
@@ -234,7 +240,7 @@ TankSchema['ultimate'] = function(self, playerIndex)
     execute_command("god " .. playerIndex)
     local key = "PLAYER_" .. playerIndex .. "_IS_EXECUTING_TANK_ULTIMATE"
     self:startCoolDown(playerIndex)
-    local ungodEvent = EventTable:new()
+    local ungodEvent = EventItem:new()
     ungodEvent:set({
         ['playerIndex']=playerIndex
     }, nil, function(props) execute_command("ungod " .. props.playerIndex) say(props.playerIndex, "You are no longer invincible!") end, 7 * 30)
@@ -247,6 +253,15 @@ TankSchema['getWeapons'] = getWeapons
 TankSchema['new'] = new
 
 
+function FindBipedTag(TagName)
+    local tag_array = read_dword(0x40440000)
+    for i=0,read_word(0x4044000C)-1 do
+        local tag = tag_array + i * 0x20
+        if(read_dword(tag) == 1651077220 and read_string(read_dword(tag + 0x10)) == TagName) then
+            return read_dword(tag + 0xC)
+        end
+    end
+end
 function activateUltimateAbility(hash, playerIndex)
     if ACTIVE_PLAYER_LIST[hash]:getClass().cooldown == false then
         ACTIVE_PLAYER_LIST[hash]:getClass():ultimate(playerIndex)
@@ -254,70 +269,15 @@ function activateUltimateAbility(hash, playerIndex)
         say(playerIndex, "You can use your ultimate ability in " .. math.ceil(EVENT_TABLE[ACTIVE_PLAYER_LIST[hash]:getClass().cooldownStatus].time / 30) .. " seconds!")
     end
 end
-function parseCommand(playerIndex, command)
-    args = {} 
-    local hash = get_var(playerIndex, "$hash")
-    for w in command:gmatch("%w+") do args[#args+1] = w end
-        if args[1] == "class" then 
-            if args[2] == "boss" and tonumber(get_var(playerIndex, "$lvl")) ~= 4 then
-                say(playerIndex, "You must be an admin to become a boss!")
-            else
-                changePlayerClass(playerIndex, args[2])
-            end
-            return true
-        elseif args[1] == "ult" or args[1] == "ultimate" then
-            if ACTIVE_PLAYER_LIST[hash]:getClass().boss == nil then
-                activateUltimateAbility(hash, playerIndex)
-            else
-                say(playerIndex, "Bosses cannot do that!")
-            end
-            return true
-        elseif args[1] == "sp" then
-            spawn_object("weap", "halo reach\\objects\\weapons\\support_high\\spartan_laser\\savant", 105.62, 342.36, -3)
-            return true
-        elseif args[1] == "boss" then
-            if tonumber(get_var(playerIndex, "$lvl")) == 4 and ACTIVE_PLAYER_LIST[hash]:getClass().boss ~= nil then
-                if BIPED_TAG_LIST[args[2]] ~= nil then
-                    kill(playerIndex)
-                    local playerClass = ACTIVE_PLAYER_LIST[hash]:getClass()
-                    playerClass:changeBoss(args[2])
-                else
-                    say(playerIndex, "That boss does not exist!")
-                end
-                return true
-            else
-                say(playerIndex, "You cannot do that!")
-            end
-            return true
-        elseif args[1] == "whoami" then
-            say(playerIndex, "You are a " .. ACTIVE_PLAYER_LIST[hash]:getClass().name)
-            return true
-        end
-        return false
-end
-function loadBipeds()
-    --Load in Biped Table
-    for key,_ in pairs(BIPED_DIR_LIST) do
-        BIPED_TAG_LIST[key] = FindBipedTag(BIPED_DIR_LIST[key])
+function changeBoss(playerIndex, player, selectedBoss)
+    if BIPED_TAG_LIST[selectedBoss] ~= nil then
+        kill(playerIndex)
+        local playerClass = player:getClass()
+        playerClass:changeBoss(selectedBoss)
+        ACTIVE_BOSSES[playerIndex] = player
+    else
+        say(playerIndex, "That boss does not exist!")
     end
-    --Load in default biped
-    local tag_array = read_dword(0x40440000)
-    for i=0,read_word(0x4044000C)-1 do
-        local tag = tag_array + i * 0x20
-        if(read_dword(tag) == 1835103335 and read_string(read_dword(tag + 0x10)) == "globals\\globals") then
-            local tag_data = read_dword(tag + 0x14)
-            local mp_info = read_dword(tag_data + 0x164 + 4)
-            for j=0,read_dword(tag_data + 0x164)-1 do
-                BIPED_TAG_LIST['DEFAULT'] = read_dword(mp_info + j * 160 + 0x10 + 0xC)
-            end
-        end
-    end
-end
-function loadPlayer(playerIndex) 
-    local hash = get_var(playerIndex, "$hash")
-    local newPlayer = PlayerSchema:new()
-    newPlayer:setClass(DpsSchema:new())
-    ACTIVE_PLAYER_LIST[hash] = newPlayer
 end
 function unloadPlayer(playerIndex) 
     local hash = get_var(playerIndex, "$hash")
@@ -342,6 +302,126 @@ function changePlayerClass(playerIndex, newClass)
     end
 end
 
+function loadPlayer(playerIndex) 
+    local hash = get_var(playerIndex, "$hash")
+    local newPlayer = PlayerSchema:new()
+    newPlayer:setClass(DpsSchema:new())
+    ACTIVE_PLAYER_LIST[hash] = newPlayer
+end
+function loadBipeds()
+    --Load in Biped Table
+    for key,_ in pairs(BIPED_DIR_LIST) do
+        BIPED_TAG_LIST[key] = FindBipedTag(BIPED_DIR_LIST[key])
+    end
+    --Load in default biped
+    local tag_array = read_dword(0x40440000)
+    for i=0,read_word(0x4044000C)-1 do
+        local tag = tag_array + i * 0x20
+        if(read_dword(tag) == 1835103335 and read_string(read_dword(tag + 0x10)) == "globals\\globals") then
+            local tag_data = read_dword(tag + 0x14)
+            local mp_info = read_dword(tag_data + 0x164 + 4)
+            for j=0,read_dword(tag_data + 0x164)-1 do
+                BIPED_TAG_LIST['DEFAULT'] = read_dword(mp_info + j * 160 + 0x10 + 0xC)
+            end
+        end
+    end
+end
+function parseCommand(playerIndex, command)
+    args = {} 
+    local hash = get_var(playerIndex, "$hash")
+    local player = ACTIVE_PLAYER_LIST[hash]
+    for w in command:gmatch("%w+") do args[#args+1] = w end
+        if args[1] == "class" then 
+            if args[2] == "boss" and tonumber(get_var(playerIndex, "$lvl")) ~= 4 then
+                say(playerIndex, "You must be an admin to become a boss!")
+            else
+                changePlayerClass(playerIndex, args[2])
+            end
+            return true
+        elseif args[1] == "ult" or args[1] == "ultimate" then
+            if player:getClass().boss == nil then
+                activateUltimateAbility(hash, playerIndex)
+            else
+                say(playerIndex, "Bosses cannot do that!")
+            end
+            return true
+        elseif args[1] == "sp" then
+            spawn_object("weap", "halo reach\\objects\\weapons\\support_high\\spartan_laser\\savant", 105.62, 342.36, -3)
+            return true
+        elseif args[1] == "boss" then
+            if tonumber(get_var(playerIndex, "$lvl")) == 4 and player:getClass().boss ~= nil then
+                changeBoss(playerIndex, player, args[2])
+            else
+                say(playerIndex, "You cannot do that!")
+            end
+            return true
+        elseif args[1] == "whoami" then
+            say(playerIndex, "You are a " .. ACTIVE_PLAYER_LIST[hash]:getClass().name)
+            return true
+        end
+        return false
+end
+function ClearConsole(i)
+	for j=0,25 do
+		rprint(i, " ")
+	end
+end
+
+function PrintHealthBar(currentHealth, maxHealth)
+    local length = 65
+	if currentHealth == -100 then
+		currentHealth = maxHealth
+	end
+	local healthBar = ""
+	for i=1,length do
+		if i > currentHealth/maxHealth*length then
+			healthBar = healthBar.."."
+		else
+    		healthBar = healthBar.."|"
+		end
+	end
+	return healthBar
+end
+
+function pickColor(health, maxHealth)
+    local healthRatio = health / maxHealth
+    if healthRatio >= 0.75 then
+        return "|nc15B500" --green
+    elseif healthRatio >= 0.5 and healthRatio < 0.75 then
+        return "|ncDBC900" --yellow
+    elseif healthRatio >= 0.25 and healthRatio < 0.5 then
+        return "|ncFC8003" --orange
+    else
+        return "|ncFC0303" --red
+    end
+end
+
+function PrintBossBar()
+    for key,_ in pairs(ACTIVE_BOSSES) do
+        local currentBoss = ACTIVE_BOSSES[key]
+        local currentBossInMemory = get_dynamic_player(key) 
+        local currentBossMaxHealth = currentBoss:getClass().maxHealth 
+        local currentBossHealth = 0
+        if currentBossInMemory ~= 0 then
+            currentBossHealth = read_float(currentBossInMemory + 0xE0)*currentBoss:getClass().maxHealth
+        end
+        local chosenColor = pickColor(currentBossHealth, currentBossMaxHealth)
+        if player_alive(key) then
+            for i=1,16 do
+                if get_var(0, "$ticks")%5 == 1 then
+                    if player_present(i) then
+                        ClearConsole(i)
+                        rprint(i, "|c"..string.upper(currentBoss:getClass().name, "$name").."'S HEALTH " .. math.floor(currentBossHealth) .. "/" .. currentBossMaxHealth ..chosenColor)
+                        rprint(i, "|c<"..PrintHealthBar(currentBossHealth, currentBossMaxHealth)..">"..chosenColor)
+                    end
+                end
+            end
+        else
+        end
+    end
+end
+
+
 
 --Callbacks
 function OnScriptLoad()
@@ -351,10 +431,16 @@ function OnScriptLoad()
     register_callback(cb['EVENT_DAMAGE_APPLICATION'], "handleDamage")
     register_callback(cb['EVENT_OBJECT_SPAWN'], "handleSpawn")
     register_callback(cb['EVENT_TICK'], "handleTick")
+    register_callback(cb['EVENT_DIE'], "handlePlayerDie")
 end
 
 
 function OnScriptUnload()
+
+end
+
+function handlePlayerDie(playerIndex, causer)
+    ACTIVE_BOSSES[playerIndex] = nil
 
 end
 
@@ -366,6 +452,7 @@ function handleDamage(playerIndex, damagerPlayerIndex, damageTagId, Damage, Coll
 end
 
 function handleTick()
+    PrintBossBar()
     for key,_ in pairs(EVENT_TABLE) do
         if EVENT_TABLE[key]:isTimedOut() == true then
             EVENT_TABLE[key] = nil 
@@ -380,7 +467,18 @@ function handleSpawn(playerIndex, tagId, parentObjectId, newObjectId)
     end
     if player_present(playerIndex) and tagId == BIPED_TAG_LIST['DEFAULT'] then 
         local hash = get_var(playerIndex, "$hash")
-        return true,BIPED_TAG_LIST[ACTIVE_PLAYER_LIST[hash]:getClass().name]
+        local currentPlayer = ACTIVE_PLAYER_LIST[hash]
+        local maxHealth = currentPlayer:getClass().maxHealth
+        print(maxHealth)
+        if maxHealth ~= nil and maxHealth ~= 0 then
+            local playerGuard = get_dynamic_player(playerIndex)
+            if playerGuard ~= 0 then
+                write_float(playerGuard + 0xD8, maxHealth)
+            end
+        else
+            print("SOMETHING WENT WRONG WHEN TRYING TO OVERWRITE PLAYER'S HEALTH!")
+        end
+        return true,BIPED_TAG_LIST[currentPlayer:getClass().name]
     end
 end
 

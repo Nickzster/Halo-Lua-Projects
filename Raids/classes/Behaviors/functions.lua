@@ -1,5 +1,5 @@
 -- BEGIN_IMPORT
--- import Raids.modules.Events.EventTable end
+-- import Raids.modules.Events.EventItem end
 -- END_IMPORT
 
 --function definitions
@@ -27,12 +27,12 @@ startCoolDown = function(self, playerIndex)
     self.cooldown = true
     key = self.name .. playerIndex
     self.cooldownStatus = key
-    newEventTable = EventTable:new()
-    newEventTable:set({
+    newEventItem = EventItem:new()
+    newEventItem:set({
         ['self']=self,
         ['playerIndex']=playerIndex
     }, self.coolDownMessage, self.endCoolDown, self.cooldownTime)
-    EVENT_TABLE[key]=newEventTable
+    EVENT_TABLE[key]=newEventItem
 end
 
 coolDownMessage = function(props, time)

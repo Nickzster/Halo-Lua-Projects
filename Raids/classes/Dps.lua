@@ -1,7 +1,7 @@
 -- BEGIN_IMPORT
 -- import Raids.classes.Behaviors.functions end
 -- import Raids.globals.values end
--- import Raids.modules.Events.EventTable end
+-- import Raids.modules.Events.EventItem end
 -- END_IMPORT
 
 DPS_COOLDOWN_IN_SECONDS = 130
@@ -19,14 +19,14 @@ DpsSchema = {
 }
 
 DpsSchema['ultimate'] = function(self, playerIndex)
-    say(playerIndex, "You now have bottomless clip for your current weapon!")
-    execute_command("mag " .. playerIndex .. " 999")
+    say(playerIndex, "All of your weapons now have bottomless clip!")
+    execute_command("mag " .. playerIndex .. " 999 5")
     self:startCoolDown(playerIndex)
     local key = "PLAYER_" .. playerIndex .. "_IS_EXECUTING_DPS_ULTIMATE"
-    local newEvent = EventTable:new()
+    local newEvent = EventItem:new()
     newEvent:set({
         ['playerIndex']=playerIndex
-    }, nil, function(props) say(props.playerIndex, "Your weapon is now back to normal.") execute_command("mag " .. props.playerIndex .. " 0") end, 10 * 30)
+    }, nil, function(props) say(props.playerIndex, "Your weapons are now back to normal.") execute_command("mag " .. props.playerIndex .. " 0 5") end, 10 * 30)
     EVENT_TABLE[key] = newEvent
 end
 DpsSchema['startCoolDown'] = startCoolDown

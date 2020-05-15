@@ -6,7 +6,8 @@
 -- import Raids.sapp.PlayerEvents.UnloadPlayer end
 -- import Raids.sapp.PlayerEvents.ParseCommand end
 -- import Raids.util.FindBipedTag end
--- import Raids.modules.Events.EventTable end
+-- import Raids.modules.Events.EventItem end
+-- import Raids.gameplay.BossMechanics.HealthBar end
 -- END_IMPORT
 
 
@@ -18,10 +19,16 @@ function OnScriptLoad()
     register_callback(cb['EVENT_DAMAGE_APPLICATION'], "handleDamage")
     register_callback(cb['EVENT_OBJECT_SPAWN'], "handleSpawn")
     register_callback(cb['EVENT_TICK'], "handleTick")
+    register_callback(cb['EVENT_DIE'], "handlePlayerDie")
 end
 
 
 function OnScriptUnload()
+
+end
+
+function handlePlayerDie(playerIndex, causer)
+    ACTIVE_BOSSES[playerIndex] = nil
 
 end
 
@@ -33,6 +40,7 @@ function handleDamage(playerIndex, damagerPlayerIndex, damageTagId, Damage, Coll
 end
 
 function handleTick()
+    PrintBossBar()
     for key,_ in pairs(EVENT_TABLE) do
         if EVENT_TABLE[key]:isTimedOut() == true then
             EVENT_TABLE[key] = nil 
@@ -47,7 +55,18 @@ function handleSpawn(playerIndex, tagId, parentObjectId, newObjectId)
     end
     if player_present(playerIndex) and tagId == BIPED_TAG_LIST['DEFAULT'] then 
         local hash = get_var(playerIndex, "$hash")
-        return true,BIPED_TAG_LIST[ACTIVE_PLAYER_LIST[hash]:getClass().name]
+        local currentPlayer = ACTIVE_PLAYER_LIST[hash]
+        local maxHealth = currentPlayer:getClass().maxHealth
+        print(maxHealth)
+        if maxHealth ~= nil and maxHealth ~= 0 then
+            local playerGuard = get_dynamic_player(playerIndex)
+            if playerGuard ~= 0 then
+                write_float(playerGuard + 0xD8, maxHealth)
+            end
+        else
+            print("SOMETHING WENT WRONG WHEN TRYING TO OVERWRITE PLAYER'S HEALTH!")
+        end
+        return true,BIPED_TAG_LIST[currentPlayer:getClass().name]
     end
 end
 

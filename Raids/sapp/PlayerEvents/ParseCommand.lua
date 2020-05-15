@@ -4,11 +4,13 @@
 -- import Raids.classes.Boss end
 -- import Raids.sapp.PlayerEvents.ActivateUltimateAbility end
 -- import Raids.sapp.PlayerEvents.Commands.ChangePlayerClass end
+-- import Raids.sapp.PlayerEvents.Commands.ChangeBoss end
 -- END_IMPORT
 
 function parseCommand(playerIndex, command)
     args = {} 
     local hash = get_var(playerIndex, "$hash")
+    local player = ACTIVE_PLAYER_LIST[hash]
     for w in command:gmatch("%w+") do args[#args+1] = w end
         if args[1] == "class" then 
             if args[2] == "boss" and tonumber(get_var(playerIndex, "$lvl")) ~= 4 then
@@ -18,7 +20,7 @@ function parseCommand(playerIndex, command)
             end
             return true
         elseif args[1] == "ult" or args[1] == "ultimate" then
-            if ACTIVE_PLAYER_LIST[hash]:getClass().boss == nil then
+            if player:getClass().boss == nil then
                 activateUltimateAbility(hash, playerIndex)
             else
                 say(playerIndex, "Bosses cannot do that!")
@@ -28,15 +30,8 @@ function parseCommand(playerIndex, command)
             spawn_object("weap", "halo reach\\objects\\weapons\\support_high\\spartan_laser\\savant", 105.62, 342.36, -3)
             return true
         elseif args[1] == "boss" then
-            if tonumber(get_var(playerIndex, "$lvl")) == 4 and ACTIVE_PLAYER_LIST[hash]:getClass().boss ~= nil then
-                if BIPED_TAG_LIST[args[2]] ~= nil then
-                    kill(playerIndex)
-                    local playerClass = ACTIVE_PLAYER_LIST[hash]:getClass()
-                    playerClass:changeBoss(args[2])
-                else
-                    say(playerIndex, "That boss does not exist!")
-                end
-                return true
+            if tonumber(get_var(playerIndex, "$lvl")) == 4 and player:getClass().boss ~= nil then
+                changeBoss(playerIndex, player, args[2])
             else
                 say(playerIndex, "You cannot do that!")
             end
