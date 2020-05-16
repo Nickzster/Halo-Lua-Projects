@@ -83,6 +83,7 @@ function handleAreaExit(playerIndex, areaExited)
     end
 end
 
+--TODO: Dequeue ultimate if player dies
 function handlePlayerDie(playerIndex, causer)
     if(player_present(playerIndex)) then
         local hash = get_var(playerIndex, "$hash")
