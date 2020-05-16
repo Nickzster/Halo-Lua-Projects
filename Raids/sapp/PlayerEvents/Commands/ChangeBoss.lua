@@ -1,7 +1,10 @@
 -- BEGIN_IMPORT
+-- import Raids.globals.values end
 -- import Raids.classes.Boss end
 -- import Raids.classes.Player end
 -- import Raids.globals.values end
+-- import Raids.modules.Events.EventItem end
+-- import Raids.gameplay.BossEvents.Torres end
 -- END_IMPORT
 
 function changeBoss(playerIndex, player, selectedBoss)
@@ -10,6 +13,13 @@ function changeBoss(playerIndex, player, selectedBoss)
         local playerClass = player:getClass()
         playerClass:changeBoss(selectedBoss)
         ACTIVE_BOSSES[playerIndex] = player
+        --TODO: Refactor this so that it can handle all bosses. 
+        --probably best to place this in one function.
+        if selectedBoss == "torres" then
+            newTorresEvent = EventItem:new()
+            newTorresEvent:set({}, nil, NotifyPlayersCompleted, 30 * 26)
+            EVENT_TABLE['TorresEvent'] = newTorresEvent
+        end
     else
         say(playerIndex, "That boss does not exist!")
     end

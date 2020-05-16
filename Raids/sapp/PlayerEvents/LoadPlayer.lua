@@ -8,5 +8,6 @@ function loadPlayer(playerIndex)
     local hash = get_var(playerIndex, "$hash")
     local newPlayer = PlayerSchema:new()
     newPlayer:setClass(DpsSchema:new())
+    newPlayer:setPlayerIndex(playerIndex)
     ACTIVE_PLAYER_LIST[hash] = newPlayer
 end

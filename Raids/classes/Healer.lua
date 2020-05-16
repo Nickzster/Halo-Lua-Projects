@@ -3,12 +3,13 @@
 -- import Raids.util.GetPlayerDistance end
 -- END_IMPORT
 
-HEALER_COOLDOWN_IN_SECONDS = 90
+HEALER_COOLDOWN_IN_SECONDS = 75
 
 HealerSchema = {
     name="healer",
     cooldown=false,
     cooldownTime = HEALER_COOLDOWN_IN_SECONDS * 30,
+    maxHealth=100,
     weapons={
         primary='lightbringer',
         secondary='faithful',

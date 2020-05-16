@@ -5,7 +5,11 @@
 -- END_IMPORT
 
 BossHealthValues = {
-    ["DEFAULT"] = 1000
+    ["DEFAULT"] = 1000,
+    ["scourge"] = 5000,
+    ["torres"] = 1500,
+    ["eliminator"] = 2000,
+    ["kreyul"] = 1000
 }
 
 BossSchema = {
@@ -17,5 +21,5 @@ BossSchema = {
 BossSchema['new'] = new
 BossSchema['changeBoss'] = function(self, newBiped)
     self.name = newBiped
-    self.maxHealth = BossHealthValues['DEFAULT']
+    self.maxHealth = BossHealthValues[newBiped]
 end

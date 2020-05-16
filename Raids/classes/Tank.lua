@@ -4,12 +4,13 @@
 -- import Raids.modules.Events.EventItem end
 -- END_IMPORT
 
-TANK_COOLDOWN_IN_SECONDS = 127
+TANK_COOLDOWN_IN_SECONDS = 100
 
 TankSchema = {
     name="tank",
     cooldown=false,
     cooldownTime = TANK_COOLDOWN_IN_SECONDS * 30,
+    maxHealth=500,
     weapons= {
     primary='brassknucle',
     secondary='rampart',
@@ -26,7 +27,7 @@ TankSchema['ultimate'] = function(self, playerIndex)
     local ungodEvent = EventItem:new()
     ungodEvent:set({
         ['playerIndex']=playerIndex
-    }, nil, function(props) execute_command("ungod " .. props.playerIndex) say(props.playerIndex, "You are no longer invincible!") end, 7 * 30)
+    }, nil, function(props) execute_command("ungod " .. props.playerIndex) say(props.playerIndex, "You are no longer invincible!") end, 10 * 30)
     EVENT_TABLE[key] = ungodEvent
 end
 TankSchema['startCoolDown'] = startCoolDown

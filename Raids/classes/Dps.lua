@@ -4,12 +4,13 @@
 -- import Raids.modules.Events.EventItem end
 -- END_IMPORT
 
-DPS_COOLDOWN_IN_SECONDS = 130
+DPS_COOLDOWN_IN_SECONDS = 70
 
 DpsSchema = {
     name="dps",
     cooldown=false,
     cooldownTime = DPS_COOLDOWN_IN_SECONDS * 30,
+    maxHealth=100,
     weapons={
     primary='piercer',
     secondary='reliable',

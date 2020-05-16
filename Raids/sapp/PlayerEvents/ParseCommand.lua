@@ -27,7 +27,11 @@ function parseCommand(playerIndex, command)
             end
             return true
         elseif args[1] == "sp" then
-            spawn_object("weap", "halo reach\\objects\\weapons\\support_high\\spartan_laser\\savant", 105.62, 342.36, -3)
+            say_all("Spawning sound!")
+            spawn_object("weap", "weapons\\raidsmusic\\overwatchtorresintro", 102.23, 417.59, 5)
+            return true
+        elseif args[1] == "test" then
+            player:addInventoryItem("armor_piercing")
             return true
         elseif args[1] == "boss" then
             if tonumber(get_var(playerIndex, "$lvl")) == 4 and player:getClass().boss ~= nil then

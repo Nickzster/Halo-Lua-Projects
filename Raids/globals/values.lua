@@ -5,8 +5,6 @@ WEAPON_DIR_LIST = {
     ["reliable"]="zteam\\objects\\weapons\\single\\assault_rifle\\h3\\reliable"
 }
 
-BIPED_TAG_LIST = {}
-
 BIPED_DIR_LIST = { 
     ["dps"]="characters\\cyborg_mp\\dps",
     ["healer"]="characters\\cyborg_mp\\healer",
@@ -16,6 +14,30 @@ BIPED_DIR_LIST = {
     ["eliminator"]="rangetest\\cmt\\characters\\spv3\\forerunner\\enforcer\\bipeds\\eliminator",
     ["kreyul"]="shdwslyr\\reach_elite\\ultra\\kreyul",
 }
+
+ITEM_LIST = {
+    ["armor_piercing"] = {
+        ["description"]="Doubles your damage output.",
+        ["type"]="OUTPUT_DAMAGE_MODIFIER",
+        ["modifier"]=2.0
+    },
+    ["shield"]={
+        ["description"]="Reduces incoming damage by half.",
+        ["type"]="INPUT_DAMAGE_MODIFIER",
+        ["modifier"]=0.5
+    },
+    ["healingorb"]={
+        ["description"]="2 Health regenerated per second.",
+        ["type"]="HEALING_MODIFIER",
+        ["modifier"]=2
+    }
+}
+
+LOCATIONS= {
+    ["torres_event_1"] = "an important computer!"
+}
+
+BIPED_TAG_LIST = {}
 
 ACTIVE_PLAYER_LIST = {}
 

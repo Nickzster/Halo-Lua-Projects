@@ -12,7 +12,7 @@ EventItem = {
 
 function EventItem.isTimedOut(self)
     if self.time == -1 then --conditional event
-        if self.eachTickCb == nil and self.eachTickCb(self.props, self.time) then
+        if self.eachTickCb ~= nil and self.eachTickCb(self.props, self.time) then
             self.completedCb(self.props)
             return true 
         end
