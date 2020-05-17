@@ -3,6 +3,8 @@
 -- import Raids.classes.Dps end
 -- import Raids.classes.Healer end
 -- import Raids.classes.Tank end
+-- import Raids.classes.Bandolier end
+-- import Raids.classes.Gunslinger end
 -- import Raids.globals.values end
 -- END_IMPORT
 

@@ -27,7 +27,7 @@ end
 function PlayerSchema:addInventoryItem(itemName)
     if ITEM_LIST[itemName] then
         newItem = ItemSchema:new()
-        newItem:createItem(ITEM_LIST[itemName], ITEM_LIST[itemName].description, ITEM_LIST[itemName].modifier, self.playerIndex)
+        newItem:createItem(itemName, ITEM_LIST[itemName].description, ITEM_LIST[itemName].modifier, self.playerIndex)
         self.inventory[itemName] = newItem
     end
 end

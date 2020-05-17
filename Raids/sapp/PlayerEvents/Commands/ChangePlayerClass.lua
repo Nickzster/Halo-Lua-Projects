@@ -4,6 +4,8 @@
 -- import Raids.classes.Healer end
 -- import Raids.classes.Tank end
 -- import Raids.classes.Boss end
+-- import Raids.classes.Gunslinger end
+-- import Raids.classes.Bandolier end
 -- import Raids.globals.values end
 -- END_IMPORT
 
@@ -11,7 +13,9 @@ CLASS_LIST = {
     ["dps"] = DpsSchema,
     ["healer"] = HealerSchema,
     ["tank"] = TankSchema,
-    ["boss"] = BossSchema
+    ["boss"] = BossSchema,
+    ["gunslinger"] = GunslingerSchema,
+    ["bandolier"] = BandolierSchema
 }
 
 function changePlayerClass(playerIndex, newClass)

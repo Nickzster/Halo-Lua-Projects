@@ -98,10 +98,16 @@ end
 function handleDamage(playerIndex, damagerPlayerIndex, damageTagId, Damage, CollisionMaterial, Backtap)
     --TODO: Refactor this into a damage function, that funnels through all players and handles damage accordingly. 
     if player_present(playerIndex) and player_present(damagerPlayerIndex) then
-        newDamage = Damage
         local attackingPlayer = ACTIVE_PLAYER_LIST[get_var(damagerPlayerIndex, "$hash")]:getPlayerInventory()
         local player = ACTIVE_PLAYER_LIST[get_var(playerIndex, "$hash")]:getPlayerInventory()
-        return true,modifyDamage(attackingPlayer, player, Damage)
+        local newDamage = modifyDamage(attackingPlayer, player, Damage)
+        if playerIndex == damagerPlayerIndex then 
+            say(playerIndex, "You dealt " .. newDamage .. " damage to yourself, you goober!")
+        else
+            say(playerIndex, "You were dealt " .. newDamage .. " damage!")
+            say(damagerPlayerIndex, "You dealt " .. newDamage .. " damage!")
+        end
+        return true,newDamage
     end
     return true
 end

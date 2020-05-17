@@ -10,6 +10,8 @@ BIPED_DIR_LIST = {
     ["dps"]="characters\\cyborg_mp\\dps",
     ["healer"]="characters\\cyborg_mp\\healer",
     ["tank"]="zteam\\objects\\characters\\spartan\\h3\\tank",
+    ["bandolier"]="bourrin\\halo reach\\marine-to-spartan\\bandolier",
+    ["gunslinger"]="h3\\objects\\characters\\elite\\gunslinger",
     ["scourge"]="h2spp\\characters\\flood\\juggernaut\\scourge",
     ["torres"]="rangetest\\cmt\\characters\\evolved_h1-spirit\\cyborg\\bipeds\\torres",
     ["eliminator"]="rangetest\\cmt\\characters\\spv3\\forerunner\\enforcer\\bipeds\\eliminator",
@@ -208,7 +210,7 @@ end
 function PlayerSchema:addInventoryItem(itemName)
     if ITEM_LIST[itemName] then
         newItem = ItemSchema:new()
-        newItem:createItem(ITEM_LIST[itemName], ITEM_LIST[itemName].description, ITEM_LIST[itemName].modifier, self.playerIndex)
+        newItem:createItem(itemName, ITEM_LIST[itemName].description, ITEM_LIST[itemName].modifier, self.playerIndex)
         self.inventory[itemName] = newItem
     end
 end
@@ -261,6 +263,14 @@ BossSchema['changeBoss'] = function(self, newBiped)
     self.name = newBiped
     self.maxHealth = BossHealthValues[newBiped]
 end
+function GetPlayerDistance(index1, index2)
+	local p1 = get_dynamic_player(index1)
+	local p2 = get_dynamic_player(index2)
+	
+	return math.sqrt((read_float(p2+0x5C  ) - read_float(p1+0x5C  ))^2
+	                +(read_float(p2+0x5C+4) - read_float(p1+0x5C+4))^2
+	                +(read_float(p2+0x5C+8) - read_float(p1+0x5C+8))^2)
+end
 DPS_COOLDOWN_IN_SECONDS = 70
 
 DpsSchema = {
@@ -292,14 +302,49 @@ DpsSchema['coolDownMessage'] = coolDownMessage
 DpsSchema['endCoolDown'] = endCoolDown
 DpsSchema['getWeapons'] = getWeapons
 DpsSchema['new'] = new
-function GetPlayerDistance(index1, index2)
-	local p1 = get_dynamic_player(index1)
-	local p2 = get_dynamic_player(index2)
-	
-	return math.sqrt((read_float(p2+0x5C  ) - read_float(p1+0x5C  ))^2
-	                +(read_float(p2+0x5C+4) - read_float(p1+0x5C+4))^2
-	                +(read_float(p2+0x5C+8) - read_float(p1+0x5C+8))^2)
+
+GUNSLINGER_COOLDOWN_IN_SECONDS = 120
+
+GunslingerSchema = {
+    name="gunslinger",
+    cooldown = false,
+    cooldownTime = GUNSLINGER_COOLDOWN_IN_SECONDS * 30,
+    maxHealth = 100,
+    weapons = {}
+}
+
+
+GunslingerSchema['ultimate'] = function(self, playerIndex)
+    say(playerIndex, "Engaging active camoflage!")
+    execute_command('camo ' .. playerIndex .. " " .. 30)
+    self:startCoolDown(playerIndex)
 end
+
+GunslingerSchema['startCoolDown'] = startCoolDown
+GunslingerSchema['cooldownMessage'] = cooldownMessage
+GunslingerSchema['endCoolDown'] = endCoolDown
+GunslingerSchema['getWeapons'] = getWeapons
+GunslingerSchema['new'] = new
+BANDOLIER_COOLDOWN_IN_SECONDS = 75
+
+BandolierSchema = {
+    name="bandolier",
+    cooldown=false,
+    cooldownTime = BANDOLIER_COOLDOWN_IN_SECONDS * 30,
+    maxHealth = 100,
+    weapons = {},
+}
+
+BandolierSchema['ultimate'] = function(self, playerIndex)
+    say(playerIndex, "Giving all nearby players ammo!")
+    self:startCoolDown(playerIndex)
+end
+
+BandolierSchema['startCoolDown'] = startCoolDown
+BandolierSchema['coolDownMessage'] = coolDownMessage
+BandolierSchema['endCoolDown'] = endCoolDown
+BandolierSchema['getWeapons'] = getWeapons
+BandolierSchema['new'] = new
 TANK_COOLDOWN_IN_SECONDS = 100
 
 TankSchema = {
@@ -413,41 +458,24 @@ function parseCommand(playerIndex, command)
         end
         return false
 end
-function loadBipeds()
-    --Load in Biped Table
-    for key,_ in pairs(BIPED_DIR_LIST) do
-        BIPED_TAG_LIST[key] = FindBipedTag(BIPED_DIR_LIST[key])
-    end
-    --Load in default biped
-    local tag_array = read_dword(0x40440000)
-    for i=0,read_word(0x4044000C)-1 do
-        local tag = tag_array + i * 0x20
-        if(read_dword(tag) == 1835103335 and read_string(read_dword(tag + 0x10)) == "globals\\globals") then
-            local tag_data = read_dword(tag + 0x14)
-            local mp_info = read_dword(tag_data + 0x164 + 4)
-            for j=0,read_dword(tag_data + 0x164)-1 do
-                BIPED_TAG_LIST['DEFAULT'] = read_dword(mp_info + j * 160 + 0x10 + 0xC)
-            end
-        end
-    end
-end
-function loadPlayer(playerIndex) 
-    local hash = get_var(playerIndex, "$hash")
-    local newPlayer = PlayerSchema:new()
-    newPlayer:setClass(DpsSchema:new())
-    newPlayer:setPlayerIndex(playerIndex)
-    ACTIVE_PLAYER_LIST[hash] = newPlayer
-end
-function activateUltimateAbility(hash, playerIndex)
-    if ACTIVE_PLAYER_LIST[hash]:getClass().cooldown == false then
-        ACTIVE_PLAYER_LIST[hash]:getClass():ultimate(playerIndex)
+CLASS_LIST = {
+    ["dps"] = DpsSchema,
+    ["healer"] = HealerSchema,
+    ["tank"] = TankSchema,
+    ["boss"] = BossSchema,
+    ["gunslinger"] = GunslingerSchema,
+    ["bandolier"] = BandolierSchema
+}
+
+function changePlayerClass(playerIndex, newClass)
+    if CLASS_LIST[newClass] ~= nil or newClass == "boss" then
+        kill(playerIndex)
+        ACTIVE_PLAYER_LIST[get_var(playerIndex, "$hash")]:setClass(CLASS_LIST[newClass]:new())
+        return true
     else
-        say(playerIndex, "You can use your ultimate ability in " .. math.ceil(EVENT_TABLE[ACTIVE_PLAYER_LIST[hash]:getClass().cooldownStatus].time / 30) .. " seconds!")
+        say(playerIndex, "That class does not exist!")
+        return false
     end
-end
-function unloadPlayer(playerIndex) 
-    local hash = get_var(playerIndex, "$hash")
-    ACTIVE_PLAYER_LIST[hash] = nil
 end
 
 function changeBoss(playerIndex, player, selectedBoss)
@@ -467,6 +495,18 @@ function changeBoss(playerIndex, player, selectedBoss)
         say(playerIndex, "That boss does not exist!")
     end
 end
+function activateUltimateAbility(hash, playerIndex)
+    if ACTIVE_PLAYER_LIST[hash]:getClass().cooldown == false then
+        ACTIVE_PLAYER_LIST[hash]:getClass():ultimate(playerIndex)
+    else
+        say(playerIndex, "You can use your ultimate ability in " .. math.ceil(EVENT_TABLE[ACTIVE_PLAYER_LIST[hash]:getClass().cooldownStatus].time / 30) .. " seconds!")
+    end
+end
+function unloadPlayer(playerIndex) 
+    local hash = get_var(playerIndex, "$hash")
+    ACTIVE_PLAYER_LIST[hash] = nil
+end
+
 SavantEventCompleted = function(props) 
     say_all("Savant Deployed! It's near the center walkway!")
     spawn_object("weap", "halo reach\\objects\\weapons\\support_high\\spartan_laser\\savant", 105.62, 342.36, -3)
@@ -497,6 +537,24 @@ NotifyPlayersCompleted = function(props)
 end
 
 
+function loadBipeds()
+    --Load in Biped Table
+    for key,_ in pairs(BIPED_DIR_LIST) do
+        BIPED_TAG_LIST[key] = FindBipedTag(BIPED_DIR_LIST[key])
+    end
+    --Load in default biped
+    local tag_array = read_dword(0x40440000)
+    for i=0,read_word(0x4044000C)-1 do
+        local tag = tag_array + i * 0x20
+        if(read_dword(tag) == 1835103335 and read_string(read_dword(tag + 0x10)) == "globals\\globals") then
+            local tag_data = read_dword(tag + 0x14)
+            local mp_info = read_dword(tag_data + 0x164 + 4)
+            for j=0,read_dword(tag_data + 0x164)-1 do
+                BIPED_TAG_LIST['DEFAULT'] = read_dword(mp_info + j * 160 + 0x10 + 0xC)
+            end
+        end
+    end
+end
 function ClearConsole(i)
 	for j=0,25 do
 		rprint(i, " ")
@@ -561,31 +619,22 @@ end
 function modifyDamage(attackingPlayer, playerTakingDamage, damage)
     local newDamage = damage
     for inventoryItem,_ in pairs(attackingPlayer) do
+        print(inventoryItem)
         newDamage = newDamage * attackingPlayer[inventoryItem].modifier
+        print(newDamage)
     end
-    for inventoryItem,_ in pairs(playerTakingDamage) do
-        newDamage = newDamage * playerTakingDamage[inventoryItem].modifier
-    end
+    -- for inventoryItem,_ in pairs(playerTakingDamage) do
+    --     newDamage = newDamage * playerTakingDamage[inventoryItem].modifier
+    -- end
     return newDamage
 end
-CLASS_LIST = {
-    ["dps"] = DpsSchema,
-    ["healer"] = HealerSchema,
-    ["tank"] = TankSchema,
-    ["boss"] = BossSchema
-}
-
-function changePlayerClass(playerIndex, newClass)
-    if CLASS_LIST[newClass] ~= nil or newClass == "boss" then
-        kill(playerIndex)
-        ACTIVE_PLAYER_LIST[get_var(playerIndex, "$hash")]:setClass(CLASS_LIST[newClass]:new())
-        return true
-    else
-        say(playerIndex, "That class does not exist!")
-        return false
-    end
+function loadPlayer(playerIndex) 
+    local hash = get_var(playerIndex, "$hash")
+    local newPlayer = PlayerSchema:new()
+    newPlayer:setClass(DpsSchema:new())
+    newPlayer:setPlayerIndex(playerIndex)
+    ACTIVE_PLAYER_LIST[hash] = newPlayer
 end
-
 
 --Callbacks
 function OnScriptLoad()
@@ -657,6 +706,7 @@ function handleAreaExit(playerIndex, areaExited)
     end
 end
 
+--TODO: Dequeue ultimate if player dies
 function handlePlayerDie(playerIndex, causer)
     if(player_present(playerIndex)) then
         local hash = get_var(playerIndex, "$hash")
@@ -671,10 +721,16 @@ end
 function handleDamage(playerIndex, damagerPlayerIndex, damageTagId, Damage, CollisionMaterial, Backtap)
     --TODO: Refactor this into a damage function, that funnels through all players and handles damage accordingly. 
     if player_present(playerIndex) and player_present(damagerPlayerIndex) then
-        newDamage = Damage
         local attackingPlayer = ACTIVE_PLAYER_LIST[get_var(damagerPlayerIndex, "$hash")]:getPlayerInventory()
         local player = ACTIVE_PLAYER_LIST[get_var(playerIndex, "$hash")]:getPlayerInventory()
-        return true,modifyDamage(attackingPlayer, player, Damage)
+        local newDamage = modifyDamage(attackingPlayer, player, Damage)
+        if playerIndex == damagerPlayerIndex then 
+            say(playerIndex, "You dealt " .. newDamage .. " damage to yourself, you goober!")
+        else
+            say(playerIndex, "You were dealt " .. newDamage .. " damage!")
+            say(damagerPlayerIndex, "You dealt " .. newDamage .. " damage!")
+        end
+        return true,newDamage
     end
     return true
 end
