@@ -620,6 +620,7 @@ function modifyDamage(attackingPlayer, playerTakingDamage, damage)
     local newDamage = damage
     for inventoryItem,_ in pairs(attackingPlayer) do
         print(inventoryItem)
+        print(attackingPlayer[inventoryItem].modifier)
         newDamage = newDamage * attackingPlayer[inventoryItem].modifier
         print(newDamage)
     end
