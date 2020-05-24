@@ -11,11 +11,12 @@ BIPED_DIR_LIST = {
     ["healer"]="characters\\cyborg_mp\\healer",
     ["tank"]="zteam\\objects\\characters\\spartan\\h3\\tank",
     ["bandolier"]="bourrin\\halo reach\\marine-to-spartan\\bandolier",
-    ["gunslinger"]="h3\\objects\\characters\\elite\\gunslinger",
+    ["gunslinger"]="np\\objects\\characters\\elite\\h3\\bipeds\\gunslinger",
     ["scourge"]="h2spp\\characters\\flood\\juggernaut\\scourge",
     ["torres"]="rangetest\\cmt\\characters\\evolved_h1-spirit\\cyborg\\bipeds\\torres",
     ["eliminator"]="rangetest\\cmt\\characters\\spv3\\forerunner\\enforcer\\bipeds\\eliminator",
     ["kreyul"]="shdwslyr\\reach_elite\\ultra\\kreyul",
+    ["gordius"]="cmt\\characters\\evolved\\covenant\\hunter\\bipeds\\gordius"
 }
 
 ITEM_LIST = {
@@ -166,7 +167,11 @@ function ItemSchema:destroyItem()
 
 end
 
-function ItemSchema:createItem(name, description, type, modifier, playerIndex) 
+function ItemSchema.createItem(self, name, description, type, modifier, playerIndex) 
+    print("Creating item....")
+    print(type)
+    print(modifier)
+    print("attaching it to... " .. playerIndex)
     self.name = name
     self.description = description
     self.type = type
@@ -195,46 +200,46 @@ PlayerSchema = {
     class=nil
 }
 
-function PlayerSchema:isInLocation(location)
+function PlayerSchema.isInLocation(self, location)
     if self.locations[location] ~= nil then return true else return false end
 end
 
-function PlayerSchema:setLocation(newLocation)
+function PlayerSchema.setLocation(self, newLocation)
     self.locations[newLocation] = newLocation
 end
 
-function PlayerSchema:removeLocation(location)
+function PlayerSchema.removeLocation(self, location)
     self.locations[location] = nil
 end
 
-function PlayerSchema:addInventoryItem(itemName)
+function PlayerSchema.addInventoryItem(self, itemName)
     if ITEM_LIST[itemName] then
-        newItem = ItemSchema:new()
-        newItem:createItem(itemName, ITEM_LIST[itemName].description, ITEM_LIST[itemName].modifier, self.playerIndex)
+        local newItem = ItemSchema:new()
+        newItem:createItem(itemName, ITEM_LIST[itemName].description, ITEM_LIST[itemName].type, ITEM_LIST[itemName].modifier, self.playerIndex)
         self.inventory[itemName] = newItem
     end
 end
 
-function PlayerSchema:getPlayerInventory()
+function PlayerSchema.getPlayerInventory(self)
     return self.inventory
 end
 
-function PlayerSchema:removeInventoryItem(itemName)
+function PlayerSchema.removeInventoryItem(self,itemName)
     self.inventory[itemName] = nil
 end
 
-function PlayerSchema:addUnlock(weaponName)
+function PlayerSchema.addUnlock(self,weaponName)
     if WEAPON_DIR_LIST[weaponName] then
         self.unlocks[weaponName] = weaponName
     end
 end
 
-function PlayerSchema:setPlayerIndex(playerIndex)
+function PlayerSchema.setPlayerIndex(self,playerIndex)
     self.playerIndex = playerIndex
 end
 
 --TODO: Future, disallow duplicate redeemUnlocks
-function PlayerSchema:redeemUnlock(weaponName)
+function PlayerSchema.redeemUnlock(self, weaponName)
     if self.unlocks[weaponName] then
         local weaponToGive = spawn_object("weapon", WEAPON_DIR_LIST[weaponName])
         assign_weapon(weaponToGive, tonumber(playerIndex))
@@ -249,7 +254,8 @@ BossHealthValues = {
     ["scourge"] = 5000,
     ["torres"] = 1500,
     ["eliminator"] = 2000,
-    ["kreyul"] = 1000
+    ["kreyul"] = 1000,
+    ["gordius"]=4000
 }
 
 BossSchema = {
@@ -399,7 +405,9 @@ HealerSchema = {
     for i=0,16 do 
         if i ~= playerIndex then
             if player_present(i) and GetPlayerDistance(playerIndex, i) <= 5 then
-                execute_command("hp " .. i .. " 1.0")
+                if ACTIVE_BOSSES[i] == nil then
+                    execute_command("hp " .. i .. " 1.0")
+                end
             end
         end
     end
@@ -638,6 +646,7 @@ function loadPlayer(playerIndex)
 end
 
 --Callbacks
+
 function OnScriptLoad()
     register_callback(cb['EVENT_COMMAND'], "handleCommand")
     register_callback(cb['EVENT_JOIN'], "handleJoin")
@@ -650,6 +659,7 @@ function OnScriptLoad()
     register_callback(cb['EVENT_AREA_EXIT'], "handleAreaExit")
     register_callback(cb['EVENT_PRESPAWN'], "handlePrespawn")
     register_callback(cb['EVENT_GAME_END'],"OnGameEnd")
+    register_callback(cb['EVENT_GAME_START'], "OnGameStart")
     for i=1,16 do
         if(player_present(i)) then
             loadPlayer(i)
@@ -658,24 +668,26 @@ function OnScriptLoad()
     end
 end
 
-
 function OnScriptUnload()
-    unregister_callback(cb['EVENT_COMMAND'])
-    unregister_callback(cb['EVENT_JOIN'])
-    unregister_callback(cb['EVENT_LEAVE'])
-    unregister_callback(cb['EVENT_DAMAGE_APPLICATION'])
-    unregister_callback(cb['EVENT_OBJECT_SPAWN'])
-    unregister_callback(cb['EVENT_TICK'])
-    unregister_callback(cb['EVENT_DIE'])
-    unregister_callback(cb['EVENT_AREA_ENTER'])
-    unregister_callback(cb['EVENT_AREA_EXIT'])
-    unregister_callback(cb['EVENT_PRESPAWN'])
-    unregister_callback(cb['EVENT_GAME_END'])
+    -- unregister_callback(cb['EVENT_COMMAND'])
+    -- unregister_callback(cb['EVENT_JOIN'])
+    -- unregister_callback(cb['EVENT_LEAVE'])
+    -- unregister_callback(cb['EVENT_DAMAGE_APPLICATION'])
+    -- unregister_callback(cb['EVENT_OBJECT_SPAWN'])
+    -- unregister_callback(cb['EVENT_TICK'])
+    -- unregister_callback(cb['EVENT_DIE'])
+    -- unregister_callback(cb['EVENT_AREA_ENTER'])
+    -- unregister_callback(cb['EVENT_AREA_EXIT'])
+    -- unregister_callback(cb['EVENT_PRESPAWN'])
+    -- unregister_callback(cb['EVENT_GAME_END'])
+    -- unregister_callback(cb['EVENT_GAME_START'])
     BIPED_TAG_LIST = {}
     ACTIVE_PLAYER_LIST = {}
     ACTIVE_BOSSES = {}
     EVENT_TABLE = {}
 end
+
+OnGameStart = OnScriptLoad
 
 OnGameEnd = OnScriptUnload
 

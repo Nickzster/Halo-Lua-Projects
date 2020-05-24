@@ -14,6 +14,7 @@
 
 
 --Callbacks
+
 function OnScriptLoad()
     register_callback(cb['EVENT_COMMAND'], "handleCommand")
     register_callback(cb['EVENT_JOIN'], "handleJoin")
@@ -26,6 +27,7 @@ function OnScriptLoad()
     register_callback(cb['EVENT_AREA_EXIT'], "handleAreaExit")
     register_callback(cb['EVENT_PRESPAWN'], "handlePrespawn")
     register_callback(cb['EVENT_GAME_END'],"OnGameEnd")
+    register_callback(cb['EVENT_GAME_START'], "OnGameStart")
     for i=1,16 do
         if(player_present(i)) then
             loadPlayer(i)
@@ -34,24 +36,26 @@ function OnScriptLoad()
     end
 end
 
-
 function OnScriptUnload()
-    unregister_callback(cb['EVENT_COMMAND'])
-    unregister_callback(cb['EVENT_JOIN'])
-    unregister_callback(cb['EVENT_LEAVE'])
-    unregister_callback(cb['EVENT_DAMAGE_APPLICATION'])
-    unregister_callback(cb['EVENT_OBJECT_SPAWN'])
-    unregister_callback(cb['EVENT_TICK'])
-    unregister_callback(cb['EVENT_DIE'])
-    unregister_callback(cb['EVENT_AREA_ENTER'])
-    unregister_callback(cb['EVENT_AREA_EXIT'])
-    unregister_callback(cb['EVENT_PRESPAWN'])
-    unregister_callback(cb['EVENT_GAME_END'])
+    -- unregister_callback(cb['EVENT_COMMAND'])
+    -- unregister_callback(cb['EVENT_JOIN'])
+    -- unregister_callback(cb['EVENT_LEAVE'])
+    -- unregister_callback(cb['EVENT_DAMAGE_APPLICATION'])
+    -- unregister_callback(cb['EVENT_OBJECT_SPAWN'])
+    -- unregister_callback(cb['EVENT_TICK'])
+    -- unregister_callback(cb['EVENT_DIE'])
+    -- unregister_callback(cb['EVENT_AREA_ENTER'])
+    -- unregister_callback(cb['EVENT_AREA_EXIT'])
+    -- unregister_callback(cb['EVENT_PRESPAWN'])
+    -- unregister_callback(cb['EVENT_GAME_END'])
+    -- unregister_callback(cb['EVENT_GAME_START'])
     BIPED_TAG_LIST = {}
     ACTIVE_PLAYER_LIST = {}
     ACTIVE_BOSSES = {}
     EVENT_TABLE = {}
 end
+
+OnGameStart = OnScriptLoad
 
 OnGameEnd = OnScriptUnload
 

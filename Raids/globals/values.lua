@@ -10,28 +10,64 @@ BIPED_DIR_LIST = {
     ["healer"]="characters\\cyborg_mp\\healer",
     ["tank"]="zteam\\objects\\characters\\spartan\\h3\\tank",
     ["bandolier"]="bourrin\\halo reach\\marine-to-spartan\\bandolier",
-    ["gunslinger"]="h3\\objects\\characters\\elite\\gunslinger",
+    ["gunslinger"]="np\\objects\\characters\\elite\\h3\\bipeds\\gunslinger",
     ["scourge"]="h2spp\\characters\\flood\\juggernaut\\scourge",
     ["torres"]="rangetest\\cmt\\characters\\evolved_h1-spirit\\cyborg\\bipeds\\torres",
     ["eliminator"]="rangetest\\cmt\\characters\\spv3\\forerunner\\enforcer\\bipeds\\eliminator",
     ["kreyul"]="shdwslyr\\reach_elite\\ultra\\kreyul",
+    ["gordius"]="cmt\\characters\\evolved\\covenant\\hunter\\bipeds\\gordius"
 }
 
-ITEM_LIST = {
+EQUIPMENT_LIST = {
     ["armor_piercing"] = {
-        ["description"]="Doubles your damage output.",
-        ["type"]="OUTPUT_DAMAGE_MODIFIER",
-        ["modifier"]=2.0
+        ["description"]="Increases your damage output",
+        ["type"]="OUTPUT_DAMAGE",
+        ["modifiers"]={
+            ["lesser"] = 0.1,
+            ["normal"] = 0.2,
+            ["greater"] = 0.3, 
+            ["super"] = 0.4
+        }
     },
-    ["shield"]={
-        ["description"]="Reduces incoming damage by half.",
-        ["type"]="INPUT_DAMAGE_MODIFIER",
-        ["modifier"]=0.5
+    ["armor"]={
+        ["description"]="Reduces damage you take",
+        ["type"]="INPUT_DAMAGE",
+        ["modifiers"]={
+            ["lesser"] = 0.1,
+            ["normal"] = 0.2,
+            ["greater"] = 0.3,
+            ["super"] = 0.4
+        }
     },
-    ["healingorb"]={
-        ["description"]="2 Health regenerated per second.",
-        ["type"]="HEALING_MODIFIER",
-        ["modifier"]=2
+    ["reflective_shields"]={
+        ["description"]="Gives you a percentage chance to ignore damage",
+        ["type"]="INPUT_DAMAGE",
+        ["modifiers"]= {
+            ["lesser"] = 20,
+            ["normal"] = 10,
+            ["greater"] = 5,
+            ["super"] = 4
+        }
+    },
+    ["regeneration"]={
+        ["description"]="Slowly regens health over time",
+        ["type"]="SELF_HEALING",
+        ["modifiers"]={
+            ["lesser"] = 0.025,
+            ["normal"] = 0.01,
+            ["greater"] = 0.05,
+            ["super"] = 0.1
+        }
+    },
+    ["power_armor"]={
+        ["description"]="Gives you a damage immunity after you take damage",
+        ["type"]="INVINCIBILITY_PERIOD",
+        ["modifiers"]= {
+            ["lesser"] = 1,
+            ["normal"] = 3,
+            ["greater"] = 5,
+            ["super"] = 8
+        }
     }
 }
 
@@ -45,7 +81,8 @@ ACTIVE_PLAYER_LIST = {}
 
 ACTIVE_BOSSES = {}
 
-EVENT_TABLE = {}
+-- MOVED TO Raids.modules.events.EventTable
+-- EVENT_TABLE = {}
 
 
 

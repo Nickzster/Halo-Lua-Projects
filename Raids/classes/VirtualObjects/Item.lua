@@ -18,7 +18,11 @@ function ItemSchema:destroyItem()
 
 end
 
-function ItemSchema:createItem(name, description, type, modifier, playerIndex) 
+function ItemSchema.createItem(self, name, description, type, modifier, playerIndex) 
+    print("Creating item....")
+    print(type)
+    print(modifier)
+    print("attaching it to... " .. playerIndex)
     self.name = name
     self.description = description
     self.type = type

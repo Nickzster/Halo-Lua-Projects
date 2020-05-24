@@ -1,4 +1,5 @@
 -- BEGIN_IMPORT
+-- import Raids.globals.values end
 -- import Raids.classes.Behaviors.functions end
 -- import Raids.util.GetPlayerDistance end
 -- END_IMPORT
@@ -24,7 +25,9 @@ HealerSchema = {
     for i=0,16 do 
         if i ~= playerIndex then
             if player_present(i) and GetPlayerDistance(playerIndex, i) <= 5 then
-                execute_command("hp " .. i .. " 1.0")
+                if ACTIVE_BOSSES[i] == nil then
+                    execute_command("hp " .. i .. " 1.0")
+                end
             end
         end
     end

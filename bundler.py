@@ -6,7 +6,7 @@ import shutil
 # configuration
 projectName = "Raids"
 sappApiVersion = "1.10.1.0"
-projectDirName = "Raids"
+projectDirName = "Raids_"
 entryFile = "main.lua"
 # DO NOT MODIFY ANYTHING UNDER THIS LINE UNLESS YOU KNOW WHAT YOU ARE DOING
 # Data Structs

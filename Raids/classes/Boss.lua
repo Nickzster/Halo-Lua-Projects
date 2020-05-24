@@ -9,7 +9,8 @@ BossHealthValues = {
     ["scourge"] = 5000,
     ["torres"] = 1500,
     ["eliminator"] = 2000,
-    ["kreyul"] = 1000
+    ["kreyul"] = 1000,
+    ["gordius"]=4000
 }
 
 BossSchema = {
