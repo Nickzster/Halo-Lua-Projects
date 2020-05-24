@@ -53,8 +53,8 @@ EQUIPMENT_LIST = {
         ["description"]="Slowly regens health over time",
         ["type"]="SELF_HEALING",
         ["modifiers"]={
-            ["lesser"] = 0.025,
-            ["normal"] = 0.01,
+            ["lesser"] = 0.01,
+            ["normal"] = 0.025,
             ["greater"] = 0.05,
             ["super"] = 0.1
         }
