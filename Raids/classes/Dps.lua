@@ -11,12 +11,6 @@ DpsSchema = {
     cooldown=false,
     cooldownTime = DPS_COOLDOWN_IN_SECONDS * 30,
     maxHealth=100,
-    weapons={
-    primary='piercer',
-    secondary='reliable',
-    third='',
-    fourth=''
-    }
 }
 
 DpsSchema['ultimate'] = function(self, playerIndex)
@@ -30,6 +24,8 @@ DpsSchema['ultimate'] = function(self, playerIndex)
     }, nil, function(props) say(props.playerIndex, "Your weapons are now back to normal.") execute_command("mag " .. props.playerIndex .. " 0 5") end, 10 * 30)
     EVENT_TABLE[key] = newEvent
 end
+
+
 DpsSchema['startCoolDown'] = startCoolDown
 DpsSchema['coolDownMessage'] = coolDownMessage
 DpsSchema['endCoolDown'] = endCoolDown

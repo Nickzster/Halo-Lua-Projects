@@ -11,7 +11,6 @@ GunslingerSchema = {
     cooldown = false,
     cooldownTime = GUNSLINGER_COOLDOWN_IN_SECONDS * 30,
     maxHealth = 100,
-    weapons = {}
 }
 
 

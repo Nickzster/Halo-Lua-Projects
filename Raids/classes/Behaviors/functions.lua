@@ -23,6 +23,7 @@ getClass = function(self)
     return self.class
 end
 
+
 startCoolDown = function(self, playerIndex)
     self.cooldown = true
     key = self.name .. playerIndex

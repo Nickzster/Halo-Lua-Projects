@@ -10,7 +10,6 @@ BandolierSchema = {
     cooldown=false,
     cooldownTime = BANDOLIER_COOLDOWN_IN_SECONDS * 30,
     maxHealth = 100,
-    weapons = {},
 }
 
 BandolierSchema['ultimate'] = function(self, playerIndex)

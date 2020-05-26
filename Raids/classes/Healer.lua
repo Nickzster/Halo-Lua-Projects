@@ -11,12 +11,6 @@ HealerSchema = {
     cooldown=false,
     cooldownTime = HEALER_COOLDOWN_IN_SECONDS * 30,
     maxHealth=100,
-    weapons={
-        primary='lightbringer',
-        secondary='faithful',
-        third='',
-        fourth=''
-    }
  }
 
  HealerSchema['ultimate'] = function(self, playerIndex)

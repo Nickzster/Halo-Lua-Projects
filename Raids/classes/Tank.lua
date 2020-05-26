@@ -11,12 +11,6 @@ TankSchema = {
     cooldown=false,
     cooldownTime = TANK_COOLDOWN_IN_SECONDS * 30,
     maxHealth=500,
-    weapons= {
-    primary='brassknucle',
-    secondary='rampart',
-    third='',
-    fourth=''
-    }
 }
 
 TankSchema['ultimate'] = function(self, playerIndex)

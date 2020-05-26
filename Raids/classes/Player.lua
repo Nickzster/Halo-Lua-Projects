@@ -6,12 +6,14 @@
 
 PlayerSchema = {
     playerIndex=nil,
-    weaponInventory={},
-    equipmentInventory={},
-    equippedEquipment="",
-    equippedPrimary="",
-    equippedSecondary="",
+    inventory={}
+    weapons={
+        primary="",
+        secondary=""
+    }
+    equipment="",
     locations={},
+    preferredClass="",
     class=nil
 }
 
@@ -27,19 +29,24 @@ function PlayerSchema.removeLocation(self, location)
     self.locations[location] = nil
 end
 
-function PlayerSchema.addInventoryItem(self, itemName)
-    if ITEM_LIST[itemName] then
+function PlayerSchema.addItemToInventory(self, itemName)
+    --TODO: Refactor
+    if ITEM_LIST[itemName] and ITEM_LIST[itemName]:getClasses() then
         local newItem = ItemSchema:new()
         newItem:createItem(itemName, ITEM_LIST[itemName].description, ITEM_LIST[itemName].type, ITEM_LIST[itemName].modifier, self.playerIndex)
         self.inventory[itemName] = newItem
+        say(self.playerIndex, "New Item: " ..itemName.. " has been added to your inventory!")
+        return true
+    else
+        return false
     end
 end
 
-function PlayerSchema.getPlayerInventory(self)
-    return self.inventory
+function PlayerSchema.getItemFrominventory(self, item)
+    if self.inventory[item] then return self.inventory[item] else return nil end
 end
 
-function PlayerSchema.removeInventoryItem(self,itemName)
+function PlayerSchema.removeEquipmentFromInventory(self,itemName)
     self.inventory[itemName] = nil
 end
 
@@ -53,13 +60,7 @@ function PlayerSchema.setPlayerIndex(self,playerIndex)
     self.playerIndex = playerIndex
 end
 
---TODO: Future, disallow duplicate redeemUnlocks
-function PlayerSchema.redeemUnlock(self, weaponName)
-    if self.unlocks[weaponName] then
-        local weaponToGive = spawn_object("weapon", WEAPON_DIR_LIST[weaponName])
-        assign_weapon(weaponToGive, tonumber(playerIndex))
-    end
-end
+
 
 PlayerSchema['new'] = new
 PlayerSchema['getClass'] = getClass
