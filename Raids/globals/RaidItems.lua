@@ -12,8 +12,8 @@ ITEM_LIST = {
     piercer={
         description="Battle Rifle",
         type="WEAPON",
-        ref="zteam\\objects\\weapons\\single\\battle_rifle\\h3\\piercer",
-        modifier=nil,
+        dir="zteam\\objects\\weapons\\single\\battle_rifle\\h3\\piercer",
+        modifier=612,
         classes={
             dps=true
         }
@@ -22,7 +22,7 @@ ITEM_LIST = {
         description="Assault Rifle",
         type="WEAPON",
         dir="zteam\\objects\\weapons\\single\\assault_rifle\\h3\\reliable",
-        modifier=nil,
+        modifier=640,
         classes={
             dps=true
         }
@@ -31,7 +31,7 @@ ITEM_LIST = {
         description="MA5K",
         type="WEAPON",
         dir="altis\\weapons\\br\\accelerator",
-        modifier=nil,
+        modifier=640,
         classes={
             bandolier=true
         }
@@ -40,7 +40,7 @@ ITEM_LIST = {
         description="MG",
         type="WEAPON",
         dir="rangetest\\cmt\\weapons\\spv3\\human\\turret\\limitless",
-        modifier=nil,
+        modifier=500,
         classes={
             bandolier=true
         }
@@ -49,7 +49,7 @@ ITEM_LIST = {
         description="Concussion Rifle",
         type="WEAPON",
         dir="zteam\\objects\\weapons\\single\\concussion_rifle\\hr\\discordant",
-        modifier=nil,
+        modifier=594,
         classes={
             gunslinger=true
         }
@@ -58,7 +58,7 @@ ITEM_LIST = {
         description="Carbine",
         type="WEAPON",
         dir="zteam\\objects\\weapons\\single\\covenant_carbine\\h3\\irradiator",
-        modifier=nil,
+        modifier=612,
         classes={
             gunslinger=true
         }
@@ -67,7 +67,16 @@ ITEM_LIST = {
         description="Mauler",
         type="WEAPON",
         dir="zteam\\objects\\weapons\\single\\mauler\\h3\\brassknuckle",
-        modifier=nil,
+        modifier=495,
+        classes={
+            tank=true
+        }
+    },
+    rampart={
+        description="Spiker",
+        type="WEAPON",
+        dir="zteam\\objects\\weapons\\single\\spike_rifle\\h3\\rampart",
+        modifier=920,
         classes={
             tank=true
         }
@@ -76,7 +85,7 @@ ITEM_LIST = {
         description="Plasma Pistol",
         type="WEAPON",
         dir="zteam\\objects\\weapons\\single\\plasma_pistol\\h3\\faithful",
-        modifier=nil,
+        modifier=100,
         classes={
             healer=true
         }
@@ -85,18 +94,9 @@ ITEM_LIST = {
         description="Plasma Rifle",
         type="WEAPON",
         dir="zteam\\objects\\weapons\\single\\plasma_rifle\\h3\\lightbringer",
-        modifier=nil,
+        modifier=100,
         classes={
             healer=true
-        }
-    },
-    rampart={
-        description="Spiker",
-        type="WEAPON",
-        dir="zteam\\objects\\weapons\\single\\spike_rifle\\h3\\rampart",
-        modifier=nil,
-        classes={
-            tank=true
         }
     },
     armor_piercing={

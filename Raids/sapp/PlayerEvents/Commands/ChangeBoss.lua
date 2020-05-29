@@ -4,6 +4,7 @@
 -- import Raids.classes.Player end
 -- import Raids.globals.values end
 -- import Raids.modules.Events.EventItem end
+-- import Raids.modules.Events.EventTable end
 -- import Raids.gameplay.BossEvents.Torres end
 -- END_IMPORT
 
@@ -18,7 +19,7 @@ function changeBoss(playerIndex, player, selectedBoss)
         if selectedBoss == "torres" then
             newTorresEvent = EventItem:new()
             newTorresEvent:set({}, nil, NotifyPlayersCompleted, 30 * 26)
-            EVENT_TABLE['TorresEvent'] = newTorresEvent
+            EventTable:addEvent('TorresEvent', newTorresEvent)
         end
     else
         say(playerIndex, "That boss does not exist!")

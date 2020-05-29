@@ -2,6 +2,7 @@
 -- import Raids.globals.values end
 -- import Raids.classes.Player end
 -- import Raids.modules.Events.EventItem end
+-- import Raids.modules.Events.EventTable end
 -- END_IMPORT
 
 SavantEventCompleted = function(props) 
@@ -13,7 +14,7 @@ LocationEventCompleted = function(props)
     say_all("Message Received. Savant Drop is on it's way!")
     savantEventComplete = EventItem:new()
     savantEventComplete:set({}, nil, SavantEventCompleted, 30 * 120)
-    EVENT_TABLE["savantEventComplete"] = savantEventComplete
+    EventTable:addEvent('savantEventComplete', savantEventComplete)
 end
 
 NotifyPlayersCompleted = function(props) 
@@ -30,6 +31,6 @@ NotifyPlayersCompleted = function(props)
         end
         return false
     end, LocationEventCompleted, -1)
-    EVENT_TABLE["LocationEventTorres"] = locationEventComplete
+    EventTable:addEvent("LocationEventTorres", locationEventComplete)
 end
 

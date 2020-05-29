@@ -7,6 +7,7 @@
 -- import Raids.sapp.PlayerEvents.ParseCommand end
 -- import Raids.util.FindBipedTag end
 -- import Raids.modules.Events.EventItem end
+-- import Raids.modules.Events.EventTable end
 -- import Raids.gameplay.BossMechanics.HealthBar end
 -- import Raids.classes.VirtualObjects.Item end
 -- import Raids.util.ModifyDamage end
@@ -20,7 +21,8 @@ function OnScriptLoad()
     register_callback(cb['EVENT_JOIN'], "handleJoin")
     register_callback(cb['EVENT_LEAVE'], "handleLeave")
     register_callback(cb['EVENT_DAMAGE_APPLICATION'], "handleDamage")
-    register_callback(cb['EVENT_OBJECT_SPAWN'], "handleSpawn")
+    register_callback(cb['EVENT_OBJECT_SPAWN'], "handleObjectSpawn")
+    register_callback(cb['EVENT_SPAWN'], "handleSpawn")
     register_callback(cb['EVENT_TICK'], "handleTick")
     register_callback(cb['EVENT_DIE'], "handlePlayerDie")
     register_callback(cb['EVENT_AREA_ENTER'], "handleAreaEnter")
@@ -59,16 +61,6 @@ OnGameStart = OnScriptLoad
 
 OnGameEnd = OnScriptUnload
 
-function handlePrespawn(playerIndex)
-    if player_present(playerIndex) then
-        local hash = get_var(playerIndex, "$hash")
-        local currentPlayer = ACTIVE_PLAYER_LIST[hash]
-        if currentPlayer:getClass().boss then
-            execute_command("t ".. tostring(playerIndex) .." ".. tostring(currentPlayer:getClass().name))
-        end
-    end
-end
-
 function handleAreaEnter(playerIndex, areaEntered) 
     if player_present(playerIndex) then
         local hash = get_var(playerIndex, "$hash")
@@ -102,9 +94,9 @@ end
 function handleDamage(playerIndex, damagerPlayerIndex, damageTagId, Damage, CollisionMaterial, Backtap)
     --TODO: Refactor this into a damage function, that funnels through all players and handles damage accordingly. 
     if player_present(playerIndex) and player_present(damagerPlayerIndex) then
-        local attackingPlayer = ACTIVE_PLAYER_LIST[get_var(damagerPlayerIndex, "$hash")]:getPlayerInventory()
-        local player = ACTIVE_PLAYER_LIST[get_var(playerIndex, "$hash")]:getPlayerInventory()
-        local newDamage = modifyDamage(attackingPlayer, player, Damage)
+        local attackingPlayerEquipment = ACTIVE_PLAYER_LIST[get_var(damagerPlayerIndex, "$hash")]:getEquipment()
+        local damagedPlayerEquipment = ACTIVE_PLAYER_LIST[get_var(playerIndex, "$hash")]:getEquipment()
+        local newDamage = modifyDamage(attackingPlayerEquipment, damagedPlayerEquipment, Damage)
         if playerIndex == damagerPlayerIndex then 
             say(playerIndex, "You dealt " .. newDamage .. " damage to yourself, you goober!")
         else
@@ -118,31 +110,50 @@ end
 
 function handleTick()
     PrintBossBar()
-    for key,_ in pairs(EVENT_TABLE) do
-        if EVENT_TABLE[key]:isTimedOut() == true then
-            EVENT_TABLE[key] = nil 
-        end
-    end
-
+    EventTable:cycle()
 end
 
-function handleSpawn(playerIndex, tagId, parentObjectId, newObjectId)
+function handleObjectSpawn(playerIndex, tagId, parentObjectId, newObjectId)
     if BIPED_TAG_LIST['DEFAULT'] == nil then 
         loadBipeds() 
     end
     if player_present(playerIndex) and tagId == BIPED_TAG_LIST['DEFAULT'] then 
         local hash = get_var(playerIndex, "$hash")
         local currentPlayer = ACTIVE_PLAYER_LIST[hash]
-        local maxHealth = currentPlayer:getClass().maxHealth
-        if maxHealth ~= nil and maxHealth ~= 0 then
-            local playerGuard = get_dynamic_player(playerIndex)
-            if playerGuard ~= 0 then
-                write_float(playerGuard + 0xD8, maxHealth)
+        if currentPlayer:getClass().getMaxHealth ~= nil then
+            local maxHealth = currentPlayer:getClass():getMaxHealth()
+            if maxHealth ~= 0 then
+                local playerGuard = get_dynamic_player(playerIndex)
+                if playerGuard ~= 0 then
+                    write_float(playerGuard + 0xD8, maxHealth)
+                end
             end
         end
-        return true,BIPED_TAG_LIST[currentPlayer:getClass().name]
+        return true,BIPED_TAG_LIST[currentPlayer:getClass():getClassName()]
     end
 end
+
+
+function handlePrespawn(playerIndex)
+    if player_present(playerIndex) then
+        local hash = get_var(playerIndex, "$hash")
+        local currentPlayer = ACTIVE_PLAYER_LIST[hash]
+        if currentPlayer:getClass().boss then
+            execute_command("t ".. tostring(playerIndex) .." ".. tostring(currentPlayer:getClass().name))
+        end
+    end
+end
+
+function handleSpawn(playerIndex)
+    local hash = get_var(playerIndex, "$hash")
+    local currentPlayer = ACTIVE_PLAYER_LIST[hash]
+    if currentPlayer:getClass().isBoss == nil then
+        execute_command('wdel ' .. playerIndex .. ' 5')
+        assign_weapon(spawn_object("weap", currentPlayer:getPrimaryWeapon(currentPlayer:getClass():getClassName()):getRef()), tonumber(playerIndex))
+        assign_weapon(spawn_object("weap", currentPlayer:getSecondaryWeapon(currentPlayer:getClass():getClassName()):getRef()), tonumber(playerIndex))
+    end
+end
+
 
 function handleJoin(playerIndex) 
     if player_present(playerIndex) then

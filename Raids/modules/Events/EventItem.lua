@@ -9,6 +9,10 @@ EventItem = {
     props=nil
 }
 
+function EventItem.getRemainingTime(self)
+    return self.time 
+end
+
 
 function EventItem.isTimedOut(self)
     if self.time == -1 then --conditional event

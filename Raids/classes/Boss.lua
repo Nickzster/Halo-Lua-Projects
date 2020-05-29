@@ -19,6 +19,14 @@ BossSchema = {
     maxHealth=100
 }
 
+BossSchema['getMaxHealth'] = function(self)
+    return self.maxHealth
+end
+
+BossSchema['getClassName'] = getClassName
+BossSchema['isBoss'] = function(self)
+    return self.boss
+end
 BossSchema['new'] = new
 BossSchema['changeBoss'] = function(self, newBiped)
     self.name = newBiped

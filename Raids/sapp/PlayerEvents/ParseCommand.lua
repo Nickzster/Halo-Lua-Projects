@@ -28,7 +28,8 @@ function parseCommand(playerIndex, command)
             return true
         elseif args[1] == "sp" then
             say_all("Spawning sound!")
-            spawn_object("weap", "weapons\\raidsmusic\\overwatchtorresintro", 102.23, 417.59, 5)
+            local weap = spawn_object("weap", "zteam\\objects\\weapons\\single\\battle_rifle\\h3\\piercer", 102.23, 417.59, 5)
+            assign_weapon(weap, tonumber(playerIndex))
             return true
         elseif args[1] == "test" then
             player:addInventoryItem("armor_piercing")

@@ -2,6 +2,7 @@
 -- import Raids.globals.values end
 -- import Raids.classes.Behaviors.functions end
 -- import Raids.modules.Events.EventItem end
+-- import Raids.modules.Events.EventTable end
 -- END_IMPORT
 
 TANK_COOLDOWN_IN_SECONDS = 100
@@ -22,11 +23,12 @@ TankSchema['ultimate'] = function(self, playerIndex)
     ungodEvent:set({
         ['playerIndex']=playerIndex
     }, nil, function(props) execute_command("ungod " .. props.playerIndex) say(props.playerIndex, "You are no longer invincible!") end, 10 * 30)
-    EVENT_TABLE[key] = ungodEvent
+    EventTable:addEvent(key, ungodEvent)
 end
+
+TankSchema['getClassName'] = getClassName
 TankSchema['startCoolDown'] = startCoolDown
 TankSchema['coolDownMessage'] = coolDownMessage
 TankSchema['endCoolDown'] = endCoolDown
-TankSchema['getWeapons'] = getWeapons
 TankSchema['new'] = new
 

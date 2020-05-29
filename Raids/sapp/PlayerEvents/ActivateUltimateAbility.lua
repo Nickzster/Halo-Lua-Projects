@@ -6,12 +6,14 @@
 -- import Raids.classes.Bandolier end
 -- import Raids.classes.Gunslinger end
 -- import Raids.globals.values end
+-- import Raids.modules.Events.EventTable end
 -- END_IMPORT
 
 function activateUltimateAbility(hash, playerIndex)
     if ACTIVE_PLAYER_LIST[hash]:getClass().cooldown == false then
         ACTIVE_PLAYER_LIST[hash]:getClass():ultimate(playerIndex)
     else
-        say(playerIndex, "You can use your ultimate ability in " .. math.ceil(EVENT_TABLE[ACTIVE_PLAYER_LIST[hash]:getClass().cooldownStatus].time / 30) .. " seconds!")
+        local remainingTime = EventTable:getEvent(ACTIVE_PLAYER_LIST[hash]:getClass():getClassName()..playerIndex):getRemainingTime()
+        say(playerIndex, "You can use your ultimate ability in " .. math.ceil(remainingTime / 30) .. " seconds!")
     end
 end

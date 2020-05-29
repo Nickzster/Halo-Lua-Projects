@@ -1,5 +1,7 @@
 -- BEGIN_IMPORT
 -- import Raids.modules.Events.EventItem end
+-- import Raids.modules.Events.EventTable end
+-- import Raids.globals.RaidItems end
 -- END_IMPORT
 
 --function definitions
@@ -10,10 +12,6 @@ new = function(self)
     return newClassInstance
 end
 
-getWeapons = function(self)
-    return self.weapons
-end
-
 setClass = function(self, class)
     self.class = class
     return self.class
@@ -21,6 +19,10 @@ end
 
 getClass = function(self)
     return self.class
+end
+
+getClassName = function(self)
+    return self.name
 end
 
 
@@ -33,7 +35,7 @@ startCoolDown = function(self, playerIndex)
         ['self']=self,
         ['playerIndex']=playerIndex
     }, self.coolDownMessage, self.endCoolDown, self.cooldownTime)
-    EVENT_TABLE[key]=newEventItem
+    EventTable:addEvent(key, newEventItem)
 end
 
 coolDownMessage = function(props, time)

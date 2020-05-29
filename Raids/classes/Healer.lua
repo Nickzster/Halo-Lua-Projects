@@ -15,20 +15,20 @@ HealerSchema = {
 
  HealerSchema['ultimate'] = function(self, playerIndex)
     say(playerIndex, "Healing nearby players!")
-    execute_command("hp " .. playerIndex .. " 1.0")
     for i=0,16 do 
-        if i ~= playerIndex then
-            if player_present(i) and GetPlayerDistance(playerIndex, i) <= 5 then
-                if ACTIVE_BOSSES[i] == nil then
-                    execute_command("hp " .. i .. " 1.0")
-                end
-            end
+        if player_present(i) 
+        and ACTIVE_BOSSES[i] == nil
+        and GetPlayerDistance(playerIndex, i) <= 5 
+        or i == playerIndex then
+            execute_command("hp " .. i .. " 1.0")
         end
     end
     self:startCoolDown(playerIndex)
 end
+
+
+HealerSchema['getClassName'] = getClassName
 HealerSchema['startCoolDown'] = startCoolDown
 HealerSchema['coolDownMessage'] = coolDownMessage
 HealerSchema['endCoolDown'] = endCoolDown
-HealerSchema['getWeapons'] = getWeapons
 HealerSchema['new'] = new

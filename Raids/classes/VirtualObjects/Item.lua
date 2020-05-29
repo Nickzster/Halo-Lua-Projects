@@ -8,8 +8,8 @@ ItemSchema = {
     name=nil,
     description=nil,
     type=nil,
-    dir=nil
-    modifier=nil,
+    dir=nil,
+    modifier=nil
 }
 
 ItemSchema['new'] = new
@@ -36,6 +36,11 @@ function ItemSchema.createItem(self, name, description, type, dir, modifier)
     -- end
     self.dir = dir
     self.modifier = modifier
+    return self
+end
+
+function ItemSchema.getName(self)
+    return self.name
 end
 
 function ItemSchema.getRef(self)
@@ -48,5 +53,9 @@ end
 
 function ItemSchema.getModifier(self)
     if self.modifier ~= nil then return self.modifier else return nil end
+end
+
+function ItemSchema.getType(self)
+    if self.type ~= nil then return self.modifier else return nil end
 end
 

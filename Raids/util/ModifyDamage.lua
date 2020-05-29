@@ -2,16 +2,21 @@
 -- import Raids.classes.VirtualObjects.Item end
 -- END_IMPORT
 
-function modifyDamage(attackingPlayer, playerTakingDamage, damage)
+function modifyDamage(attackingEquipment, damagedEquipment, damage)
     local newDamage = damage
-    for inventoryItem,_ in pairs(attackingPlayer) do
-        print(inventoryItem)
-        print(attackingPlayer[inventoryItem].modifier)
-        newDamage = newDamage * attackingPlayer[inventoryItem].modifier
-        print(newDamage)
+    if attackingEquipment ~= nil and attackingEquipment:getType() == "OUTPUT_DAMAGE" then
+        newDamage = newDamage + (newDamage * attackingEquipment:getModifier())
     end
-    -- for inventoryItem,_ in pairs(playerTakingDamage) do
-    --     newDamage = newDamage * playerTakingDamage[inventoryItem].modifier
-    -- end
+    if damagedEquipment ~= nil then
+        if damagedEquipment:getType() == "INPUT_DAMAGE" then
+            newDamage = newDamage - (newDamage * damagedEquipment:getModifier())
+        elseif damagedEquipment:getType() == "INVINCIBILITY" then
+            --TODO: Refactor this properly in future
+            newDamage = newDamage - (newDamage * damagedEquipment:getModifier())
+        elseif damagedEquipment:getType() == "IGNORE" then
+            local random = math.random(1, damagedEquipment:getModifier())
+            if random == 1 then newDamage = 0 end
+        end
+    end
     return newDamage
 end

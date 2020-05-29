@@ -2,6 +2,7 @@
 -- import Raids.classes.Behaviors.functions end
 -- import Raids.globals.values end
 -- import Raids.modules.Events.EventItem end
+-- import Raids.modules.Events.EventTable end
 -- END_IMPORT
 
 DPS_COOLDOWN_IN_SECONDS = 70
@@ -22,12 +23,11 @@ DpsSchema['ultimate'] = function(self, playerIndex)
     newEvent:set({
         ['playerIndex']=playerIndex
     }, nil, function(props) say(props.playerIndex, "Your weapons are now back to normal.") execute_command("mag " .. props.playerIndex .. " 0 5") end, 10 * 30)
-    EVENT_TABLE[key] = newEvent
+    EventTable:addEvent(key, newEvent)
 end
 
-
+DpsSchema['getClassName'] = getClassName
 DpsSchema['startCoolDown'] = startCoolDown
 DpsSchema['coolDownMessage'] = coolDownMessage
 DpsSchema['endCoolDown'] = endCoolDown
-DpsSchema['getWeapons'] = getWeapons
 DpsSchema['new'] = new

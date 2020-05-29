@@ -20,8 +20,8 @@ GunslingerSchema['ultimate'] = function(self, playerIndex)
     self:startCoolDown(playerIndex)
 end
 
+GunslingerSchema['getClassName'] = getClassName
 GunslingerSchema['startCoolDown'] = startCoolDown
 GunslingerSchema['cooldownMessage'] = cooldownMessage
 GunslingerSchema['endCoolDown'] = endCoolDown
-GunslingerSchema['getWeapons'] = getWeapons
 GunslingerSchema['new'] = new
