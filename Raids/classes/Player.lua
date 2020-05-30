@@ -12,8 +12,8 @@ PlayerSchema = {
             secondary="reliable"
         },
         bandolier={
-                primary="limitless",
-                secondary="accelerator"
+            primary="limitless",
+            secondary="accelerator"
         },
         gunslinger={
             primary="irradiator",
@@ -28,6 +28,7 @@ PlayerSchema = {
             secondary="rampart"
         },
     },
+    armors={},
     inventory={
         piercer="piercer",
         reliable="reliable",
@@ -137,8 +138,14 @@ function PlayerSchema.setLoadoutTable(self, newLoadoutTable)
     self.loadouts = newLoadoutTable
 end
 
+function PlayerSchema.setClass(self, class)
+    self.class = class
+    return self.class
+end
+
+function PlayerSchema.getClass(self)
+    return self.class
+end
 
 
 PlayerSchema['new'] = new
-PlayerSchema['getClass'] = getClass
-PlayerSchema['setClass'] = setClass
