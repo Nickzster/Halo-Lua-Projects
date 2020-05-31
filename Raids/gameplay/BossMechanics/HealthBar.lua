@@ -42,10 +42,10 @@ function PrintBossBar()
     for key,_ in pairs(ACTIVE_BOSSES) do
         local currentBoss = ACTIVE_BOSSES[key]
         local currentBossInMemory = get_dynamic_player(key) 
-        local currentBossMaxHealth = currentBoss:getClass().maxHealth 
+        local currentBossMaxHealth = currentBoss:getArmor():getMaxHealth()
         local currentBossHealth = 0
         if currentBossInMemory ~= 0 then
-            currentBossHealth = read_float(currentBossInMemory + 0xE0)*currentBoss:getClass().maxHealth
+            currentBossHealth = read_float(currentBossInMemory + 0xE0)*currentBoss:getArmor():getMaxHealth()
         end
         local chosenColor = pickColor(currentBossHealth, currentBossMaxHealth)
         if player_alive(key) then
@@ -53,7 +53,7 @@ function PrintBossBar()
                 if get_var(0, "$ticks")%5 == 1 then
                     if player_present(i) then
                         ClearConsole(i)
-                        rprint(i, "|c"..string.upper(currentBoss:getClass().name, "$name").."'S HEALTH " .. math.floor(currentBossHealth) .. "/" .. currentBossMaxHealth ..chosenColor)
+                        rprint(i, "|c"..string.upper(currentBoss:getArmor():getName(), "$name").."'S HEALTH " .. math.floor(currentBossHealth) .. "/" .. currentBossMaxHealth ..chosenColor)
                         rprint(i, "|c<"..PrintHealthBar(currentBossHealth, currentBossMaxHealth)..">"..chosenColor)
                     end
                 end

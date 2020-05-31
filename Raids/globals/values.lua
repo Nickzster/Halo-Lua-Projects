@@ -1,8 +1,4 @@
 -- NO_IMPORTS
-
-
-
-
 LOCATIONS= {
     ["torres_event_1"] = "an important computer!"
 }

@@ -1,5 +1,6 @@
 -- BEGIN_IMPORT
 -- import Raids.globals.values end
+-- import Raids.classes.Class end
 -- import Raids.classes.Behaviors.functions end
 -- import Raids.modules.Events.EventItem end
 -- import Raids.modules.Events.EventTable end
@@ -7,14 +8,9 @@
 
 TANK_COOLDOWN_IN_SECONDS = 100
 
-TankSchema = {
-    name="tank",
-    cooldown=false,
-    cooldownTime = TANK_COOLDOWN_IN_SECONDS * 30,
-    maxHealth=500,
-}
+TankSchema=ClassSchema:new():instantiate("tank", TANK_COOLDOWN_IN_SECONDS * 30)
 
-TankSchema['ultimate'] = function(self, playerIndex)
+function TankSchema.ultimate(self, playerIndex)
     say(playerIndex, "You are now temporarly invincible!")
     execute_command("god " .. playerIndex)
     local key = "PLAYER_" .. playerIndex .. "_IS_EXECUTING_TANK_ULTIMATE"
@@ -26,9 +22,4 @@ TankSchema['ultimate'] = function(self, playerIndex)
     EventTable:addEvent(key, ungodEvent)
 end
 
-TankSchema['getClassName'] = getClassName
-TankSchema['startCoolDown'] = startCoolDown
-TankSchema['coolDownMessage'] = coolDownMessage
-TankSchema['endCoolDown'] = endCoolDown
-TankSchema['new'] = new
 

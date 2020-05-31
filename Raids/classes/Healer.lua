@@ -1,19 +1,15 @@
 -- BEGIN_IMPORT
 -- import Raids.globals.values end
+-- import Raids.classes.Class end
 -- import Raids.classes.Behaviors.functions end
 -- import Raids.util.GetPlayerDistance end
 -- END_IMPORT
 
 HEALER_COOLDOWN_IN_SECONDS = 75
 
-HealerSchema = {
-    name="healer",
-    cooldown=false,
-    cooldownTime = HEALER_COOLDOWN_IN_SECONDS * 30,
-    maxHealth=100,
- }
+HealerSchema=ClassSchema:new():instantiate("healer", HEALER_COOLDOWN_IN_SECONDS * 30)
 
- HealerSchema['ultimate'] = function(self, playerIndex)
+function HealerSchema.ultimate(self, playerIndex)
     say(playerIndex, "Healing nearby players!")
     for i=0,16 do 
         if player_present(i) 
@@ -27,8 +23,3 @@ HealerSchema = {
 end
 
 
-HealerSchema['getClassName'] = getClassName
-HealerSchema['startCoolDown'] = startCoolDown
-HealerSchema['coolDownMessage'] = coolDownMessage
-HealerSchema['endCoolDown'] = endCoolDown
-HealerSchema['new'] = new

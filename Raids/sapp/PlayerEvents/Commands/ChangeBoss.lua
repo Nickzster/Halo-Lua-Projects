@@ -12,7 +12,7 @@ function changeBoss(playerIndex, player, selectedBoss)
     if BIPED_TAG_LIST[selectedBoss] ~= nil then
         kill(playerIndex)
         local playerClass = player:getClass()
-        playerClass:changeBoss(selectedBoss)
+        player:setBoss(selectedBoss)
         ACTIVE_BOSSES[playerIndex] = player
         --TODO: Refactor this so that it can handle all bosses. 
         --probably best to place this in one function.

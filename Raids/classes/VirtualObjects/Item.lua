@@ -7,19 +7,38 @@
 ItemSchema = {
     name=nil,
     description=nil,
-    type=nil,
-    dir=nil,
-    modifier=nil
+    ref=nil,
+    classes={}
 }
 
 ItemSchema['new'] = new
 
-function ItemSchema:destroyItem() end
-
-function ItemSchema.createItem(self, name, description, type, dir, modifier) 
+function ItemSchema.createItem(self, name, description, ref, classes) 
     self.name = name
     self.description = description
-    self.type = type
+    self.ref = ref
+    self.classes = classes
+    return self
+end
+
+function ItemSchema.getName(self)
+    return self.name
+end
+
+function ItemSchema.getRef(self)
+    return self.ref
+end
+
+function ItemSchema.getDescription(self)
+    return self.description
+end
+
+function ItemSchema.isCompatible(self, className)
+    if classes == nil or classes ~= nil and self.classes[className] == nil then return false end
+    return true
+end 
+
+
     --TODO: Reimplement this in a different function or scope.
     -- if self.type == "HEAL" then
     --     local key = 'HEALING_MODIFIER_FOR_PLAYER_' ..playerIndex
@@ -34,28 +53,3 @@ function ItemSchema.createItem(self, name, description, type, dir, modifier)
     --     EVENT_TABLE[key] = newHealthRegenModifier
     --     self.key = key
     -- end
-    self.dir = dir
-    self.modifier = modifier
-    return self
-end
-
-function ItemSchema.getName(self)
-    return self.name
-end
-
-function ItemSchema.getRef(self)
-    if self.dir ~= nil then return self.dir else return nil end
-end
-
-function ItemSchema.getDescription(self)
-    return self.description
-end
-
-function ItemSchema.getModifier(self)
-    if self.modifier ~= nil then return self.modifier else return nil end
-end
-
-function ItemSchema.getType(self)
-    if self.type ~= nil then return self.modifier else return nil end
-end
-

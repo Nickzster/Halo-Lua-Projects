@@ -1,12 +1,14 @@
 -- BEGIN_IMPORT
--- import Raids.globals.values end
+-- import Raids.globals.RaidItems end
 -- import Raids.util.FindBipedTag end
 -- END_IMPORT
 
 function loadBipeds()
     --Load in Biped Table
-    for key,_ in pairs(BIPED_DIR_LIST) do
-        BIPED_TAG_LIST[key] = FindBipedTag(BIPED_DIR_LIST[key])
+    for key,_ in pairs(ITEM_LIST) do
+        if ITEM_LIST[key].type == "ARMOR" or ITEM_LIST[key].type == "BOSS" then
+            BIPED_TAG_LIST[key] = FindBipedTag(ITEM_LIST[key].ref)
+        end
     end
     --Load in default biped
     local tag_array = read_dword(0x40440000)

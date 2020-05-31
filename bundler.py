@@ -163,7 +163,7 @@ def parseTopOfFile(file):
             else:
                 importStatement = nextLine.split(" ")
                 if importStatement[1] != 'import':
-                    raise Exception("Invalid Import Statement!")
+                    raise Exception("Invalid Import Statement in file " + file + " !")
                 else:
                     directories = importStatement[2].split(".")
                     fileDir = os.getcwd()
