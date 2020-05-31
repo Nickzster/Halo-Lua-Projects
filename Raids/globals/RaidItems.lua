@@ -13,7 +13,7 @@ ITEM_LIST = {
         description="Battle Rifle",
         type="WEAPON",
         ref="zteam\\objects\\weapons\\single\\battle_rifle\\h3\\piercer",
-        maxAmmo=612,
+        maxAmmo=684,
         classes={
             dps=true
         }
@@ -22,7 +22,7 @@ ITEM_LIST = {
         description="Assault Rifle",
         type="WEAPON",
         ref="zteam\\objects\\weapons\\single\\assault_rifle\\h3\\reliable",
-        maxAmmo=612,
+        maxAmmo=676,
         classes={
             dps=true
         }
@@ -31,7 +31,7 @@ ITEM_LIST = {
         description="MA5K",
         type="WEAPON",
         ref="altis\\weapons\\br\\accelerator",
-        maxAmmo=612,
+        maxAmmo=676,
         classes={
             bandolier=true
         }
@@ -40,7 +40,7 @@ ITEM_LIST = {
         description="MG",
         type="WEAPON",
         ref="rangetest\\cmt\\weapons\\spv3\\human\\turret\\limitless",
-        maxAmmo=500,
+        maxAmmo=600,
         classes={
             bandolier=true
         }
@@ -49,7 +49,7 @@ ITEM_LIST = {
         description="Concussion Rifle",
         type="WEAPON",
         ref="zteam\\objects\\weapons\\single\\concussion_rifle\\hr\\discordant",
-        maxAmmo=594,
+        maxAmmo=606,
         classes={
             gunslinger=true
         }
@@ -58,7 +58,7 @@ ITEM_LIST = {
         description="Carbine",
         type="WEAPON",
         ref="zteam\\objects\\weapons\\single\\covenant_carbine\\h3\\irradiator",
-        maxAmmo=612,
+        maxAmmo=636,
         classes={
             gunslinger=true
         }
@@ -67,7 +67,7 @@ ITEM_LIST = {
         description="Mauler",
         type="WEAPON",
         ref="zteam\\objects\\weapons\\single\\mauler\\h3\\brassknuckle",
-        maxAmmo=495,
+        maxAmmo=505,
         classes={
             tank=true
         }
@@ -76,7 +76,7 @@ ITEM_LIST = {
         description="Spiker",
         type="WEAPON",
         ref="zteam\\objects\\weapons\\single\\spike_rifle\\h3\\rampart",
-        maxAmmo=920,
+        maxAmmo=1000,
         classes={
             tank=true
         }
@@ -101,14 +101,7 @@ ITEM_LIST = {
             healer=true
         }
     },
-    armor_piercing={
-        description="Increases your damage output",
-        type="OUTPUT_DAMAGE",
-        ref=nil,
-        damageModifier=0.4,
-        classes=nil
-    },
-    dps_std_armor={
+    dpsstd={
         description="Standard ODST Armor",
         type="ARMOR",
         ref="characters\\cyborg_mp\\dps",
@@ -118,7 +111,7 @@ ITEM_LIST = {
             dps=true
         }
     },
-    healer_std_armor={
+    healerstd={
         description="Standard ODST armor for medics.",
         type="ARMOR",
         ref="characters\\cyborg_mp\\healer",
@@ -128,7 +121,7 @@ ITEM_LIST = {
             healer=true
         }
     },
-    tank_std_armor={
+    tankstd={
         description="Standard MK 6 armor for tanks",
         type="ARMOR",
         ref="zteam\\objects\\characters\\spartan\\h3\\tank",
@@ -138,7 +131,7 @@ ITEM_LIST = {
             tank=true
         }
     },
-    bandolier_std_armor={
+    bandolierstd={
         description="Standard Marine armor for Bandoliers",
         type="ARMOR",
         ref="bourrin\\halo reach\\marine-to-spartan\\bandolier",
@@ -148,7 +141,7 @@ ITEM_LIST = {
             bandolier=true
         }
     },
-    gunslinger_std_armor={
+    gunslingerstd={
         description="Standard Elite armor for Gunslingers",
         type="ARMOR",
         ref="np\\objects\\characters\\elite\\h3\\bipeds\\gunslinger",
@@ -218,12 +211,12 @@ ITEM_LIST = {
             boss=true
         }
     },
-    ArmorPiercing = {
+    ap = {
         description="Increases your attack damage",
         type="DAMAGE_BOOST",
         modifier=0.5
     },
-    ReflectiveShields = {
+    reflectiveshields = {
         description="Decreases incoming damage",
         type="DAMAGE_REDUCE",
         modifier=0.5

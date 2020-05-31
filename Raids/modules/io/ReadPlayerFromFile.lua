@@ -4,7 +4,7 @@
 
 function ReadPlayerFromFile(hash, playerIndex)
     local fileName = "raids_data_files/"..hash
-    local newPlayer = PlayerSchema:new()
+    local newPlayer = PlayerSchema:new():loadPlayer()
     newPlayer:setPlayerIndex(playerIndex)
     local file = io.open(fileName, "r")
     if file ~= nil then

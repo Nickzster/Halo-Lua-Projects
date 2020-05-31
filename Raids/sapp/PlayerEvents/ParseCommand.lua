@@ -12,12 +12,16 @@ function parseCommand(playerIndex, command)
     args = {} 
     local hash = get_var(playerIndex, "$hash")
     local player = ACTIVE_PLAYER_LIST[hash]
-    for w in command:gmatch("%w+") do args[#args+1] = w end
+    for w in command:lower():gmatch("%w+") do args[#args+1] = w end
         if args[1] == "class" then 
-            if args[2] == "boss" and tonumber(get_var(playerIndex, "$lvl")) ~= 4 then
-                say(playerIndex, "You must be an admin to become a boss!")
+            if #ACTIVE_BOSSES == 0 then
+                if args[2] == "boss" and tonumber(get_var(playerIndex, "$lvl")) ~= 4 then
+                    say(playerIndex, "You must be an admin to become a boss!")
+                else
+                    changePlayerClass(playerIndex, args[2])
+                end
             else
-                changePlayerClass(playerIndex, args[2])
+                say(playerIndex, "You cannot change your class during a boss event!")
             end
             return true
         elseif args[1] == "ult" or args[1] == "ultimate" then
@@ -28,7 +32,11 @@ function parseCommand(playerIndex, command)
             end
             return true
         elseif args[1] == "equip" then
-            player:setEquipment(args[2]) 
+            if args[2] ~= nil then
+                player:setEquipment(args[2]) 
+            else
+                say(playerIndex, "You need to specify the equipment you want to equip!")
+            end
             return true
         elseif args[1] == "sp" then
             say_all("Spawning sound!")
@@ -36,7 +44,7 @@ function parseCommand(playerIndex, command)
             assign_weapon(weap, tonumber(playerIndex))
             return true
         elseif args[1] == "test" then
-            player:addItemToInventory("ArmorPiercing")
+            player:addItemToInventory("ap")
             return true
         elseif args[1] == "boss" then
             if tonumber(get_var(playerIndex, "$lvl")) == 4 and player:getClass():getClassName() == "boss" then

@@ -14,55 +14,10 @@
 
 PlayerSchema = {
     playerIndex=nil,
-    loadouts={
-        dps = { 
-            primary="piercer",
-            secondary="reliable",
-            armor="dps_std_armor"
-        },
-        bandolier={
-            primary="limitless",
-            secondary="accelerator",
-            armor="bandolier_std_armor"
-        },
-        gunslinger={
-            primary="irradiator",
-            secondary="discordant",
-            armor="gunslinger_std_armor"
-        },
-        healer={
-            primary="lightbringer",
-            secondary="faithful",
-            armor="healer_std_armor"
-        },
-        tank={
-            primary="brassknuckle",
-            secondary="rampart",
-            armor="tank_std_armor"
-        },
-        boss={
-            armor="DEFAULT"
-        }
-    },
-    inventory={
-        piercer="piercer",
-        reliable="reliable",
-        limitless="limitless",
-        accelerator="accelerator",
-        irradiator="irradiator",
-        discordant="discordant",
-        lightbringer="lightbringer",
-        faithful="faithful",
-        brassknuckle="brassknuckle",
-        rampart="rampart",
-        dps_std_armor = "dps_std_armor",
-        healer_std_armor="healer_std_armor",
-        tank_std_armor="tank_std_armor",
-        bandolier_std_armor="bandolier_std_armor",
-        gunslinger_std_armor="gunslinger_std_armor"
-    },
+    loadouts=nil,
+    inventory=nil,
     equipment=nil,
-    locations={},
+    locations=nil,
     preferredClass=nil,
     class=nil
 }
@@ -78,10 +33,68 @@ function PlayerSchema.setUpNewPlayer(self)
         local p = self.loadouts[key].primary
         local s = self.loadouts[key].secondary
         local a = self.loadouts[key].armor
-        self.loadouts[key].primary = CreateWeapon(p)
-        self.loadouts[key].secondary = CreateWeapon(s)
-        self.loadouts[key].armor = CreateArmor(a)
+        self:setLoadout(key, p, s)
+        self:setArmor(key, a)
     end
+end
+
+function PlayerSchema.loadPlayer(self)
+    self.locations = {}
+    local startingLoadouts = {
+        dps = { 
+            primary="piercer",
+            secondary="reliable",
+            armor="dpsstd"
+        },
+        bandolier={
+            primary="limitless",
+            secondary="accelerator",
+            armor="bandolierstd"
+        },
+        gunslinger={
+            primary="irradiator",
+            secondary="discordant",
+            armor="gunslingerstd"
+        },
+        healer={
+            primary="lightbringer",
+            secondary="faithful",
+            armor="healerstd"
+        },
+        tank={
+            primary="brassknuckle",
+            secondary="rampart",
+            armor="tankstd"
+        },
+        boss={
+            armor="DEFAULT"
+        }
+    }
+    local startingInventory = {
+        piercer="piercer",
+        reliable="reliable",
+        limitless="limitless",
+        accelerator="accelerator",
+        irradiator="irradiator",
+        discordant="discordant",
+        lightbringer="lightbringer",
+        faithful="faithful",
+        brassknuckle="brassknuckle",
+        rampart="rampart",
+        dps_std_armor = "dpsstd",
+        healer_std_armor="healerstd",
+        tank_std_armor="tankstd",
+        bandolier_std_armor="bandolierstd",
+        gunslinger_std_armor="gunslingerstd"
+    }
+    self.inventory = startingInventory
+    self.loadouts = startingLoadouts
+    return self
+end
+
+function PlayerSchema.savePlayer(self)
+    local hash = get_var(self.playerIndex, "$hash")
+    if hash ~= nil then WritePlayerToFile(hash) end
 end
 
 function PlayerSchema.getClass(self)
@@ -201,14 +214,18 @@ function PlayerSchema.setLoadout(self, classKey, newPrimaryKey, newSecondaryKey)
         return true
     else
         if ITEM_LIST[newPrimary] == nil or ITEM_LIST[newSecondary] == nil then
-            say(self:getPlayerIndex(), "You have specified an item that does NOT exist!")
+            self.loadouts[currentClass].primary = nil
+            self.loadouts[currentClass].secondary = nil
+            if currentClass ~= "boss" then
+                say(self:getPlayerIndex(), "You have specified a loadout item that does NOT exist!")
+            end
             return false
         end
     end
 end
 
 function PlayerSchema.setBoss(self, newBossKey)
-    if ITEM_LIST[newBossKey] ~= nil and ITEM_LIST[newBossKey].type == "BOSS" then
+    if ITEM_LIST[newBossKey] ~= nil and ITEM_LIST[newBossKey].type == "BOSS" or ITEM_LIST[newBossKey] == "ARMOR" then
         self.loadouts['boss'].armor = CreateArmor(newBossKey)
     else
         say(self:getPlayerIndex(), "This boss either does not exist, or it is not loaded into the map!")
@@ -229,7 +246,7 @@ function PlayerSchema.setArmor(self, classKey, newArmorKey)
         self.loadouts[currentClass].armor = CreateArmor(newArmorKey)
         return true
     else
-        say(self:getPlayerIndex(), "You have specified an item that does NOT exist!")
+        say(self:getPlayerIndex(), "You have specified an armor item that does NOT exist!")
         return false
     end
 end

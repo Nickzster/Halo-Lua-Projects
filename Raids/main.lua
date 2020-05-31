@@ -52,11 +52,11 @@ function OnScriptUnload()
     -- unregister_callback(cb['EVENT_PRESPAWN'])
     -- unregister_callback(cb['EVENT_GAME_END'])
     -- unregister_callback(cb['EVENT_GAME_START'])
-    for i=0,16 do
-        if player_present(i) then
-            WritePlayerToFile(get_var(i, "$hash"))
-        end
-    end
+    -- for i=0,16 do
+    --     if player_present(i) then
+    --         WritePlayerToFile(get_var(i, "$hash"))
+    --     end
+    -- end
     BIPED_TAG_LIST = {}
     ACTIVE_PLAYER_LIST = {}
     ACTIVE_BOSSES = {}
@@ -90,7 +90,7 @@ function handlePlayerDie(playerIndex, causer)
     if(player_present(playerIndex)) then
         local hash = get_var(playerIndex, "$hash")
         local playerClass = ACTIVE_PLAYER_LIST[hash]
-        if playerClass:getClass():getClassName() == "boss" then
+        if playerClass:getClass():getClassName() == "boss" or ACTIVE_BOSSES[playerIndex] ~= nil then
             ACTIVE_BOSSES[playerIndex] = nil
             playerClass:setArmor(nil, "DEFAULT")
         end

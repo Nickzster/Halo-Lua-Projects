@@ -18,7 +18,6 @@ ACTIVE_BOSSES = {}
 
 --function definitions
 new = function(self, o)
-    print(o)
     local newClassInstance = o or {}
     setmetatable(newClassInstance, self)
     self.__index = self
@@ -158,7 +157,7 @@ ITEM_LIST = {
         description="Battle Rifle",
         type="WEAPON",
         ref="zteam\\objects\\weapons\\single\\battle_rifle\\h3\\piercer",
-        maxAmmo=612,
+        maxAmmo=684,
         classes={
             dps=true
         }
@@ -167,7 +166,7 @@ ITEM_LIST = {
         description="Assault Rifle",
         type="WEAPON",
         ref="zteam\\objects\\weapons\\single\\assault_rifle\\h3\\reliable",
-        maxAmmo=612,
+        maxAmmo=676,
         classes={
             dps=true
         }
@@ -176,7 +175,7 @@ ITEM_LIST = {
         description="MA5K",
         type="WEAPON",
         ref="altis\\weapons\\br\\accelerator",
-        maxAmmo=612,
+        maxAmmo=676,
         classes={
             bandolier=true
         }
@@ -185,7 +184,7 @@ ITEM_LIST = {
         description="MG",
         type="WEAPON",
         ref="rangetest\\cmt\\weapons\\spv3\\human\\turret\\limitless",
-        maxAmmo=500,
+        maxAmmo=600,
         classes={
             bandolier=true
         }
@@ -194,7 +193,7 @@ ITEM_LIST = {
         description="Concussion Rifle",
         type="WEAPON",
         ref="zteam\\objects\\weapons\\single\\concussion_rifle\\hr\\discordant",
-        maxAmmo=594,
+        maxAmmo=606,
         classes={
             gunslinger=true
         }
@@ -203,7 +202,7 @@ ITEM_LIST = {
         description="Carbine",
         type="WEAPON",
         ref="zteam\\objects\\weapons\\single\\covenant_carbine\\h3\\irradiator",
-        maxAmmo=612,
+        maxAmmo=636,
         classes={
             gunslinger=true
         }
@@ -212,7 +211,7 @@ ITEM_LIST = {
         description="Mauler",
         type="WEAPON",
         ref="zteam\\objects\\weapons\\single\\mauler\\h3\\brassknuckle",
-        maxAmmo=495,
+        maxAmmo=505,
         classes={
             tank=true
         }
@@ -221,7 +220,7 @@ ITEM_LIST = {
         description="Spiker",
         type="WEAPON",
         ref="zteam\\objects\\weapons\\single\\spike_rifle\\h3\\rampart",
-        maxAmmo=920,
+        maxAmmo=1000,
         classes={
             tank=true
         }
@@ -246,14 +245,7 @@ ITEM_LIST = {
             healer=true
         }
     },
-    armor_piercing={
-        description="Increases your damage output",
-        type="OUTPUT_DAMAGE",
-        ref=nil,
-        damageModifier=0.4,
-        classes=nil
-    },
-    dps_std_armor={
+    dpsstd={
         description="Standard ODST Armor",
         type="ARMOR",
         ref="characters\\cyborg_mp\\dps",
@@ -263,7 +255,7 @@ ITEM_LIST = {
             dps=true
         }
     },
-    healer_std_armor={
+    healerstd={
         description="Standard ODST armor for medics.",
         type="ARMOR",
         ref="characters\\cyborg_mp\\healer",
@@ -273,7 +265,7 @@ ITEM_LIST = {
             healer=true
         }
     },
-    tank_std_armor={
+    tankstd={
         description="Standard MK 6 armor for tanks",
         type="ARMOR",
         ref="zteam\\objects\\characters\\spartan\\h3\\tank",
@@ -283,7 +275,7 @@ ITEM_LIST = {
             tank=true
         }
     },
-    bandolier_std_armor={
+    bandolierstd={
         description="Standard Marine armor for Bandoliers",
         type="ARMOR",
         ref="bourrin\\halo reach\\marine-to-spartan\\bandolier",
@@ -293,7 +285,7 @@ ITEM_LIST = {
             bandolier=true
         }
     },
-    gunslinger_std_armor={
+    gunslingerstd={
         description="Standard Elite armor for Gunslingers",
         type="ARMOR",
         ref="np\\objects\\characters\\elite\\h3\\bipeds\\gunslinger",
@@ -363,12 +355,12 @@ ITEM_LIST = {
             boss=true
         }
     },
-    ArmorPiercing = {
+    ap = {
         description="Increases your attack damage",
         type="DAMAGE_BOOST",
         modifier=0.5
     },
-    ReflectiveShields = {
+    reflectiveshields = {
         description="Decreases incoming damage",
         type="DAMAGE_REDUCE",
         modifier=0.5
@@ -574,55 +566,10 @@ DamageBoosterSchema['equip'] = equip
 DamageBoosterSchema['getModifier'] = getModifier
 PlayerSchema = {
     playerIndex=nil,
-    loadouts={
-        dps = { 
-            primary="piercer",
-            secondary="reliable",
-            armor="dps_std_armor"
-        },
-        bandolier={
-            primary="limitless",
-            secondary="accelerator",
-            armor="bandolier_std_armor"
-        },
-        gunslinger={
-            primary="irradiator",
-            secondary="discordant",
-            armor="gunslinger_std_armor"
-        },
-        healer={
-            primary="lightbringer",
-            secondary="faithful",
-            armor="healer_std_armor"
-        },
-        tank={
-            primary="brassknuckle",
-            secondary="rampart",
-            armor="tank_std_armor"
-        },
-        boss={
-            armor="DEFAULT"
-        }
-    },
-    inventory={
-        piercer="piercer",
-        reliable="reliable",
-        limitless="limitless",
-        accelerator="accelerator",
-        irradiator="irradiator",
-        discordant="discordant",
-        lightbringer="lightbringer",
-        faithful="faithful",
-        brassknuckle="brassknuckle",
-        rampart="rampart",
-        dps_std_armor = "dps_std_armor",
-        healer_std_armor="healer_std_armor",
-        tank_std_armor="tank_std_armor",
-        bandolier_std_armor="bandolier_std_armor",
-        gunslinger_std_armor="gunslinger_std_armor"
-    },
+    loadouts=nil,
+    inventory=nil,
     equipment=nil,
-    locations={},
+    locations=nil,
     preferredClass=nil,
     class=nil
 }
@@ -638,10 +585,68 @@ function PlayerSchema.setUpNewPlayer(self)
         local p = self.loadouts[key].primary
         local s = self.loadouts[key].secondary
         local a = self.loadouts[key].armor
-        self.loadouts[key].primary = CreateWeapon(p)
-        self.loadouts[key].secondary = CreateWeapon(s)
-        self.loadouts[key].armor = CreateArmor(a)
+        self:setLoadout(key, p, s)
+        self:setArmor(key, a)
     end
+end
+
+function PlayerSchema.loadPlayer(self)
+    self.locations = {}
+    local startingLoadouts = {
+        dps = { 
+            primary="piercer",
+            secondary="reliable",
+            armor="dpsstd"
+        },
+        bandolier={
+            primary="limitless",
+            secondary="accelerator",
+            armor="bandolierstd"
+        },
+        gunslinger={
+            primary="irradiator",
+            secondary="discordant",
+            armor="gunslingerstd"
+        },
+        healer={
+            primary="lightbringer",
+            secondary="faithful",
+            armor="healerstd"
+        },
+        tank={
+            primary="brassknuckle",
+            secondary="rampart",
+            armor="tankstd"
+        },
+        boss={
+            armor="DEFAULT"
+        }
+    }
+    local startingInventory = {
+        piercer="piercer",
+        reliable="reliable",
+        limitless="limitless",
+        accelerator="accelerator",
+        irradiator="irradiator",
+        discordant="discordant",
+        lightbringer="lightbringer",
+        faithful="faithful",
+        brassknuckle="brassknuckle",
+        rampart="rampart",
+        dps_std_armor = "dpsstd",
+        healer_std_armor="healerstd",
+        tank_std_armor="tankstd",
+        bandolier_std_armor="bandolierstd",
+        gunslinger_std_armor="gunslingerstd"
+    }
+    self.inventory = startingInventory
+    self.loadouts = startingLoadouts
+    return self
+end
+
+function PlayerSchema.savePlayer(self)
+    local hash = get_var(self.playerIndex, "$hash")
+    if hash ~= nil then WritePlayerToFile(hash) end
 end
 
 function PlayerSchema.getClass(self)
@@ -761,14 +766,18 @@ function PlayerSchema.setLoadout(self, classKey, newPrimaryKey, newSecondaryKey)
         return true
     else
         if ITEM_LIST[newPrimary] == nil or ITEM_LIST[newSecondary] == nil then
-            say(self:getPlayerIndex(), "You have specified an item that does NOT exist!")
+            self.loadouts[currentClass].primary = nil
+            self.loadouts[currentClass].secondary = nil
+            if currentClass ~= "boss" then
+                say(self:getPlayerIndex(), "You have specified a loadout item that does NOT exist!")
+            end
             return false
         end
     end
 end
 
 function PlayerSchema.setBoss(self, newBossKey)
-    if ITEM_LIST[newBossKey] ~= nil and ITEM_LIST[newBossKey].type == "BOSS" then
+    if ITEM_LIST[newBossKey] ~= nil and ITEM_LIST[newBossKey].type == "BOSS" or ITEM_LIST[newBossKey] == "ARMOR" then
         self.loadouts['boss'].armor = CreateArmor(newBossKey)
     else
         say(self:getPlayerIndex(), "This boss either does not exist, or it is not loaded into the map!")
@@ -789,7 +798,7 @@ function PlayerSchema.setArmor(self, classKey, newArmorKey)
         self.loadouts[currentClass].armor = CreateArmor(newArmorKey)
         return true
     else
-        say(self:getPlayerIndex(), "You have specified an item that does NOT exist!")
+        say(self:getPlayerIndex(), "You have specified an armor item that does NOT exist!")
         return false
     end
 end
@@ -1171,12 +1180,16 @@ function parseCommand(playerIndex, command)
     args = {} 
     local hash = get_var(playerIndex, "$hash")
     local player = ACTIVE_PLAYER_LIST[hash]
-    for w in command:gmatch("%w+") do args[#args+1] = w end
+    for w in command:lower():gmatch("%w+") do args[#args+1] = w end
         if args[1] == "class" then 
-            if args[2] == "boss" and tonumber(get_var(playerIndex, "$lvl")) ~= 4 then
-                say(playerIndex, "You must be an admin to become a boss!")
+            if #ACTIVE_BOSSES == 0 then
+                if args[2] == "boss" and tonumber(get_var(playerIndex, "$lvl")) ~= 4 then
+                    say(playerIndex, "You must be an admin to become a boss!")
+                else
+                    changePlayerClass(playerIndex, args[2])
+                end
             else
-                changePlayerClass(playerIndex, args[2])
+                say(playerIndex, "You cannot change your class during a boss event!")
             end
             return true
         elseif args[1] == "ult" or args[1] == "ultimate" then
@@ -1187,7 +1200,11 @@ function parseCommand(playerIndex, command)
             end
             return true
         elseif args[1] == "equip" then
-            player:setEquipment(args[2]) 
+            if args[2] ~= nil then
+                player:setEquipment(args[2]) 
+            else
+                say(playerIndex, "You need to specify the equipment you want to equip!")
+            end
             return true
         elseif args[1] == "sp" then
             say_all("Spawning sound!")
@@ -1195,7 +1212,7 @@ function parseCommand(playerIndex, command)
             assign_weapon(weap, tonumber(playerIndex))
             return true
         elseif args[1] == "test" then
-            player:addItemToInventory("ArmorPiercing")
+            player:addItemToInventory("ap")
             return true
         elseif args[1] == "boss" then
             if tonumber(get_var(playerIndex, "$lvl")) == 4 and player:getClass():getClassName() == "boss" then
@@ -1224,7 +1241,7 @@ function parseCommand(playerIndex, command)
 end
 function ReadPlayerFromFile(hash, playerIndex)
     local fileName = "raids_data_files/"..hash
-    local newPlayer = PlayerSchema:new()
+    local newPlayer = PlayerSchema:new():loadPlayer()
     newPlayer:setPlayerIndex(playerIndex)
     local file = io.open(fileName, "r")
     if file ~= nil then
@@ -1369,19 +1386,21 @@ end
 function loadPlayer(playerIndex) 
     local playerClass = 'dps'
     local hash = get_var(playerIndex, "$hash")
-    local newPlayer = PlayerSchema:new()
+    local newPlayer = PlayerSchema:new():loadPlayer()
+    print("\n\n=========================================================")
+    print(get_var(playerIndex, "$name") .. ' has joined the server!\n')
     newPlayer:setPlayerIndex(playerIndex)
     local playerData = ReadPlayerFromFile(hash, playerIndex)
     if playerData ~= nil then
-        print("Reading in player!")
+        print(get_var(playerIndex, "$name") .. " has a file on record!")
         newPlayer = playerData
         playerClass = newPlayer:getPreferredClass()
         newPlayer:setPlayerIndex(playerIndex)
     else
-        print(newPlayer)
-        print("Setting up new player!")
+        print(get_var(playerIndex, "$name") .. " is a new player!")
         newPlayer:setUpNewPlayer()
     end
+    print("=========================================================\n\n")
     --step two: initalize values, load player
     ACTIVE_PLAYER_LIST[hash] = newPlayer
     changePlayerClass(playerIndex, playerClass)
@@ -1454,11 +1473,11 @@ function OnScriptUnload()
     -- unregister_callback(cb['EVENT_PRESPAWN'])
     -- unregister_callback(cb['EVENT_GAME_END'])
     -- unregister_callback(cb['EVENT_GAME_START'])
-    for i=0,16 do
-        if player_present(i) then
-            WritePlayerToFile(get_var(i, "$hash"))
-        end
-    end
+    -- for i=0,16 do
+    --     if player_present(i) then
+    --         WritePlayerToFile(get_var(i, "$hash"))
+    --     end
+    -- end
     BIPED_TAG_LIST = {}
     ACTIVE_PLAYER_LIST = {}
     ACTIVE_BOSSES = {}
@@ -1492,7 +1511,7 @@ function handlePlayerDie(playerIndex, causer)
     if(player_present(playerIndex)) then
         local hash = get_var(playerIndex, "$hash")
         local playerClass = ACTIVE_PLAYER_LIST[hash]
-        if playerClass:getClass():getClassName() == "boss" then
+        if playerClass:getClass():getClassName() == "boss" or ACTIVE_BOSSES[playerIndex] ~= nil then
             ACTIVE_BOSSES[playerIndex] = nil
             playerClass:setArmor(nil, "DEFAULT")
         end

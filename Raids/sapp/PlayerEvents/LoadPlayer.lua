@@ -11,19 +11,21 @@
 function loadPlayer(playerIndex) 
     local playerClass = 'dps'
     local hash = get_var(playerIndex, "$hash")
-    local newPlayer = PlayerSchema:new()
+    local newPlayer = PlayerSchema:new():loadPlayer()
+    print("\n\n=========================================================")
+    print(get_var(playerIndex, "$name") .. ' has joined the server!\n')
     newPlayer:setPlayerIndex(playerIndex)
     local playerData = ReadPlayerFromFile(hash, playerIndex)
     if playerData ~= nil then
-        print("Reading in player!")
+        print(get_var(playerIndex, "$name") .. " has a file on record!")
         newPlayer = playerData
         playerClass = newPlayer:getPreferredClass()
         newPlayer:setPlayerIndex(playerIndex)
     else
-        print(newPlayer)
-        print("Setting up new player!")
+        print(get_var(playerIndex, "$name") .. " is a new player!")
         newPlayer:setUpNewPlayer()
     end
+    print("=========================================================\n\n")
     --step two: initalize values, load player
     ACTIVE_PLAYER_LIST[hash] = newPlayer
     changePlayerClass(playerIndex, playerClass)
