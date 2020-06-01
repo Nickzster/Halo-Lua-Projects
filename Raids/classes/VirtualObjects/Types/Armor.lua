@@ -24,6 +24,10 @@ function ArmorSchema.createArmor(self, name, desc, ref, classes, maxHealth, defe
     return self
 end
 
+function ArmorSchema.setMaxHealth(self, newHealth)
+    self.maxHealth = newHealth
+end
+
 function ArmorSchema.getDefense(self)
     return self.defense
 end

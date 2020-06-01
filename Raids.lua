@@ -550,6 +550,10 @@ function ArmorSchema.createArmor(self, name, desc, ref, classes, maxHealth, defe
     return self
 end
 
+function ArmorSchema.setMaxHealth(self, newHealth)
+    self.maxHealth = newHealth
+end
+
 function ArmorSchema.getDefense(self)
     return self.defense
 end
@@ -785,6 +789,7 @@ end
 function PlayerSchema.setBoss(self, newBossKey)
     if ITEM_LIST[newBossKey] ~= nil and ITEM_LIST[newBossKey].type == "BOSS" or ITEM_LIST[newBossKey] == "ARMOR" then
         self.loadouts['boss'].armor = CreateArmor(newBossKey)
+        self.loadouts['boss'].armor:setMaxHealth(self.loadouts['boss'].armor:getMaxHealth() * BOSS_MULTIPLIER)
     else
         say(self:getPlayerIndex(), "This boss either does not exist, or it is not loaded into the map!")
     end
