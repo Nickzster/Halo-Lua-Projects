@@ -211,14 +211,14 @@ ITEM_LIST = {
             boss=true
         }
     },
-    ap = {
-        description="Increases your attack damage",
+    mightofgordius = {
+        description="The Might of Gordius increases your damage!",
         type="DAMAGE_BOOST",
-        modifier=0.5
+        modifier=0.1
     },
-    reflectiveshields = {
-        description="Decreases incoming damage",
+    shardofgordius = {
+        description="The Shard of Gordius protects you from damage!",
         type="DAMAGE_REDUCE",
-        modifier=0.5
+        modifier=0.1
     }
 }

@@ -5,6 +5,7 @@
 -- import Raids.classes.VirtualObjects.Item end
 -- import Raids.sapp.PlayerEvents.Commands.ChangePlayerClass end
 -- import Raids.modules.io.ReadPlayerFromFile end
+-- import Raids.modules.Balancer.RaidBalancer end
 -- END_IMPORT
 
 
@@ -28,5 +29,9 @@ function loadPlayer(playerIndex)
     print("=========================================================\n\n")
     --step two: initalize values, load player
     ACTIVE_PLAYER_LIST[hash] = newPlayer
+    if playerClass ~= "dps" and playerClass ~= "gunslinger" then
+        playerClass = "dps"
+    end
     changePlayerClass(playerIndex, playerClass)
+    Balancer()
 end

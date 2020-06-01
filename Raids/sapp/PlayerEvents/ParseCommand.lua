@@ -6,13 +6,17 @@
 -- import Raids.sapp.PlayerEvents.ActivateUltimateAbility end
 -- import Raids.sapp.PlayerEvents.Commands.ChangePlayerClass end
 -- import Raids.sapp.PlayerEvents.Commands.ChangeBoss end
+-- import Raids.gameplay.Reward.Loot end
 -- END_IMPORT
 
 function parseCommand(playerIndex, command)
-    args = {} 
-    local hash = get_var(playerIndex, "$hash")
-    local player = ACTIVE_PLAYER_LIST[hash]
-    for w in command:lower():gmatch("%w+") do args[#args+1] = w end
+    if player_present(playerIndex) and player_alive(playerIndex) then
+        args = {} 
+        local hash = get_var(playerIndex, "$hash")
+        local player = ACTIVE_PLAYER_LIST[hash]
+        for w in command:lower():gmatch("%w+") do 
+            args[#args+1] = w 
+        end
         if args[1] == "class" then 
             if #ACTIVE_BOSSES == 0 then
                 if args[2] == "boss" and tonumber(get_var(playerIndex, "$lvl")) ~= 4 then
@@ -68,6 +72,34 @@ function parseCommand(playerIndex, command)
                 say(playerIndex, "That item does not exist!")
             end
             return true
+        --TODO: Index the want and need rolls based on player
+        elseif args[1] == "greed" then
+            if GREED_TABLE ~= nil and GREED_TABLE[playerIndex] == nil and NEED_TABLE[playerIndex] == nil then
+                math.randomseed(os.time())
+                local lootRoll = math.random(100)
+                table.insert(GREED_TABLE, {
+                    player=playerIndex,
+                    roll=lootRoll
+                })
+                say_all(get_var(playerIndex, "$name") .. " has selected greed, and rolls a " .. lootRool)
+            else
+                say(playerIndex, "You can't roll right now!")
+            end
+            return true
+        elseif args[1] == "need" then
+            if NEED_TABLE ~= nil and NEED_TABLE[playerIndex] == nil and GREED_TABLE[playerIndex] == nil then
+                math.randomseed(os.time())
+                local lootRoll = math.random(100)
+                table.insert(NEED_TABLE, {
+                    player=playerIndex,
+                    roll=lootRoll
+                })
+                say_all(get_var(playerIndex, "$name") .. " has selected need, and rolls a " .. lootRool)
+            else
+                say(playerIndex, "You can't roll right now!")
+            end
+            return true
         end
         return false
+    end
 end
