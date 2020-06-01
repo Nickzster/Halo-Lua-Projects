@@ -360,15 +360,15 @@ ITEM_LIST = {
             boss=true
         }
     },
-    ap = {
-        description="Increases your attack damage",
+    mightofgordius = {
+        description="The Might of Gordius increases your damage!",
         type="DAMAGE_BOOST",
-        modifier=0.5
+        modifier=0.1
     },
-    reflectiveshields = {
-        description="Decreases incoming damage",
+    shardofgordius = {
+        description="The Shard of Gordius protects you from damage!",
         type="DAMAGE_REDUCE",
-        modifier=0.5
+        modifier=0.1
     }
 }
 
@@ -456,6 +456,15 @@ function EventTable.cycle(self)
         end
     end
 end
+AmmoWeapon = ItemSchema:new()
+
+AmmoWeapon['createWeapon'] = createWeapon
+AmmoWeapon['getMaxAmmo'] = getMaxAmmo
+AmmoWeapon['getModifier'] = getModifier
+
+function AmmoWeapon.setAmmo(self, playerIndex, weaponIndex)
+    execute_command("ammo " .. playerIndex .. " " .. self:getMaxAmmo() .. " " .. weaponIndex)
+end
 ClassSchema = {
     name="BaseClass",
     cooldown=false,
@@ -513,15 +522,6 @@ end
 
 
 
-AmmoWeapon = ItemSchema:new()
-
-AmmoWeapon['createWeapon'] = createWeapon
-AmmoWeapon['getMaxAmmo'] = getMaxAmmo
-AmmoWeapon['getModifier'] = getModifier
-
-function AmmoWeapon.setAmmo(self, playerIndex, weaponIndex)
-    execute_command("ammo " .. playerIndex .. " " .. self:getMaxAmmo() .. " " .. weaponIndex)
-end
 BatteryWeapon = ItemSchema:new()
 
 BatteryWeapon['createWeapon'] = createWeapon
@@ -560,6 +560,14 @@ end
 
 
 
+DamageReductionSchema = ItemSchema:new()
+
+function DamageReductionSchema.computeNewDamage(self,baseDamage)
+    return baseDamage - (baseDamage * self:getModifier())
+end
+
+DamageReductionSchema['equip'] = equip
+DamageReductionSchema['getModifier'] = getModifier
 PlayerSchema = {
     playerIndex=nil,
     loadouts=nil,
@@ -753,7 +761,8 @@ function PlayerSchema.setLoadout(self, classKey, newPrimaryKey, newSecondaryKey)
             return false
         end
         --Ensure that the weapon is compatible with the class
-        if ITEM_LIST[newPrimaryKey].classes[currentClass] == nil and ITEM_LIST[newSecondaryKey].classes[currentClass] == nil then
+        if ITEM_LIST[newPrimaryKey].classes ~= nil and ITEM_LIST[newPrimaryKey].classes[currentClass] == nil 
+        or ITEM_LIST[newSecondaryKey].classes ~= nil and ITEM_LIST[newSecondaryKey].classes[currentClass] == nil then
             say(self:getPlayerIndex(), "You have specified a weapon that is NOT compatible with your class!")
             return false
         end
@@ -762,10 +771,11 @@ function PlayerSchema.setLoadout(self, classKey, newPrimaryKey, newSecondaryKey)
         return true
     else
         if ITEM_LIST[newPrimary] == nil or ITEM_LIST[newSecondary] == nil then
-            self.loadouts[currentClass].primary = nil
-            self.loadouts[currentClass].secondary = nil
             if currentClass ~= "boss" then
                 say(self:getPlayerIndex(), "You have specified a loadout item that does NOT exist!")
+            else
+                self.loadouts[currentClass].primary = nil
+                self.loadouts[currentClass].secondary = nil
             end
             return false
         end
@@ -805,14 +815,6 @@ end
 
 
 PlayerSchema['new'] = new
-DamageIgnoreSchema = ItemSchema:new()
-
-function DamageIgnoreSchema.computeNewDamage(self,baseDamage)
-    return baseDamage
-end
-
-DamageIgnoreSchema['equip'] = equip
-DamageIgnoreSchema['getModifier'] = getModifier
 function CreateEquipment(equipmentKey)
     if ITEM_LIST[equipmentKey].type == "DAMAGE_BOOST" then
         return DamageBoosterSchema:new():equip(
@@ -856,15 +858,23 @@ function CreateEquipment(equipmentKey)
         )
     end
 end
-DamageBoosterSchema = ItemSchema:new()
-
-
-function DamageBoosterSchema.computeNewDamage(self,baseDamage)
-    return baseDamage + (baseDamage * self:getModifier())
+function CreateArmor(key)
+    if ITEM_LIST[key] ~= nil
+    and ITEM_LIST[key].type == "ARMOR"
+    or ITEM_LIST[key].type == "BOSS"
+    then
+        return ArmorSchema:new():createArmor(
+            key,
+            ITEM_LIST[key].description,
+            ITEM_LIST[key].ref,
+            ITEM_LIST[key].classes,
+            ITEM_LIST[key].maxHealth,
+            ITEM_LIST[key].defense
+        )
+    else
+        return nil
+    end
 end
-
-DamageBoosterSchema['equip'] = equip
-DamageBoosterSchema['getModifier'] = getModifier
 function CreateWeapon(key)
     if ITEM_LIST[key] ~= nil
     and ITEM_LIST[key].type == "WEAPON" 
@@ -892,23 +902,6 @@ function CreateWeapon(key)
         return nil
     end
 end
-function CreateArmor(key)
-    if ITEM_LIST[key] ~= nil
-    and ITEM_LIST[key].type == "ARMOR"
-    or ITEM_LIST[key].type == "BOSS"
-    then
-        return ArmorSchema:new():createArmor(
-            key,
-            ITEM_LIST[key].description,
-            ITEM_LIST[key].ref,
-            ITEM_LIST[key].classes,
-            ITEM_LIST[key].maxHealth,
-            ITEM_LIST[key].defense
-        )
-    else
-        return nil
-    end
-end
 HealingSchema = ItemSchema:new()
 
 function HealingSchema.computeNewDamage(self,baseDamage)
@@ -927,14 +920,23 @@ end
 
 DamageInvPeriod['equip'] = equip
 DamageInvPeriod['getModifier'] = getModifier
-DamageReductionSchema = ItemSchema:new()
+DamageIgnoreSchema = ItemSchema:new()
 
-function DamageReductionSchema.computeNewDamage(self,baseDamage)
-    return baseDamage - (baseDamage * self:getModifier())
+function DamageIgnoreSchema.computeNewDamage(self,baseDamage)
+    return baseDamage
 end
 
-DamageReductionSchema['equip'] = equip
-DamageReductionSchema['getModifier'] = getModifier
+DamageIgnoreSchema['equip'] = equip
+DamageIgnoreSchema['getModifier'] = getModifier
+DamageBoosterSchema = ItemSchema:new()
+
+
+function DamageBoosterSchema.computeNewDamage(self,baseDamage)
+    return baseDamage + (baseDamage * self:getModifier())
+end
+
+DamageBoosterSchema['equip'] = equip
+DamageBoosterSchema['getModifier'] = getModifier
 function GetPlayerDistance(index1, index2)
 	local p1 = get_dynamic_player(index1)
 	local p2 = get_dynamic_player(index2)
@@ -1050,59 +1052,6 @@ function numberOfPlayersWithClass(class)
     end
     return numberOfPlayers
 end
-BANDOLIER_COOLDOWN_IN_SECONDS = 75
-
-BandolierSchema=ClassSchema:new():instantiate("bandolier", BANDOLIER_COOLDOWN_IN_SECONDS * 30)
-
-function BandolierSchema.ultimate(self, playerIndex)
-    say(playerIndex, "Giving all nearby players ammo!")
-    for i=0, 16 do
-        if player_present(i) 
-        and ACTIVE_BOSSES[i] == nil 
-        and GetPlayerDistance(playerIndex, i) <= 5
-        or i == playerIndex then
-            local currentPlayer = ACTIVE_PLAYER_LIST[get_var(i, "$hash")]
-            currentPlayer:getPrimaryWeapon():setAmmo(i, 4)
-            currentPlayer:getSecondaryWeapon():setAmmo(i, 3)
-        end
-    end
-    self:startCoolDown(playerIndex)
-end
-TANK_COOLDOWN_IN_SECONDS = 100
-
-TankSchema=ClassSchema:new():instantiate("tank", TANK_COOLDOWN_IN_SECONDS * 30)
-
-function TankSchema.ultimate(self, playerIndex)
-    say(playerIndex, "You are now temporarly invincible!")
-    execute_command("god " .. playerIndex)
-    local key = "PLAYER_" .. playerIndex .. "_IS_EXECUTING_TANK_ULTIMATE"
-    self:startCoolDown(playerIndex)
-    local ungodEvent = EventItem:new()
-    ungodEvent:set({
-        ['playerIndex']=playerIndex
-    }, nil, function(props) execute_command("ungod " .. props.playerIndex) say(props.playerIndex, "You are no longer invincible!") end, 10 * 30)
-    EventTable:addEvent(key, ungodEvent)
-end
-
-
-
-DPS_COOLDOWN_IN_SECONDS = 70
-
-DpsSchema = ClassSchema:new():instantiate("dps", DPS_COOLDOWN_IN_SECONDS * 30)
-
-
-function DpsSchema.ultimate(self, playerIndex)
-    say(playerIndex, "All of your weapons now have bottomless clip!")
-    execute_command("mag " .. playerIndex .. " 999 5")
-    self:startCoolDown(playerIndex)
-    local key = "PLAYER_" .. playerIndex .. "_IS_EXECUTING_DPS_ULTIMATE"
-    local newEvent = EventItem:new()
-    newEvent:set({
-        ['playerIndex']=playerIndex
-    }, nil, function(props) say(props.playerIndex, "Your weapons are now back to normal.") execute_command("mag " .. props.playerIndex .. " 0 5") end, 10 * 30)
-    EventTable:addEvent(key, newEvent)
-end
-
 
 GUNSLINGER_COOLDOWN_IN_SECONDS = 120
 
@@ -1132,6 +1081,59 @@ end
 
 
 
+TANK_COOLDOWN_IN_SECONDS = 100
+
+TankSchema=ClassSchema:new():instantiate("tank", TANK_COOLDOWN_IN_SECONDS * 30)
+
+function TankSchema.ultimate(self, playerIndex)
+    say(playerIndex, "You are now temporarly invincible!")
+    execute_command("god " .. playerIndex)
+    local key = "PLAYER_" .. playerIndex .. "_IS_EXECUTING_TANK_ULTIMATE"
+    self:startCoolDown(playerIndex)
+    local ungodEvent = EventItem:new()
+    ungodEvent:set({
+        ['playerIndex']=playerIndex
+    }, nil, function(props) execute_command("ungod " .. props.playerIndex) say(props.playerIndex, "You are no longer invincible!") end, 10 * 30)
+    EventTable:addEvent(key, ungodEvent)
+end
+
+
+
+BANDOLIER_COOLDOWN_IN_SECONDS = 75
+
+BandolierSchema=ClassSchema:new():instantiate("bandolier", BANDOLIER_COOLDOWN_IN_SECONDS * 30)
+
+function BandolierSchema.ultimate(self, playerIndex)
+    say(playerIndex, "Giving all nearby players ammo!")
+    for i=0, 16 do
+        if player_present(i) 
+        and ACTIVE_BOSSES[i] == nil 
+        and GetPlayerDistance(playerIndex, i) <= 5
+        or i == playerIndex then
+            local currentPlayer = ACTIVE_PLAYER_LIST[get_var(i, "$hash")]
+            currentPlayer:getPrimaryWeapon():setAmmo(i, 4)
+            currentPlayer:getSecondaryWeapon():setAmmo(i, 3)
+        end
+    end
+    self:startCoolDown(playerIndex)
+end
+DPS_COOLDOWN_IN_SECONDS = 70
+
+DpsSchema = ClassSchema:new():instantiate("dps", DPS_COOLDOWN_IN_SECONDS * 30)
+
+
+function DpsSchema.ultimate(self, playerIndex)
+    say(playerIndex, "All of your weapons now have bottomless clip!")
+    execute_command("mag " .. playerIndex .. " 999 5")
+    self:startCoolDown(playerIndex)
+    local key = "PLAYER_" .. playerIndex .. "_IS_EXECUTING_DPS_ULTIMATE"
+    local newEvent = EventItem:new()
+    newEvent:set({
+        ['playerIndex']=playerIndex
+    }, nil, function(props) say(props.playerIndex, "Your weapons are now back to normal.") execute_command("mag " .. props.playerIndex .. " 0 5") end, 10 * 30)
+    EventTable:addEvent(key, newEvent)
+end
+
 CLASS_LIST = {
     ["dps"] = DpsSchema,
     ["healer"] = HealerSchema,
@@ -1144,13 +1146,13 @@ CLASS_LIST = {
 function changePlayerClass(playerIndex, newClass)
     if CLASS_LIST[newClass] ~= nil then
         if newClass == "tank" and numberOfPlayersWithClass("tank") >= NUMBER_OF_ALLOWED_TANKS then
-            say(playerIndex, "There are already maximum alloted tanks in the server!")
+            say(playerIndex, "Request DENIED. There are too many tanks already!")
         elseif newClass=="healer" and numberOfPlayersWithClass("healer") >= NUMBER_OF_ALLOWED_HEALERS then
-            say(playerIndex, "There are already maximum alloted healers in the server!")
+            say(playerIndex, "Request DENIED. There are too many healers already!")
         elseif newClass=="bandolier" and numberOfPlayersWithClass("bandolier") >= NUMBER_OF_ALLOWED_BANDOLIERS then
-            say(playerIndex, "There are already maximum alloted bandoliers in the server!")
+            say(playerIndex, "Request DENIED. There are too many bandoliers already!")
         else
-            say(playerIndex, "Class change to " .. newClass .. " has been granted.")
+            say(playerIndex, "Request GRANTED. Changing class to " .. newClass .. "!")
             local currentPlayer = ACTIVE_PLAYER_LIST[get_var(playerIndex, "$hash")]
             currentPlayer:setClass(CLASS_LIST[newClass]:new())
             currentPlayer:setPreferredClass(newClass)
@@ -1173,152 +1175,26 @@ function FindBipedTag(TagName)
         end
     end
 end
-SavantEventCompleted = function(props) 
-    say_all("Savant Deployed! It's near the center walkway!")
-    spawn_object("weap", "halo reach\\objects\\weapons\\support_high\\spartan_laser\\savant", 105.62, 342.36, -3)
-end
-
-LocationEventCompleted = function(props) 
-    say_all("Message Received. Savant Drop is on it's way!")
-    savantEventComplete = EventItem:new()
-    savantEventComplete:set({}, nil, SavantEventCompleted, 30 * 120)
-    EventTable:addEvent('savantEventComplete', savantEventComplete)
-end
-
-NotifyPlayersCompleted = function(props) 
-    say_all("Be on the look out for a special computer!")
-    locationEventComplete = EventItem:new()
-    locationEventComplete:set({}, function(props, time)
-        for i=1,16 do
-            if player_present(i) then
-                local hash = get_var(i, "$hash")
-                if ACTIVE_PLAYER_LIST[hash]:isInLocation("torres_event_1") then
-                    return true
-                end
+function loadBipeds()
+    --Load in Biped Table
+    for key,_ in pairs(ITEM_LIST) do
+        if ITEM_LIST[key].type == "ARMOR" or ITEM_LIST[key].type == "BOSS" then
+            BIPED_TAG_LIST[key] = FindBipedTag(ITEM_LIST[key].ref)
+        end
+    end
+    --Load in default biped
+    local tag_array = read_dword(0x40440000)
+    for i=0,read_word(0x4044000C)-1 do
+        local tag = tag_array + i * 0x20
+        if(read_dword(tag) == 1835103335 and read_string(read_dword(tag + 0x10)) == "globals\\globals") then
+            local tag_data = read_dword(tag + 0x14)
+            local mp_info = read_dword(tag_data + 0x164 + 4)
+            for j=0,read_dword(tag_data + 0x164)-1 do
+                BIPED_TAG_LIST['DEFAULT'] = read_dword(mp_info + j * 160 + 0x10 + 0xC)
             end
         end
-        return false
-    end, LocationEventCompleted, -1)
-    EventTable:addEvent("LocationEventTorres", locationEventComplete)
-end
-
-
-function changeBoss(playerIndex, player, selectedBoss)
-    if BIPED_TAG_LIST[selectedBoss] ~= nil then
-        kill(playerIndex)
-        local playerClass = player:getClass()
-        player:setBoss(selectedBoss)
-        ACTIVE_BOSSES[playerIndex] = player
-        --TODO: Refactor this so that it can handle all bosses. 
-        --probably best to place this in one function.
-        if selectedBoss == "torres" then
-            newTorresEvent = EventItem:new()
-            newTorresEvent:set({}, nil, NotifyPlayersCompleted, 30 * 26)
-            EventTable:addEvent('TorresEvent', newTorresEvent)
-        end
-    else
-        say(playerIndex, "That boss does not exist!")
     end
 end
-function ReadPlayerFromFile(hash, playerIndex)
-    local fileName = "raids_data_files/"..hash
-    local newPlayer = PlayerSchema:new():loadPlayer()
-    newPlayer:setPlayerIndex(playerIndex)
-    local file = io.open(fileName, "r")
-    if file ~= nil then
-        local EOF = false
-        while EOF == false do
-            local nextLine = file:read("*l")
-            if nextLine == "$DPS_LOADOUT_BEGIN" then
-                local p = file:read("*l")
-                local s = file:read("*l")
-                local a = file:read("*l")
-                newPlayer:setLoadout('dps', p, s)
-                newPlayer:setArmor('dps', a)
-                file:read("*l")
-            end
-            if nextLine == "$HEALER_LOADOUT_BEGIN" then
-                local p = file:read("*l")
-                local s = file:read("*l")
-                local a = file:read("*l")
-                newPlayer:setLoadout('healer', p, s)
-                newPlayer:setArmor('healer', a)
-                file:read("*l")
-            end
-            if nextLine == "$TANK_LOADOUT_BEGIN" then
-                local p = file:read("*l")
-                local s = file:read("*l")
-                local a = file:read("*l")
-                newPlayer:setLoadout('tank', p, s)
-                newPlayer:setArmor('tank', a)
-                file:read("*l")
-            end
-            if nextLine == "$GUNSLINGER_LOADOUT_BEGIN" then
-                local p = file:read("*l")
-                local s = file:read("*l")
-                local a = file:read("*l")
-                newPlayer:setLoadout('gunslinger', p, s)
-                newPlayer:setArmor('gunslinger', a)
-                file:read("*l")
-            end
-            if nextLine == "$BANDOLIER_LOADOUT_BEGIN" then
-                local p = file:read("*l")
-                local s = file:read("*l")
-                local a = file:read("*l")
-                newPlayer:setLoadout('bandolier', p, s)
-                newPlayer:setArmor('bandolier', a)
-                file:read("*l")
-            end
-            if nextLine == "$BOSS_LOADOUT_BEGIN" then
-                local a = file:read("*l")
-                newPlayer:setArmor('boss', a)
-                file:read("*l")
-            end
-            if nextLine == "$EQUIPMENT_BEGIN" then
-                local ekey = file:read("*l")
-                if ekey ~= "$EQUIPMENT_END" then
-                    newPlayer:setEquipment(ekey)
-                    file:read("*l")
-                end
-            end
-            if nextLine=="$INVENTORY_BEGIN" then
-                local currentInventoryItem = file:read("*l")
-                while currentInventoryItem ~= "$INVENTORY_END" do
-                    newPlayer:addItemToInventory(currentInventoryItem)
-                    currentInventoryItem = file:read("*l")
-                end
-            end
-            if nextLine=="$PREFERRED_CLASS_BEGIN" then
-                newPlayer:setPreferredClass(file:read("*l"))
-                file:read("*l")
-            end
-            if nextLine=="$EOF" then
-                EOF = true
-            end
-        end
-        file:close()
-        return newPlayer
-    else
-        return nil
-    end
-end
-function activateUltimateAbility(hash, playerIndex)
-    if ACTIVE_PLAYER_LIST[hash]:getClass().cooldown == false then
-        ACTIVE_PLAYER_LIST[hash]:getClass():ultimate(playerIndex)
-    else
-        local remainingTime = EventTable:getEvent(ACTIVE_PLAYER_LIST[hash]:getClass():getClassName()..playerIndex):getRemainingTime()
-        say(playerIndex, "You can use your ultimate ability in " .. math.ceil(remainingTime / 30) .. " seconds!")
-    end
-end
-
-
-function unloadPlayer(playerIndex) 
-    local hash = get_var(playerIndex, "$hash")
-    WritePlayerToFile(hash)
-    ACTIVE_PLAYER_LIST[hash] = nil
-    Balancer()
-end
-
 function parseCommand(playerIndex, command)
     if player_present(playerIndex) and player_alive(playerIndex) then
         args = {} 
@@ -1352,13 +1228,18 @@ function parseCommand(playerIndex, command)
                 say(playerIndex, "You need to specify the equipment you want to equip!")
             end
             return true
+        elseif args[1] == "loadout" then
+           if player:setLoadout(nil, args[2], args[3]) then
+                kill(playerIndex)
+           end
+           return true
         elseif args[1] == "sp" then
             say_all("Spawning sound!")
             local weap = spawn_object("weap", "zteam\\objects\\weapons\\single\\battle_rifle\\h3\\piercer", 102.23, 417.59, 5)
             assign_weapon(weap, tonumber(playerIndex))
             return true
         elseif args[1] == "test" then
-            player:addItemToInventory("ap")
+            rewardLoot('gordius')
             return true
         elseif args[1] == "boss" then
             if tonumber(get_var(playerIndex, "$lvl")) == 4 and player:getClass():getClassName() == "boss" then
@@ -1380,6 +1261,33 @@ function parseCommand(playerIndex, command)
                 say(playerIndex, "=======================================")
             else
                 say(playerIndex, "That item does not exist!")
+            end
+            return true
+        --TODO: Index the want and need rolls based on player
+        elseif args[1] == "greed" then
+            if GREED_TABLE ~= nil and GREED_TABLE[playerIndex] == nil and NEED_TABLE[playerIndex] == nil then
+                math.randomseed(os.time())
+                local lootRoll = math.random(100)
+                table.insert(GREED_TABLE, {
+                    player=playerIndex,
+                    roll=lootRoll
+                })
+                say_all(get_var(playerIndex, "$name") .. " has selected greed, and rolls a " .. lootRoll)
+            else
+                say(playerIndex, "You can't roll right now!")
+            end
+            return true
+        elseif args[1] == "need" then
+            if NEED_TABLE ~= nil and NEED_TABLE[playerIndex] == nil and GREED_TABLE[playerIndex] == nil then
+                math.randomseed(os.time())
+                local lootRoll = math.random(100)
+                table.insert(NEED_TABLE, {
+                    player=playerIndex,
+                    roll=lootRoll
+                })
+                say_all(get_var(playerIndex, "$name") .. " has selected need, and rolls a " .. lootRoll)
+            else
+                say(playerIndex, "You can't roll right now!")
             end
             return true
         end
@@ -1474,6 +1382,204 @@ function loadPlayer(playerIndex)
     changePlayerClass(playerIndex, playerClass)
     Balancer()
 end
+SavantEventCompleted = function(props) 
+    say_all("Savant Deployed! It's near the center walkway!")
+    spawn_object("weap", "halo reach\\objects\\weapons\\support_high\\spartan_laser\\savant", 105.62, 342.36, -3)
+end
+
+LocationEventCompleted = function(props) 
+    say_all("Message Received. Savant Drop is on it's way!")
+    savantEventComplete = EventItem:new()
+    savantEventComplete:set({}, nil, SavantEventCompleted, 30 * 120)
+    EventTable:addEvent('savantEventComplete', savantEventComplete)
+end
+
+NotifyPlayersCompleted = function(props) 
+    say_all("Be on the look out for a special computer!")
+    locationEventComplete = EventItem:new()
+    locationEventComplete:set({}, function(props, time)
+        for i=1,16 do
+            if player_present(i) then
+                local hash = get_var(i, "$hash")
+                if ACTIVE_PLAYER_LIST[hash]:isInLocation("torres_event_1") then
+                    return true
+                end
+            end
+        end
+        return false
+    end, LocationEventCompleted, -1)
+    EventTable:addEvent("LocationEventTorres", locationEventComplete)
+end
+
+
+GREED_TABLE = nil
+NEED_TABLE = nil
+
+LOOT_TABLE = {
+    gordius = {
+        'mightofgordius',
+        'shardofgordius',
+        'mightofgordius',
+        'shardofgordius',
+        'mightofgordius',
+        'shardofgordius',
+    }
+}
+
+function computeLoot(playerTable)
+    local highest = 0
+    local highestIndex = 0
+    for key,_ in pairs(playerTable) do
+        local newHighest = playerTable[key].roll
+        if newHighest > highest then
+            highest = newHighest
+            highestIndex = playerTable[key].player
+        end
+    end
+    return highestIndex
+end
+
+function rewardLoot(bossName)
+    math.randomseed(os.time())
+    local number = math.random(6)
+    local item = LOOT_TABLE[bossName][number]
+    --queue up roll event
+    GREED_TABLE = {}
+    NEED_TABLE = {}
+    rollEvent = EventItem:new()
+    say_all("Boss " .. bossName .. " drops loot " .. item)
+    say_all("Roll /greed or /need to receive this item.")
+    rollEvent:set({
+        winningItem=item
+    }, nil, function(props) 
+        local winningItem = props.winningItem
+        local winner = 1
+        if #NEED_TABLE > 0 then
+            winner = computeLoot(NEED_TABLE)
+        elseif #GREED_TABLE > 0 then
+            winner = computeLoot(GREED_TABLE)
+        else
+            say_all("No one rolled on item, so it is destroyed!")
+            return
+        end
+        if player_present(winner) then
+            say_all(get_var(winner, "$name") .. " wins item " .. winningItem)
+            local hash = get_var(winner, "$hash")
+            ACTIVE_PLAYER_LIST[hash]:addItemToInventory(winningItem)
+        else
+            say_all("The player who won is no longer present, so the item is destroyed!")
+        end
+    end, 30 * 30)
+    EventTable:addEvent('gordius_drop_1', rollEvent)
+end
+
+
+function unloadPlayer(playerIndex) 
+    local hash = get_var(playerIndex, "$hash")
+    WritePlayerToFile(hash)
+    ACTIVE_PLAYER_LIST[hash] = nil
+    Balancer()
+end
+
+function ReadPlayerFromFile(hash, playerIndex)
+    local fileName = "raids_data_files/"..hash
+    local newPlayer = PlayerSchema:new():loadPlayer()
+    newPlayer:setPlayerIndex(playerIndex)
+    local file = io.open(fileName, "r")
+    if file ~= nil then
+        local EOF = false
+        while EOF == false do
+            local nextLine = file:read("*l")
+            if nextLine == "$DPS_LOADOUT_BEGIN" then
+                local p = file:read("*l")
+                local s = file:read("*l")
+                local a = file:read("*l")
+                newPlayer:setLoadout('dps', p, s)
+                newPlayer:setArmor('dps', a)
+                file:read("*l")
+            end
+            if nextLine == "$HEALER_LOADOUT_BEGIN" then
+                local p = file:read("*l")
+                local s = file:read("*l")
+                local a = file:read("*l")
+                newPlayer:setLoadout('healer', p, s)
+                newPlayer:setArmor('healer', a)
+                file:read("*l")
+            end
+            if nextLine == "$TANK_LOADOUT_BEGIN" then
+                local p = file:read("*l")
+                local s = file:read("*l")
+                local a = file:read("*l")
+                newPlayer:setLoadout('tank', p, s)
+                newPlayer:setArmor('tank', a)
+                file:read("*l")
+            end
+            if nextLine == "$GUNSLINGER_LOADOUT_BEGIN" then
+                local p = file:read("*l")
+                local s = file:read("*l")
+                local a = file:read("*l")
+                newPlayer:setLoadout('gunslinger', p, s)
+                newPlayer:setArmor('gunslinger', a)
+                file:read("*l")
+            end
+            if nextLine == "$BANDOLIER_LOADOUT_BEGIN" then
+                local p = file:read("*l")
+                local s = file:read("*l")
+                local a = file:read("*l")
+                newPlayer:setLoadout('bandolier', p, s)
+                newPlayer:setArmor('bandolier', a)
+                file:read("*l")
+            end
+            if nextLine == "$BOSS_LOADOUT_BEGIN" then
+                local a = file:read("*l")
+                newPlayer:setArmor('boss', a)
+                file:read("*l")
+            end
+            if nextLine == "$EQUIPMENT_BEGIN" then
+                local ekey = file:read("*l")
+                if ekey ~= "$EQUIPMENT_END" then
+                    newPlayer:setEquipment(ekey)
+                    file:read("*l")
+                end
+            end
+            if nextLine=="$INVENTORY_BEGIN" then
+                local currentInventoryItem = file:read("*l")
+                while currentInventoryItem ~= "$INVENTORY_END" do
+                    newPlayer:addItemToInventory(currentInventoryItem)
+                    currentInventoryItem = file:read("*l")
+                end
+            end
+            if nextLine=="$PREFERRED_CLASS_BEGIN" then
+                newPlayer:setPreferredClass(file:read("*l"))
+                file:read("*l")
+            end
+            if nextLine=="$EOF" then
+                EOF = true
+            end
+        end
+        file:close()
+        return newPlayer
+    else
+        return nil
+    end
+end
+function changeBoss(playerIndex, player, selectedBoss)
+    if BIPED_TAG_LIST[selectedBoss] ~= nil then
+        kill(playerIndex)
+        local playerClass = player:getClass()
+        player:setBoss(selectedBoss)
+        ACTIVE_BOSSES[playerIndex] = player
+        --TODO: Refactor this so that it can handle all bosses. 
+        --probably best to place this in one function.
+        if selectedBoss == "torres" then
+            newTorresEvent = EventItem:new()
+            newTorresEvent:set({}, nil, NotifyPlayersCompleted, 30 * 26)
+            EventTable:addEvent('TorresEvent', newTorresEvent)
+        end
+    else
+        say(playerIndex, "That boss does not exist!")
+    end
+end
 function modifyDamage(attackingEquipment, damagedEquipment, damage)
     local newDamage = damage
     if attackingEquipment ~= nil and attackingEquipment:getType() == "OUTPUT_DAMAGE" then
@@ -1492,24 +1598,12 @@ function modifyDamage(attackingEquipment, damagedEquipment, damage)
     end
     return newDamage
 end
-function loadBipeds()
-    --Load in Biped Table
-    for key,_ in pairs(ITEM_LIST) do
-        if ITEM_LIST[key].type == "ARMOR" or ITEM_LIST[key].type == "BOSS" then
-            BIPED_TAG_LIST[key] = FindBipedTag(ITEM_LIST[key].ref)
-        end
-    end
-    --Load in default biped
-    local tag_array = read_dword(0x40440000)
-    for i=0,read_word(0x4044000C)-1 do
-        local tag = tag_array + i * 0x20
-        if(read_dword(tag) == 1835103335 and read_string(read_dword(tag + 0x10)) == "globals\\globals") then
-            local tag_data = read_dword(tag + 0x14)
-            local mp_info = read_dword(tag_data + 0x164 + 4)
-            for j=0,read_dword(tag_data + 0x164)-1 do
-                BIPED_TAG_LIST['DEFAULT'] = read_dword(mp_info + j * 160 + 0x10 + 0xC)
-            end
-        end
+function activateUltimateAbility(hash, playerIndex)
+    if ACTIVE_PLAYER_LIST[hash]:getClass().cooldown == false then
+        ACTIVE_PLAYER_LIST[hash]:getClass():ultimate(playerIndex)
+    else
+        local remainingTime = EventTable:getEvent(ACTIVE_PLAYER_LIST[hash]:getClass():getClassName()..playerIndex):getRemainingTime()
+        say(playerIndex, "You can use your ultimate ability in " .. math.ceil(remainingTime / 30) .. " seconds!")
     end
 end
 
@@ -1595,27 +1689,40 @@ function handlePlayerDie(playerIndex, causer)
     end
 end
 
-function handleDamage(playerIndex, damagerPlayerIndex, damageTagId, Damage, CollisionMaterial, Backtap)
+function handleDamage(damagedPlayerIndex, attackingPlayerIndex, damageTagId, Damage, CollisionMaterial, Backtap)
     --TODO: Refactor this into a damage function, that funnels through all players and handles damage accordingly. 
-    local attackingPlayer = ACTIVE_PLAYER_LIST[get_var(damagerPlayerIndex, "$hash")]
-    local damagedPlayer = ACTIVE_PLAYER_LIST[get_var(damagerPlayerIndex, "$hash")]
-    if player_present(playerIndex) and player_present(damagerPlayerIndex) then
-        local newDamage = Damage
-        if attackingPlayer:getEquipment() ~= nil then  
-            newDamage = math.max(newDamage, attackingPlayer:getEquipment():computeNewDamage(Damage)) 
-        end
-        if damagedPlayer:getEquipment() ~= nil then 
-            newDamage = math.min(newDamage, damagedPlayer:getEquipment():computeNewDamage(Damage))
-        end
-        newDamage = newDamage - damagedPlayer:getArmor():getDefense()
-        if newDamage <= 0 then newDamage = 1 end
-        if playerIndex == damagerPlayerIndex then 
-            say(playerIndex, "You dealt " .. newDamage .. " damage to yourself, you goober!")
+    local attackingPlayer = ACTIVE_PLAYER_LIST[get_var(attackingPlayerIndex, "$hash")]
+    local damagedPlayer = ACTIVE_PLAYER_LIST[get_var(damagedPlayerIndex, "$hash")]
+    if player_present(damagedPlayerIndex) and player_present(attackingPlayerIndex) then
+        if attackingPlayer:getClass():getClassName() == "healer" and damagedPlayer:getClass():getClassName() ~= "boss" then
+            local damagedPlayerInMemory = get_dynamic_player(damagedPlayerIndex) 
+            if damagedPlayerInMemory ~= 0 then
+                local maxPlayerHealth = damagedPlayer:getArmor():getMaxHealth()
+                local currentPlayerHealth = read_float(damagedPlayerInMemory + 0xE0)*maxPlayerHealth
+                local fraction = currentPlayerHealth / maxPlayerHealth
+                if fraction <= 1.10 then
+                    execute_command("hp " .. damagedPlayerIndex .. " " .. fraction + 0.1)
+                end
+            end
+            return true,0
         else
-            say(playerIndex, "You were dealt " .. newDamage .. " damage!")
-            say(damagerPlayerIndex, "You dealt " .. newDamage .. " damage!")
+            local newDamage = Damage
+            if attackingPlayer:getEquipment() ~= nil then  
+                newDamage = math.max(newDamage, attackingPlayer:getEquipment():computeNewDamage(Damage)) 
+            end
+            if damagedPlayer:getEquipment() ~= nil then 
+                newDamage = math.min(newDamage, damagedPlayer:getEquipment():computeNewDamage(Damage))
+            end
+            newDamage = newDamage - damagedPlayer:getArmor():getDefense()
+            if newDamage <= 0 then newDamage = 1 end
+            if damagedPlayerIndex == attackingPlayerIndex then 
+                say(damagedPlayerIndex, "You dealt " .. newDamage .. " damage to yourself, you goober!")
+            else
+                say(damagedPlayerIndex, "You were dealt " .. newDamage .. " damage!")
+                say(attackingPlayerIndex, "You dealt " .. newDamage .. " damage!")
+            end
+            return true,newDamage
         end
-        return true,newDamage
     end
     return true
 end

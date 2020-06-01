@@ -205,7 +205,8 @@ function PlayerSchema.setLoadout(self, classKey, newPrimaryKey, newSecondaryKey)
             return false
         end
         --Ensure that the weapon is compatible with the class
-        if ITEM_LIST[newPrimaryKey].classes[currentClass] == nil and ITEM_LIST[newSecondaryKey].classes[currentClass] == nil then
+        if ITEM_LIST[newPrimaryKey].classes ~= nil and ITEM_LIST[newPrimaryKey].classes[currentClass] == nil 
+        or ITEM_LIST[newSecondaryKey].classes ~= nil and ITEM_LIST[newSecondaryKey].classes[currentClass] == nil then
             say(self:getPlayerIndex(), "You have specified a weapon that is NOT compatible with your class!")
             return false
         end
@@ -214,10 +215,11 @@ function PlayerSchema.setLoadout(self, classKey, newPrimaryKey, newSecondaryKey)
         return true
     else
         if ITEM_LIST[newPrimary] == nil or ITEM_LIST[newSecondary] == nil then
-            self.loadouts[currentClass].primary = nil
-            self.loadouts[currentClass].secondary = nil
             if currentClass ~= "boss" then
                 say(self:getPlayerIndex(), "You have specified a loadout item that does NOT exist!")
+            else
+                self.loadouts[currentClass].primary = nil
+                self.loadouts[currentClass].secondary = nil
             end
             return false
         end

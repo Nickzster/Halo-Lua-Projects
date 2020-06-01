@@ -97,27 +97,40 @@ function handlePlayerDie(playerIndex, causer)
     end
 end
 
-function handleDamage(playerIndex, damagerPlayerIndex, damageTagId, Damage, CollisionMaterial, Backtap)
+function handleDamage(damagedPlayerIndex, attackingPlayerIndex, damageTagId, Damage, CollisionMaterial, Backtap)
     --TODO: Refactor this into a damage function, that funnels through all players and handles damage accordingly. 
-    local attackingPlayer = ACTIVE_PLAYER_LIST[get_var(damagerPlayerIndex, "$hash")]
-    local damagedPlayer = ACTIVE_PLAYER_LIST[get_var(damagerPlayerIndex, "$hash")]
-    if player_present(playerIndex) and player_present(damagerPlayerIndex) then
-        local newDamage = Damage
-        if attackingPlayer:getEquipment() ~= nil then  
-            newDamage = math.max(newDamage, attackingPlayer:getEquipment():computeNewDamage(Damage)) 
-        end
-        if damagedPlayer:getEquipment() ~= nil then 
-            newDamage = math.min(newDamage, damagedPlayer:getEquipment():computeNewDamage(Damage))
-        end
-        newDamage = newDamage - damagedPlayer:getArmor():getDefense()
-        if newDamage <= 0 then newDamage = 1 end
-        if playerIndex == damagerPlayerIndex then 
-            say(playerIndex, "You dealt " .. newDamage .. " damage to yourself, you goober!")
+    local attackingPlayer = ACTIVE_PLAYER_LIST[get_var(attackingPlayerIndex, "$hash")]
+    local damagedPlayer = ACTIVE_PLAYER_LIST[get_var(damagedPlayerIndex, "$hash")]
+    if player_present(damagedPlayerIndex) and player_present(attackingPlayerIndex) then
+        if attackingPlayer:getClass():getClassName() == "healer" and damagedPlayer:getClass():getClassName() ~= "boss" then
+            local damagedPlayerInMemory = get_dynamic_player(damagedPlayerIndex) 
+            if damagedPlayerInMemory ~= 0 then
+                local maxPlayerHealth = damagedPlayer:getArmor():getMaxHealth()
+                local currentPlayerHealth = read_float(damagedPlayerInMemory + 0xE0)*maxPlayerHealth
+                local fraction = currentPlayerHealth / maxPlayerHealth
+                if fraction <= 1.10 then
+                    execute_command("hp " .. damagedPlayerIndex .. " " .. fraction + 0.1)
+                end
+            end
+            return true,0
         else
-            say(playerIndex, "You were dealt " .. newDamage .. " damage!")
-            say(damagerPlayerIndex, "You dealt " .. newDamage .. " damage!")
+            local newDamage = Damage
+            if attackingPlayer:getEquipment() ~= nil then  
+                newDamage = math.max(newDamage, attackingPlayer:getEquipment():computeNewDamage(Damage)) 
+            end
+            if damagedPlayer:getEquipment() ~= nil then 
+                newDamage = math.min(newDamage, damagedPlayer:getEquipment():computeNewDamage(Damage))
+            end
+            newDamage = newDamage - damagedPlayer:getArmor():getDefense()
+            if newDamage <= 0 then newDamage = 1 end
+            if damagedPlayerIndex == attackingPlayerIndex then 
+                say(damagedPlayerIndex, "You dealt " .. newDamage .. " damage to yourself, you goober!")
+            else
+                say(damagedPlayerIndex, "You were dealt " .. newDamage .. " damage!")
+                say(attackingPlayerIndex, "You dealt " .. newDamage .. " damage!")
+            end
+            return true,newDamage
         end
-        return true,newDamage
     end
     return true
 end

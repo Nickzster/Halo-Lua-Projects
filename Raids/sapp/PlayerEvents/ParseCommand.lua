@@ -42,13 +42,18 @@ function parseCommand(playerIndex, command)
                 say(playerIndex, "You need to specify the equipment you want to equip!")
             end
             return true
+        elseif args[1] == "loadout" then
+           if player:setLoadout(nil, args[2], args[3]) then
+                kill(playerIndex)
+           end
+           return true
         elseif args[1] == "sp" then
             say_all("Spawning sound!")
             local weap = spawn_object("weap", "zteam\\objects\\weapons\\single\\battle_rifle\\h3\\piercer", 102.23, 417.59, 5)
             assign_weapon(weap, tonumber(playerIndex))
             return true
         elseif args[1] == "test" then
-            player:addItemToInventory("ap")
+            rewardLoot('gordius')
             return true
         elseif args[1] == "boss" then
             if tonumber(get_var(playerIndex, "$lvl")) == 4 and player:getClass():getClassName() == "boss" then
@@ -81,7 +86,7 @@ function parseCommand(playerIndex, command)
                     player=playerIndex,
                     roll=lootRoll
                 })
-                say_all(get_var(playerIndex, "$name") .. " has selected greed, and rolls a " .. lootRool)
+                say_all(get_var(playerIndex, "$name") .. " has selected greed, and rolls a " .. lootRoll)
             else
                 say(playerIndex, "You can't roll right now!")
             end
@@ -94,7 +99,7 @@ function parseCommand(playerIndex, command)
                     player=playerIndex,
                     roll=lootRoll
                 })
-                say_all(get_var(playerIndex, "$name") .. " has selected need, and rolls a " .. lootRool)
+                say_all(get_var(playerIndex, "$name") .. " has selected need, and rolls a " .. lootRoll)
             else
                 say(playerIndex, "You can't roll right now!")
             end
