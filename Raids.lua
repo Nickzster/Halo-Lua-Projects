@@ -1269,6 +1269,7 @@ function parseCommand(playerIndex, command)
             end
             return true
         --TODO: Index the want and need rolls based on player
+        --TODO: Add class checks on roll commands in future
         elseif args[1] == "greed" then
             if GREED_TABLE ~= nil and GREED_TABLE[playerIndex] == nil and NEED_TABLE[playerIndex] == nil then
                 math.randomseed(os.time())
@@ -1420,6 +1421,17 @@ end
 GREED_TABLE = nil
 NEED_TABLE = nil
 
+-- NOTE
+-- WHEN MODIFYING LOOT TABLE
+-- ADD ITEMS TO LOOT TABLE
+-- AND PRETTY TABLE!!!
+
+PRETTY_TABLE={
+    gordius="Gordius",
+    mightofgordius="Might of Gordius",
+    shardofgordius="Shard of Gordius"
+}
+
 LOOT_TABLE = {
     gordius = {
         'mightofgordius',
@@ -1444,15 +1456,21 @@ function computeLoot(playerTable)
     return highestIndex
 end
 
-function rewardLoot(bossName)
+function rewardLoot(props)
+    local bossName = props.BOSS
+    print("Rewarding loot!")
+    print(bossName)
+    if LOOT_TABLE[bossName] == nil then return end
+    print("Dropping loot for " .. bossName)
     math.randomseed(os.time())
     local number = math.random(6)
     local item = LOOT_TABLE[bossName][number]
+    if item == nil then return end
     --queue up roll event
     GREED_TABLE = {}
     NEED_TABLE = {}
     rollEvent = EventItem:new()
-    say_all("Boss " .. bossName .. " drops loot " .. item)
+    say_all("Boss " .. PRETTY_TABLE[bossName] .. " drops loot " .. PRETTY_TABLE[item])
     say_all("Roll /greed or /need to receive this item.")
     rollEvent:set({
         winningItem=item
@@ -1468,13 +1486,13 @@ function rewardLoot(bossName)
             return
         end
         if player_present(winner) then
-            say_all(get_var(winner, "$name") .. " wins item " .. winningItem)
+            say_all(get_var(winner, "$name") .. " wins item " .. PRETTY_TABLE[winningItem])
             local hash = get_var(winner, "$hash")
             ACTIVE_PLAYER_LIST[hash]:addItemToInventory(winningItem)
         else
             say_all("The player who won is no longer present, so the item is destroyed!")
         end
-    end, 30 * 30)
+    end, 30 * 15)
     EventTable:addEvent('gordius_drop_1', rollEvent)
 end
 
@@ -1688,6 +1706,10 @@ function handlePlayerDie(playerIndex, causer)
         local hash = get_var(playerIndex, "$hash")
         local playerClass = ACTIVE_PLAYER_LIST[hash]
         if playerClass:getClass():getClassName() == "boss" or ACTIVE_BOSSES[playerIndex] ~= nil then
+            local bossName = playerClass:getArmor():getName()
+            local lootEvent = EventItem:new()
+            lootEvent:set({BOSS=bossName}, nil, rewardLoot, 30 * 10)
+            EventTable:addEvent(bossName, lootEvent)
             ACTIVE_BOSSES[playerIndex] = nil
             playerClass:setArmor(nil, "DEFAULT")
         end

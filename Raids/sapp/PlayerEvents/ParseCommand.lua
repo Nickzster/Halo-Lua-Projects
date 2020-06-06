@@ -78,6 +78,7 @@ function parseCommand(playerIndex, command)
             end
             return true
         --TODO: Index the want and need rolls based on player
+        --TODO: Add class checks on roll commands in future
         elseif args[1] == "greed" then
             if GREED_TABLE ~= nil and GREED_TABLE[playerIndex] == nil and NEED_TABLE[playerIndex] == nil then
                 math.randomseed(os.time())

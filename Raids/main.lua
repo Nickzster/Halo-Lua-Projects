@@ -91,6 +91,10 @@ function handlePlayerDie(playerIndex, causer)
         local hash = get_var(playerIndex, "$hash")
         local playerClass = ACTIVE_PLAYER_LIST[hash]
         if playerClass:getClass():getClassName() == "boss" or ACTIVE_BOSSES[playerIndex] ~= nil then
+            local bossName = playerClass:getArmor():getName()
+            local lootEvent = EventItem:new()
+            lootEvent:set({BOSS=bossName}, nil, rewardLoot, 30 * 10)
+            EventTable:addEvent(bossName, lootEvent)
             ACTIVE_BOSSES[playerIndex] = nil
             playerClass:setArmor(nil, "DEFAULT")
         end
