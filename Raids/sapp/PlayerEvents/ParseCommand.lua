@@ -7,7 +7,10 @@
 -- import Raids.sapp.PlayerEvents.Commands.ChangePlayerClass end
 -- import Raids.sapp.PlayerEvents.Commands.ChangeBoss end
 -- import Raids.gameplay.Reward.Loot end
+-- import Raids.util.ProperClassNames end
 -- END_IMPORT
+
+
 
 function parseCommand(playerIndex, command)
     if player_present(playerIndex) and player_alive(playerIndex) then
@@ -22,7 +25,7 @@ function parseCommand(playerIndex, command)
                 if args[2] == "boss" and tonumber(get_var(playerIndex, "$lvl")) ~= 4 then
                     say(playerIndex, "You must be an admin to become a boss!")
                 else
-                    changePlayerClass(playerIndex, args[2])
+                    changePlayerClass(playerIndex, parseProperClassName(args[2]))
                 end
             else
                 say(playerIndex, "You cannot change your class during a boss event!")
@@ -63,7 +66,7 @@ function parseCommand(playerIndex, command)
             end
             return true
         elseif args[1] == "whoami" then
-            say(playerIndex, "You are a " .. ACTIVE_PLAYER_LIST[hash]:getClass().name)
+            say(playerIndex, "You are a " .. displayProperClassName(player:getClass():getClassName()))
             return true
         elseif args[1] == "moreinfo" then
             if ITEM_LIST[args[2]] ~= nil then

@@ -11,6 +11,7 @@
 -- import Raids.globals.values end
 -- import Raids.modules.Balancer.RaidBalancer end
 -- import Raids.modules.io.WritePlayerToFile end
+-- import Raids.util.ProperClassNames end
 -- END_IMPORT
 
 CLASS_LIST = {
@@ -25,13 +26,13 @@ CLASS_LIST = {
 function changePlayerClass(playerIndex, newClass)
     if CLASS_LIST[newClass] ~= nil then
         if newClass == "tank" and numberOfPlayersWithClass("tank") >= NUMBER_OF_ALLOWED_TANKS then
-            say(playerIndex, "Request DENIED. There are too many tanks already!")
+            say(playerIndex, "Request DENIED. There are too many spartans already!")
         elseif newClass=="healer" and numberOfPlayersWithClass("healer") >= NUMBER_OF_ALLOWED_HEALERS then
-            say(playerIndex, "Request DENIED. There are too many healers already!")
+            say(playerIndex, "Request DENIED. There are too many medics already!")
         elseif newClass=="bandolier" and numberOfPlayersWithClass("bandolier") >= NUMBER_OF_ALLOWED_BANDOLIERS then
             say(playerIndex, "Request DENIED. There are too many bandoliers already!")
         else
-            say(playerIndex, "Request GRANTED. Changing class to " .. newClass .. "!")
+            say(playerIndex, "Request GRANTED. Changing class to " .. displayProperClassName(newClass) .. "!")
             local currentPlayer = ACTIVE_PLAYER_LIST[get_var(playerIndex, "$hash")]
             currentPlayer:setClass(CLASS_LIST[newClass]:new())
             currentPlayer:setPreferredClass(newClass)
