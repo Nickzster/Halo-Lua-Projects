@@ -16,7 +16,10 @@ NEED_TABLE = nil
 PRETTY_TABLE={
     gordius="Gordius",
     mightofgordius="Might of Gordius",
-    shardofgordius="Shard of Gordius"
+    shardofgordius="Shard of Gordius",
+    widowmaker="Widow Maker",
+    torresshieldgenerator="Torres's Shield Generator",
+    torresammopouch="Torres's Ammo Pouch"
 }
 
 LOOT_TABLE = {
@@ -27,6 +30,14 @@ LOOT_TABLE = {
         'shardofgordius',
         'mightofgordius',
         'shardofgordius',
+    }
+    torres = {
+        'torresshieldgenerator',
+        'torresammopouch',
+        'widowmaker',
+        'torresshieldgenerator',
+        'torresammopouch',
+        'widowmaker'
     }
 }
 
