@@ -48,7 +48,7 @@ ITEM_LIST = {
     discordant={
         description="Concussion Rifle",
         type="WEAPON",
-        ref="zteam\\objects\\weapons\\single\\concussion_rifle\\hr\\discordant",
+        ref="halo3\\weapons\\'plasma cannon'\\discordant",
         maxAmmo=606,
         classes={
             gunslinger=true
@@ -101,10 +101,77 @@ ITEM_LIST = {
             healer=true
         }
     },
+    headhunter={
+        description="Beam Rifle",
+        type="WEAPON",
+        battery=true,
+        ref="zteam\\objects\\weapons\\single\\beam_rifle\\h3\\headhunter",
+        classes={
+            gunslinger=true
+        }
+    },
+    eviscerator={
+        description="Energy Sword",
+        type="WEAPON",
+        battery=true,
+        ref="h4\\weapons\\covenant\\energy sword\\eviscerator",
+        classes={
+            gunslinger=true
+        }
+    },
+    thor={
+        description="Gravity Hammer",
+        type="WEAPON",
+        battery=true,
+        ref="zteam\\objects\\weapons\\single\\gravity_hammer\\h3\\thor",
+        classes={
+            tank=true
+        }
+    },
+    charity={
+        description="Pistol",
+        type="WEAPON",
+        ref="zteam\\objects\\weapons\\single\\magnum\\h1\\charity",
+        classes={
+            healer=true
+        }
+    },
+    grimreaper={
+        description="Rocket Launcher",
+        type="WEAPON",
+        ref="zteam\\objects\\weapons\\single\\rocket_launcher\\hr\\grimreaper",
+        classes={
+            dps=true
+        }
+    },
+    deathwarrant={
+        description="Shotgun",
+        type="WEAPON",
+        ref="zteam\\objects\\weapons\\single\\shotgun\\h3\\deathwarrant",
+        classes={
+            tank=true
+        }
+    },
+    chicagotypewriter={
+        description="SMG",
+        type="WEAPON",
+        ref="zteam\\objects\\weapons\\single\\smg\\h3\\chicagotypewriter",
+        classes={
+            healer=true
+        }
+    },
+    widowmaker={
+        description="Sniper Rifle",
+        type="WEAPON",
+        ref="halo3\\weapons\\sniper rifle\\widowmaker",
+        classes={
+            dps=true
+        }
+    },
     dpsstd={
         description="Standard ODST Armor",
         type="ARMOR",
-        ref="characters\\cyborg_mp\\dps",
+        ref="characters\\cyborg_mp\\soldier",
         maxHealth=100,
         defense=0,
         classes={
@@ -114,7 +181,7 @@ ITEM_LIST = {
     healerstd={
         description="Standard ODST armor for medics.",
         type="ARMOR",
-        ref="characters\\cyborg_mp\\healer",
+        ref="characters\\cyborg_mp\\medic",
         maxHealth=100,
         defense=0,
         classes={
@@ -124,7 +191,7 @@ ITEM_LIST = {
     tankstd={
         description="Standard MK 6 armor for tanks",
         type="ARMOR",
-        ref="zteam\\objects\\characters\\spartan\\h3\\tank",
+        ref="zteam\\objects\\characters\\spartan\\h3\\spartan",
         maxHealth=500,
         defense=0,
         classes={
@@ -144,7 +211,7 @@ ITEM_LIST = {
     gunslingerstd={
         description="Standard Elite armor for Gunslingers",
         type="ARMOR",
-        ref="np\\objects\\characters\\elite\\h3\\bipeds\\gunslinger",
+        ref="np\\objects\\characters\\elite\\h3\\bipeds\\valiant",
         maxHealth=100,
         defense=0,
         classes={

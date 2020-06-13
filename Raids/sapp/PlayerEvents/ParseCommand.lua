@@ -10,8 +10,6 @@
 -- import Raids.util.ProperClassNames end
 -- END_IMPORT
 
-
-
 function parseCommand(playerIndex, command)
     if player_present(playerIndex) and player_alive(playerIndex) then
         args = {} 
@@ -53,10 +51,20 @@ function parseCommand(playerIndex, command)
         elseif args[1] == "sp" then
             say_all("Spawning sound!")
             local weap = spawn_object("weap", "zteam\\objects\\weapons\\single\\battle_rifle\\h3\\piercer", 102.23, 417.59, 5)
-            assign_weapon(weap, tonumber(playerIndex))
             return true
         elseif args[1] == "test" then
-            rewardLoot('gordius')
+            local weapon = args[2]
+            if tonumber(get_var(playerIndex, "$lvl")) ~= 4 then
+                say(playerIndex, "You must be an admin to execute this command!")
+            elseif weapon == nil 
+            or ITEM_LIST[weapon] == nil
+            or ITEM_LIST[weapon].type ~= "WEAPON" 
+            or ITEM_LIST[weapon].ref == nil 
+            then 
+                say(playerIndex, "This item does not exist") 
+            else 
+                spawn_object("weap", ITEM_LIST[weapon].ref, 105.62, 342.36, -3)
+            end
             return true
         elseif args[1] == "boss" then
             if tonumber(get_var(playerIndex, "$lvl")) == 4 and player:getClass():getClassName() == "boss" then

@@ -197,7 +197,7 @@ ITEM_LIST = {
     discordant={
         description="Concussion Rifle",
         type="WEAPON",
-        ref="zteam\\objects\\weapons\\single\\concussion_rifle\\hr\\discordant",
+        ref="halo3\\weapons\\'plasma cannon'\\discordant",
         maxAmmo=606,
         classes={
             gunslinger=true
@@ -250,10 +250,77 @@ ITEM_LIST = {
             healer=true
         }
     },
+    headhunter={
+        description="Beam Rifle",
+        type="WEAPON",
+        battery=true,
+        ref="zteam\\objects\\weapons\\single\\beam_rifle\\h3\\headhunter",
+        classes={
+            gunslinger=true
+        }
+    },
+    eviscerator={
+        description="Energy Sword",
+        type="WEAPON",
+        battery=true,
+        ref="h4\\weapons\\covenant\\energy sword\\eviscerator",
+        classes={
+            gunslinger=true
+        }
+    },
+    thor={
+        description="Gravity Hammer",
+        type="WEAPON",
+        battery=true,
+        ref="zteam\\objects\\weapons\\single\\gravity_hammer\\h3\\thor",
+        classes={
+            tank=true
+        }
+    },
+    charity={
+        description="Pistol",
+        type="WEAPON",
+        ref="zteam\\objects\\weapons\\single\\magnum\\h1\\charity",
+        classes={
+            healer=true
+        }
+    },
+    grimreaper={
+        description="Rocket Launcher",
+        type="WEAPON",
+        ref="zteam\\objects\\weapons\\single\\rocket_launcher\\hr\\grimreaper",
+        classes={
+            dps=true
+        }
+    },
+    deathwarrant={
+        description="Shotgun",
+        type="WEAPON",
+        ref="zteam\\objects\\weapons\\single\\shotgun\\h3\\deathwarrant",
+        classes={
+            tank=true
+        }
+    },
+    chicagotypewriter={
+        description="SMG",
+        type="WEAPON",
+        ref="zteam\\objects\\weapons\\single\\smg\\h3\\chicagotypewriter",
+        classes={
+            healer=true
+        }
+    },
+    widowmaker={
+        description="Sniper Rifle",
+        type="WEAPON",
+        ref="halo3\\weapons\\sniper rifle\\widowmaker",
+        classes={
+            dps=true
+        }
+    },
     dpsstd={
         description="Standard ODST Armor",
         type="ARMOR",
-        ref="characters\\cyborg_mp\\dps",
+        ref="characters\\cyborg_mp\\soldier",
         maxHealth=100,
         defense=0,
         classes={
@@ -263,7 +330,7 @@ ITEM_LIST = {
     healerstd={
         description="Standard ODST armor for medics.",
         type="ARMOR",
-        ref="characters\\cyborg_mp\\healer",
+        ref="characters\\cyborg_mp\\medic",
         maxHealth=100,
         defense=0,
         classes={
@@ -273,7 +340,7 @@ ITEM_LIST = {
     tankstd={
         description="Standard MK 6 armor for tanks",
         type="ARMOR",
-        ref="zteam\\objects\\characters\\spartan\\h3\\tank",
+        ref="zteam\\objects\\characters\\spartan\\h3\\spartan",
         maxHealth=500,
         defense=0,
         classes={
@@ -293,7 +360,7 @@ ITEM_LIST = {
     gunslingerstd={
         description="Standard Elite armor for Gunslingers",
         type="ARMOR",
-        ref="np\\objects\\characters\\elite\\h3\\bipeds\\gunslinger",
+        ref="np\\objects\\characters\\elite\\h3\\bipeds\\valiant",
         maxHealth=100,
         defense=0,
         classes={
@@ -1265,8 +1332,6 @@ function PrintBossBar()
 end
 
 
-
-
 function parseCommand(playerIndex, command)
     if player_present(playerIndex) and player_alive(playerIndex) then
         args = {} 
@@ -1308,10 +1373,20 @@ function parseCommand(playerIndex, command)
         elseif args[1] == "sp" then
             say_all("Spawning sound!")
             local weap = spawn_object("weap", "zteam\\objects\\weapons\\single\\battle_rifle\\h3\\piercer", 102.23, 417.59, 5)
-            assign_weapon(weap, tonumber(playerIndex))
             return true
         elseif args[1] == "test" then
-            rewardLoot('gordius')
+            local weapon = args[2]
+            if tonumber(get_var(playerIndex, "$lvl")) ~= 4 then
+                say(playerIndex, "You must be an admin to execute this command!")
+            elseif weapon == nil 
+            or ITEM_LIST[weapon] == nil
+            or ITEM_LIST[weapon].type ~= "WEAPON" 
+            or ITEM_LIST[weapon].ref == nil 
+            then 
+                say(playerIndex, "This item does not exist") 
+            else 
+                spawn_object("weap", ITEM_LIST[weapon].ref, 105.62, 342.36, -3)
+            end
             return true
         elseif args[1] == "boss" then
             if tonumber(get_var(playerIndex, "$lvl")) == 4 and player:getClass():getClassName() == "boss" then
@@ -1589,7 +1664,10 @@ NEED_TABLE = nil
 PRETTY_TABLE={
     gordius="Gordius",
     mightofgordius="Might of Gordius",
-    shardofgordius="Shard of Gordius"
+    shardofgordius="Shard of Gordius",
+    widowmaker="Widow Maker",
+    torresshieldgenerator="Torres's Shield Generator",
+    torresammopouch="Torres's Ammo Pouch"
 }
 
 LOOT_TABLE = {
@@ -1600,6 +1678,14 @@ LOOT_TABLE = {
         'shardofgordius',
         'mightofgordius',
         'shardofgordius',
+    },
+    torres = {
+        'torresshieldgenerator',
+        'torresammopouch',
+        'widowmaker',
+        'torresshieldgenerator',
+        'torresammopouch',
+        'widowmaker'
     }
 }
 
@@ -1754,7 +1840,7 @@ function handleDamage(damagedPlayerIndex, attackingPlayerIndex, damageTagId, Dam
                 local currentPlayerHealth = read_float(damagedPlayerInMemory + 0xE0)*maxPlayerHealth
                 local fraction = currentPlayerHealth / maxPlayerHealth
                 if fraction <= 1.10 then
-                    execute_command("hp " .. damagedPlayerIndex .. " " .. fraction + 0.1)
+                    execute_command("hp " .. damagedPlayerIndex .. " " .. fraction + 0.05)
                 end
             end
             return true,0

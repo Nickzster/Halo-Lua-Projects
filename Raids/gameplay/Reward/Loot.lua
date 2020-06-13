@@ -30,7 +30,7 @@ LOOT_TABLE = {
         'shardofgordius',
         'mightofgordius',
         'shardofgordius',
-    }
+    },
     torres = {
         'torresshieldgenerator',
         'torresammopouch',

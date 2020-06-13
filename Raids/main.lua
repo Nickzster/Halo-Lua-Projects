@@ -113,7 +113,7 @@ function handleDamage(damagedPlayerIndex, attackingPlayerIndex, damageTagId, Dam
                 local currentPlayerHealth = read_float(damagedPlayerInMemory + 0xE0)*maxPlayerHealth
                 local fraction = currentPlayerHealth / maxPlayerHealth
                 if fraction <= 1.10 then
-                    execute_command("hp " .. damagedPlayerIndex .. " " .. fraction + 0.1)
+                    execute_command("hp " .. damagedPlayerIndex .. " " .. fraction + 0.05)
                 end
             end
             return true,0
