@@ -194,15 +194,16 @@ ITEM_LIST = {
             bandolier=true
         }
     },
-    discordant={
-        description="Concussion Rifle",
+    lobber={
+        description="Grenade Launcher",
         type="WEAPON",
-        ref="halo3\\weapons\\'plasma cannon'\\discordant",
-        maxAmmo=606,
+        ref="zteam\\objects\\weapons\\single\\grenade_launcher\\hr\\lobber",
+        maxAmmo=40,
         classes={
-            gunslinger=true
+            bandolier=true
         }
     },
+    
     irradiator={
         description="Carbine",
         type="WEAPON",
@@ -250,20 +251,50 @@ ITEM_LIST = {
             healer=true
         }
     },
+    eviscerator={
+        description="Energy Sword",
+        type="WEAPON",
+        battery=true,
+        maxBattery=100,
+        ref="h4\\weapons\\covenant\\energy sword\\eviscerator",
+        classes={
+            gunslinger=true
+        }
+    },
+    linearity={
+        description="Focus Rifle",
+        type="WEAPON",
+        battery=true,
+        maxBattery=100,
+        ref="np\\objects\\weapons\\rifle\\focus_rifle\\hr\\linearity",
+        classes={
+            gunslinger=true
+        }
+    },
     headhunter={
         description="Beam Rifle",
         type="WEAPON",
         battery=true,
+        maxBattery=100,
         ref="zteam\\objects\\weapons\\single\\beam_rifle\\h3\\headhunter",
         classes={
             gunslinger=true
         }
     },
-    eviscerator={
-        description="Energy Sword",
+    discordant={
+        description="Fuel Rod Cannon",
         type="WEAPON",
-        battery=true,
-        ref="h4\\weapons\\covenant\\energy sword\\eviscerator",
+        ref="halo3\\weapons\\'plasma cannon'\\discordant",
+        maxAmmo=30,
+        classes={
+            gunslinger=true
+        }
+    },
+    concusser={
+        description="Concussion Rifle",
+        type="WEAPON",
+        ref="zteam\\objects\\weapons\\single\\concussion_rifle\\hr\\concusser",
+        maxAmmo=606,
         classes={
             gunslinger=true
         }
@@ -272,7 +303,17 @@ ITEM_LIST = {
         description="Gravity Hammer",
         type="WEAPON",
         battery=true,
+        maxBattery=100,
         ref="zteam\\objects\\weapons\\single\\gravity_hammer\\h3\\thor",
+        classes={
+            tank=true
+        }
+    },
+    kingsglaive={
+        description="Brute Shot",
+        type="WEAPON",
+        maxAmmo=42,
+        ref="zteam\\objects\\weapons\\single\\brute_shot\\h3_6rounds\\kingsglaive",
         classes={
             tank=true
         }
@@ -280,6 +321,7 @@ ITEM_LIST = {
     charity={
         description="Pistol",
         type="WEAPON",
+        maxAmmo=500,
         ref="zteam\\objects\\weapons\\single\\magnum\\h1\\charity",
         classes={
             healer=true
@@ -288,6 +330,7 @@ ITEM_LIST = {
     grimreaper={
         description="Rocket Launcher",
         type="WEAPON",
+        maxAmmo=8,
         ref="zteam\\objects\\weapons\\single\\rocket_launcher\\hr\\grimreaper",
         classes={
             dps=true
@@ -296,6 +339,7 @@ ITEM_LIST = {
     deathwarrant={
         description="Shotgun",
         type="WEAPON",
+        maxAmmo=60,
         ref="zteam\\objects\\weapons\\single\\shotgun\\h3\\deathwarrant",
         classes={
             tank=true
@@ -304,6 +348,7 @@ ITEM_LIST = {
     chicagotypewriter={
         description="SMG",
         type="WEAPON",
+        maxAmmo=400,
         ref="zteam\\objects\\weapons\\single\\smg\\h3\\chicagotypewriter",
         classes={
             healer=true
@@ -312,7 +357,26 @@ ITEM_LIST = {
     widowmaker={
         description="Sniper Rifle",
         type="WEAPON",
+        maxAmmo=20,
         ref="halo3\\weapons\\sniper rifle\\widowmaker",
+        classes={
+            dps=true
+        }
+    },
+    covert={
+        description="Ma5K Tactical Rifle",
+        type="WEAPON",
+        maxAmmo=250,
+        ref="altis\\weapons\\br_spec_ops\\covert",
+        classes={
+            dps=true
+        }
+    },
+    negotiator={
+        description="Gauss Rifle",
+        type="WEAPON",
+        maxAmmo=40,
+        ref="np\\objects\\weapons\\rifle\\gauss_sniper_rifle\\hm\\negotiator",
         classes={
             dps=true
         }
@@ -322,6 +386,26 @@ ITEM_LIST = {
         type="ARMOR",
         ref="characters\\cyborg_mp\\soldier",
         maxHealth=100,
+        defense=0,
+        classes={
+            dps=true
+        }
+    },
+    dpstierone={
+        description="Tier 1 Soldier Armor",
+        type="ARMOR",
+        ref="characters\\cyborg_mp\\soldier1",
+        maxHealth=115,
+        defense=0,
+        classes={
+            dps=true
+        }
+    },
+    dpstiertwo={
+        description="Tier 2 Soldier Armor",
+        type="ARMOR",
+        ref="characters\\cyborg_mp\\soldier2",
+        maxHealth=130,
         defense=0,
         classes={
             dps=true
@@ -337,11 +421,51 @@ ITEM_LIST = {
             healer=true
         }
     },
+    healertierone={
+        description="Tier 1 Medic Armor",
+        type="ARMOR",
+        ref="characters\\cyborg_mp\\medic1",
+        maxHealth=115,
+        defense=0,
+        classes={
+            healer=true
+        }
+    },
+    healertiertwo={
+        description="Tier 2 Medic Armor",
+        type="ARMOR",
+        ref="characters\\cyborg_mp\\medic2",
+        maxHealth=130,
+        defense=0,
+        classes={
+            healer=true
+        }
+    },
     tankstd={
         description="Standard MK 6 armor for tanks",
         type="ARMOR",
-        ref="zteam\\objects\\characters\\spartan\\h3\\spartan",
+        ref="hcea\\characters\\cyborg\\spartan",
         maxHealth=500,
+        defense=0,
+        classes={
+            tank=true
+        }
+    },
+    tanktierone={
+        description="Tier 1 Spartan Armor",
+        type="ARMOR",
+        ref="zteam\\objects\\characters\\spartan\\h3\\spartan1",
+        maxHealth=550,
+        defense=0,
+        classes={
+            tank=true
+        }
+    },
+    tanktiertwo={
+        description="Tier 2 Spartan Armor",
+        type="ARMOR",
+        ref="zteam\\objects\\characters\\spartan\\h3\\spartan2",
+        maxHealth=600,
         defense=0,
         classes={
             tank=true
@@ -351,7 +475,17 @@ ITEM_LIST = {
         description="Standard Marine armor for Bandoliers",
         type="ARMOR",
         ref="bourrin\\halo reach\\marine-to-spartan\\bandolier",
-        maxHealth=100,
+        maxHealth=115,
+        defense=0,
+        classes={
+            bandolier=true
+        }
+    },
+    bandoliertiertwo={
+        description="Tier 2 Bandolier Armor",
+        type="ARMOR",
+        ref="bourrin\\halo reach\\marine-to-spartan\\bandolier2",
+        maxHealth=130,
         defense=0,
         classes={
             bandolier=true
@@ -362,6 +496,26 @@ ITEM_LIST = {
         type="ARMOR",
         ref="np\\objects\\characters\\elite\\h3\\bipeds\\valiant",
         maxHealth=100,
+        defense=0,
+        classes={
+            gunslinger=true
+        }
+    },
+    gunslingertierone={
+        description="Tier 1 Valiant Armor",
+        type="ARMOR",
+        ref="np\\objects\\characters\\elite\\hm\\bipeds\\valiant1",
+        maxHealth=115,
+        defense=0,
+        classes={
+            gunslinger=true
+        }
+    },
+    gunslingertiertwo={
+        description="Tier 2 Valiant Armor",
+        type="ARMOR",
+        ref="np\\objects\\characters\\elite\\hm\\bipeds\\valiant2",
+        maxHealth=130,
         defense=0,
         classes={
             gunslinger=true
@@ -660,9 +814,16 @@ function PlayerSchema.setUpNewPlayer(self)
         local p = self.loadouts[key].primary
         local s = self.loadouts[key].secondary
         local a = self.loadouts[key].armor
+        print("============================================")
+        print(key)
+        print(self:checkForItem(p))
+        print(self:checkForItem(s))
+        print(self:checkForItem(a))
+        print("============================================\n\n")
         self:setLoadout(key, p, s)
         self:setArmor(key, a)
     end
+    self:setArmor('boss', 'dpsstd')
 end
 
 function PlayerSchema.loadPlayer(self)
@@ -680,7 +841,7 @@ function PlayerSchema.loadPlayer(self)
         },
         gunslinger={
             primary="irradiator",
-            secondary="discordant",
+            secondary="concusser",
             armor="gunslingerstd"
         },
         healer={
@@ -703,16 +864,16 @@ function PlayerSchema.loadPlayer(self)
         limitless="limitless",
         accelerator="accelerator",
         irradiator="irradiator",
-        discordant="discordant",
+        concusser="concusser",
         lightbringer="lightbringer",
         faithful="faithful",
         brassknuckle="brassknuckle",
         rampart="rampart",
-        dps_std_armor = "dpsstd",
-        healer_std_armor="healerstd",
-        tank_std_armor="tankstd",
-        bandolier_std_armor="bandolierstd",
-        gunslinger_std_armor="gunslingerstd"
+        dpsstd = "dpsstd",
+        healerstd="healerstd",
+        tankstd="tankstd",
+        bandolierstd="bandolierstd",
+        gunslingerstd="gunslingerstd"
     }
     self.inventory = startingInventory
     self.loadouts = startingLoadouts
@@ -759,8 +920,12 @@ function PlayerSchema.addItemToInventory(self, itemName)
     end
 end
 
-function PlayerSchema.getItemFrominventory(self, item)
+function PlayerSchema.getItemFromInventory(self, item)
     if self.inventory[item] then return self.inventory[item] else return nil end
+end
+
+function PlayerSchema.checkForItem(self, item)
+    if self.inventory[item] ~= nil then return true else return false end
 end
 
 function PlayerSchema.removeItemFromInventory(self,itemName)
@@ -837,6 +1002,10 @@ function PlayerSchema.setLoadout(self, classKey, newPrimaryKey, newSecondaryKey)
             say(self:getPlayerIndex(), "You have specified a weapon that is NOT compatible with your class!")
             return false
         end
+        if self:checkForItem(newPrimaryKey) == false or self:checkForItem(newSecondaryKey) == false then
+            say(self:getPlayerIndex(), "You do not have these weapons yet!")
+            return false
+        end
         self.loadouts[currentClass].primary = CreateWeapon(newPrimaryKey)
         self.loadouts[currentClass].secondary = CreateWeapon(newSecondaryKey)
         return true
@@ -871,6 +1040,10 @@ function PlayerSchema.setArmor(self, classKey, newArmorKey)
         end
         if ITEM_LIST[newArmorKey].classes[currentClass] == nil then
             say(self:getPlayerIndex(), "You have specified armor that is NOT compatible with your current class!")
+            return false
+        end
+        if self:checkForItem(newArmorKey) == false then
+            say(self:getPlayerIndex(), "You do not have this armor unlocked!")
             return false
         end
         self.loadouts[currentClass].armor = CreateArmor(newArmorKey)
@@ -1040,11 +1213,7 @@ function WritePlayerToFile(hash)
             boss="BOSS"
         }
         for key,_ in pairs(classNames) do
-            if key == "boss" then
-                file:write("$BOSS_LOADOUT_BEGIN\n")
-                file:write(currentPlayer:getArmor(key):getName().."\n")
-                file:write("$BOSS_LOADOUT_END\n")
-            else
+            if key ~= "boss" then 
                 file:write("$"..classNames[key] .. "_LOADOUT_BEGIN\n")
                 file:write(currentPlayer:getPrimaryWeapon(key):getName().."\n")
                 file:write(currentPlayer:getSecondaryWeapon(key):getName().."\n")
@@ -1452,11 +1621,6 @@ function ReadPlayerFromFile(hash, playerIndex)
                 newPlayer:setArmor('bandolier', a)
                 file:read("*l")
             end
-            if nextLine == "$BOSS_LOADOUT_BEGIN" then
-                local a = file:read("*l")
-                newPlayer:setArmor('boss', a)
-                file:read("*l")
-            end
             if nextLine == "$EQUIPMENT_BEGIN" then
                 local ekey = file:read("*l")
                 if ekey ~= "$EQUIPMENT_END" then
@@ -1480,6 +1644,7 @@ function ReadPlayerFromFile(hash, playerIndex)
             end
         end
         file:close()
+        newPlayer:setArmor('boss', 'dpsstd')
         return newPlayer
     else
         return nil
@@ -1596,6 +1761,16 @@ function parseCommand(playerIndex, command)
             else
                 say(playerIndex, "You need to specify the equipment you want to equip!")
             end
+            return true
+        elseif args[1] == "armor" then
+            if args[2] ~= nil then
+                player:setArmor(nil, args[2])
+            else
+                say(playerIndex, "You need to specify the armor you want to equip!")
+            end
+            return true
+        elseif args[1] == "respawn" then
+            kill(playerIndex)
             return true
         elseif args[1] == "loadout" then
            if player:setLoadout(nil, args[2], args[3]) then

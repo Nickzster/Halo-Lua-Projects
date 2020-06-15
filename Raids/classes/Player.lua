@@ -33,9 +33,16 @@ function PlayerSchema.setUpNewPlayer(self)
         local p = self.loadouts[key].primary
         local s = self.loadouts[key].secondary
         local a = self.loadouts[key].armor
+        print("============================================")
+        print(key)
+        print(self:checkForItem(p))
+        print(self:checkForItem(s))
+        print(self:checkForItem(a))
+        print("============================================\n\n")
         self:setLoadout(key, p, s)
         self:setArmor(key, a)
     end
+    self:setArmor('boss', 'dpsstd')
 end
 
 function PlayerSchema.loadPlayer(self)
@@ -53,7 +60,7 @@ function PlayerSchema.loadPlayer(self)
         },
         gunslinger={
             primary="irradiator",
-            secondary="discordant",
+            secondary="concusser",
             armor="gunslingerstd"
         },
         healer={
@@ -76,16 +83,16 @@ function PlayerSchema.loadPlayer(self)
         limitless="limitless",
         accelerator="accelerator",
         irradiator="irradiator",
-        discordant="discordant",
+        concusser="concusser",
         lightbringer="lightbringer",
         faithful="faithful",
         brassknuckle="brassknuckle",
         rampart="rampart",
-        dps_std_armor = "dpsstd",
-        healer_std_armor="healerstd",
-        tank_std_armor="tankstd",
-        bandolier_std_armor="bandolierstd",
-        gunslinger_std_armor="gunslingerstd"
+        dpsstd = "dpsstd",
+        healerstd="healerstd",
+        tankstd="tankstd",
+        bandolierstd="bandolierstd",
+        gunslingerstd="gunslingerstd"
     }
     self.inventory = startingInventory
     self.loadouts = startingLoadouts
@@ -132,8 +139,12 @@ function PlayerSchema.addItemToInventory(self, itemName)
     end
 end
 
-function PlayerSchema.getItemFrominventory(self, item)
+function PlayerSchema.getItemFromInventory(self, item)
     if self.inventory[item] then return self.inventory[item] else return nil end
+end
+
+function PlayerSchema.checkForItem(self, item)
+    if self.inventory[item] ~= nil then return true else return false end
 end
 
 function PlayerSchema.removeItemFromInventory(self,itemName)
@@ -210,6 +221,10 @@ function PlayerSchema.setLoadout(self, classKey, newPrimaryKey, newSecondaryKey)
             say(self:getPlayerIndex(), "You have specified a weapon that is NOT compatible with your class!")
             return false
         end
+        if self:checkForItem(newPrimaryKey) == false or self:checkForItem(newSecondaryKey) == false then
+            say(self:getPlayerIndex(), "You do not have these weapons yet!")
+            return false
+        end
         self.loadouts[currentClass].primary = CreateWeapon(newPrimaryKey)
         self.loadouts[currentClass].secondary = CreateWeapon(newSecondaryKey)
         return true
@@ -244,6 +259,10 @@ function PlayerSchema.setArmor(self, classKey, newArmorKey)
         end
         if ITEM_LIST[newArmorKey].classes[currentClass] == nil then
             say(self:getPlayerIndex(), "You have specified armor that is NOT compatible with your current class!")
+            return false
+        end
+        if self:checkForItem(newArmorKey) == false then
+            say(self:getPlayerIndex(), "You do not have this armor unlocked!")
             return false
         end
         self.loadouts[currentClass].armor = CreateArmor(newArmorKey)

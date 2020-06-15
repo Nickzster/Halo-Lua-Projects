@@ -51,11 +51,6 @@ function ReadPlayerFromFile(hash, playerIndex)
                 newPlayer:setArmor('bandolier', a)
                 file:read("*l")
             end
-            if nextLine == "$BOSS_LOADOUT_BEGIN" then
-                local a = file:read("*l")
-                newPlayer:setArmor('boss', a)
-                file:read("*l")
-            end
             if nextLine == "$EQUIPMENT_BEGIN" then
                 local ekey = file:read("*l")
                 if ekey ~= "$EQUIPMENT_END" then
@@ -79,6 +74,7 @@ function ReadPlayerFromFile(hash, playerIndex)
             end
         end
         file:close()
+        newPlayer:setArmor('boss', 'dpsstd')
         return newPlayer
     else
         return nil

@@ -43,6 +43,16 @@ function parseCommand(playerIndex, command)
                 say(playerIndex, "You need to specify the equipment you want to equip!")
             end
             return true
+        elseif args[1] == "armor" then
+            if args[2] ~= nil then
+                player:setArmor(nil, args[2])
+            else
+                say(playerIndex, "You need to specify the armor you want to equip!")
+            end
+            return true
+        elseif args[1] == "respawn" then
+            kill(playerIndex)
+            return true
         elseif args[1] == "loadout" then
            if player:setLoadout(nil, args[2], args[3]) then
                 kill(playerIndex)

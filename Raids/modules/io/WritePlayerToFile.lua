@@ -19,11 +19,7 @@ function WritePlayerToFile(hash)
             boss="BOSS"
         }
         for key,_ in pairs(classNames) do
-            if key == "boss" then
-                file:write("$BOSS_LOADOUT_BEGIN\n")
-                file:write(currentPlayer:getArmor(key):getName().."\n")
-                file:write("$BOSS_LOADOUT_END\n")
-            else
+            if key ~= "boss" then 
                 file:write("$"..classNames[key] .. "_LOADOUT_BEGIN\n")
                 file:write(currentPlayer:getPrimaryWeapon(key):getName().."\n")
                 file:write(currentPlayer:getSecondaryWeapon(key):getName().."\n")
