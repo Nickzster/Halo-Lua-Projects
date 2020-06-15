@@ -10,7 +10,6 @@
 -- import Raids.classes.VirtualObjects.Item end
 -- import Raids.globals.values end
 -- import Raids.modules.Balancer.RaidBalancer end
--- import Raids.modules.io.WritePlayerToFile end
 -- import Raids.util.ProperClassNames end
 -- END_IMPORT
 
@@ -36,7 +35,6 @@ function changePlayerClass(playerIndex, newClass)
             local currentPlayer = ACTIVE_PLAYER_LIST[get_var(playerIndex, "$hash")]
             currentPlayer:setClass(CLASS_LIST[newClass]:new())
             currentPlayer:setPreferredClass(newClass)
-            WritePlayerToFile(get_var(playerIndex, "$hash"))
             if player_alive(playerIndex) then kill(playerIndex) end
         end
         return true

@@ -28,80 +28,88 @@ function PlayerSchema.setClass(self, class)
     return self.class
 end
 
-function PlayerSchema.setUpNewPlayer(self)
+function PlayerSchema.create(self, playerIndex)
+    local defaultTable = {
+        locations = {},
+        startingLoadouts = {
+            dps = { 
+                primary="piercer",
+                secondary="reliable",
+                armor="dpsstd"
+            },
+            bandolier={
+                primary="limitless",
+                secondary="accelerator",
+                armor="bandolierstd"
+            },
+            gunslinger={
+                primary="irradiator",
+                secondary="concusser",
+                armor="gunslingerstd"
+            },
+            healer={
+                primary="lightbringer",
+                secondary="faithful",
+                armor="healerstd"
+            },
+            tank={
+                primary="brassknuckle",
+                secondary="rampart",
+                armor="tankstd"
+            },
+            boss={
+                armor="DEFAULT"
+            }
+        },
+        startingInventory = {
+            piercer="piercer",
+            reliable="reliable",
+            limitless="limitless",
+            accelerator="accelerator",
+            irradiator="irradiator",
+            concusser="concusser",
+            lightbringer="lightbringer",
+            faithful="faithful",
+            brassknuckle="brassknuckle",
+            rampart="rampart",
+            dpsstd = "dpsstd",
+            healerstd="healerstd",
+            tankstd="tankstd",
+            bandolierstd="bandolierstd",
+            gunslingerstd="gunslingerstd",
+            DEFAULT="DEFAULT"
+        },
+        startingEquipment = nil,
+        preferredClass = 'dps'
+    }
+    local newPlayer = self:ReadPlayerFromFile(get_var(playerIndex, "$hash"), defaultTable)
+    -- Instantiate player using table
+    self.playerIndex = playerIndex
+    self.loadouts = newPlayer['startingLoadouts']
+    self.inventory = newPlayer['startingInventory']
+    self.locations = newPlayer['locations']
+    self:setEquipment(newPlayer['startingEquipment'])
+    self.preferredClass = newPlayer['preferredClass']
+    self:instantiatePlayer()
+    return self
+end
+
+function PlayerSchema.instantiatePlayer(self)
     for key,_ in pairs(self.loadouts) do
         local p = self.loadouts[key].primary
         local s = self.loadouts[key].secondary
         local a = self.loadouts[key].armor
-        print("============================================")
-        print(key)
-        print(self:checkForItem(p))
-        print(self:checkForItem(s))
-        print(self:checkForItem(a))
-        print("============================================\n\n")
         self:setLoadout(key, p, s)
         self:setArmor(key, a)
     end
-    self:setArmor('boss', 'dpsstd')
-end
-
-function PlayerSchema.loadPlayer(self)
-    self.locations = {}
-    local startingLoadouts = {
-        dps = { 
-            primary="piercer",
-            secondary="reliable",
-            armor="dpsstd"
-        },
-        bandolier={
-            primary="limitless",
-            secondary="accelerator",
-            armor="bandolierstd"
-        },
-        gunslinger={
-            primary="irradiator",
-            secondary="concusser",
-            armor="gunslingerstd"
-        },
-        healer={
-            primary="lightbringer",
-            secondary="faithful",
-            armor="healerstd"
-        },
-        tank={
-            primary="brassknuckle",
-            secondary="rampart",
-            armor="tankstd"
-        },
-        boss={
-            armor="DEFAULT"
-        }
-    }
-    local startingInventory = {
-        piercer="piercer",
-        reliable="reliable",
-        limitless="limitless",
-        accelerator="accelerator",
-        irradiator="irradiator",
-        concusser="concusser",
-        lightbringer="lightbringer",
-        faithful="faithful",
-        brassknuckle="brassknuckle",
-        rampart="rampart",
-        dpsstd = "dpsstd",
-        healerstd="healerstd",
-        tankstd="tankstd",
-        bandolierstd="bandolierstd",
-        gunslingerstd="gunslingerstd"
-    }
-    self.inventory = startingInventory
-    self.loadouts = startingLoadouts
-    return self
 end
 
 function PlayerSchema.savePlayer(self)
-    local hash = get_var(self.playerIndex, "$hash")
-    if hash ~= nil then WritePlayerToFile(hash) end
+    self:WritePlayerToFile(get_var(self:getPlayerIndex(), "$hash"), self)
+end
+
+function PlayerSchema.delete(self)
+   self:savePlayer()
 end
 
 function PlayerSchema.getClass(self)
@@ -130,7 +138,7 @@ end
 
 function PlayerSchema.addItemToInventory(self, itemName)
     --TODO: Refactor
-    if ITEM_LIST[itemName] and self:getItemFrominventory(itemName) == nil then
+    if ITEM_LIST[itemName] and self:getItemFromInventory(itemName) == nil then
         self.inventory[itemName] = itemName
         say(self.playerIndex, "New Item: " ..itemName.. " has been added to your inventory!")
         return true
@@ -170,8 +178,9 @@ function PlayerSchema.getPlayerIndex(self)
 end
 
 function PlayerSchema.setEquipment(self, newEquipmentKey)
+    if newEquipmentKey == nil then return end
     if ITEM_LIST[newEquipmentKey] ~= nil 
-    and self:getItemFrominventory(newEquipmentKey) ~= nil
+    and self:getItemFromInventory(newEquipmentKey) ~= nil
     then
         if ITEM_LIST[newEquipmentKey].classes == nil
         or ITEM_LIST[newEquipmentKey].classes ~= nil
@@ -275,6 +284,116 @@ end
 
 function PlayerSchema.getArmor(self, key)
     return self.loadouts[self:getClassNameUtil(key)].armor
+end
+
+function PlayerSchema.WritePlayerToFile(self)
+    local hash = get_var(self:getPlayerIndex(), "$hash")
+    local fileName = "raids_data_files/"..hash
+    local file = io.open(fileName, "w")
+    if file == nil then
+        print("ERROR: raids_data_files DOES NOT EXIST. CREATE IT IN ORDER TO SAVE PLAYER DATA!")
+    else
+        local classNames = {
+            dps='DPS',
+            healer='HEALER',
+            bandolier='BANDOLIER',
+            tank='TANK',
+            gunslinger='GUNSLINGER',
+            boss="BOSS"
+        }
+        for key,_ in pairs(classNames) do
+            if key ~= "boss" then 
+                file:write("$"..classNames[key] .. "_LOADOUT_BEGIN\n")
+                file:write(self:getPrimaryWeapon(key):getName().."\n")
+                file:write(self:getSecondaryWeapon(key):getName().."\n")
+                file:write(self:getArmor(key):getName().."\n") 
+                file:write("$"..classNames[key] .. "_LOADOUT_END\n")
+            end
+        end
+        local playerInventory = self:getInventory()
+        file:write("$INVENTORY_BEGIN\n")
+        for key,_ in pairs(playerInventory) do
+            file:write(key.."\n")
+        end
+        file:write("$INVENTORY_END\n")
+        file:write("$EQUIPMENT_BEGIN\n")
+        if self:getEquipment() ~= nil then
+            file:write(self:getEquipment():getName().."\n")
+        end
+        file:write("$EQUIPMENT_END\n")
+        file:write("$PREFERRED_CLASS_BEGIN\n")
+        file:write(self:getPreferredClass()..'\n')
+        file:write("$PREFERRED_CLASS_END\n")
+        file:write("$EOF")
+        file:close()
+    end
+end
+
+function PlayerSchema.ReadPlayerFromFile(self, hash, defaultPlayerTable)
+    local fileName = "raids_data_files/"..hash
+    local file = io.open(fileName, "r")
+    local newPlayerTable = defaultPlayerTable
+    if file ~= nil then
+        local EOF = false
+        while EOF == false do
+            local nextLine = file:read("*l")
+            if nextLine == "$DPS_LOADOUT_BEGIN" then
+                newPlayerTable['startingLoadouts']['dps']['primary'] = file:read("*l")
+                newPlayerTable['startingLoadouts']['dps']['secondary'] = file:read("*l")
+                newPlayerTable['startingLoadouts']['dps']['armor'] = file:read("*l")
+                file:read("*l")
+            end
+            if nextLine == "$HEALER_LOADOUT_BEGIN" then
+                newPlayerTable['startingLoadouts']['healer']['primary'] = file:read("*l")
+                newPlayerTable['startingLoadouts']['healer']['secondary'] = file:read("*l")
+                newPlayerTable['startingLoadouts']['healer']['armor'] = file:read("*l")
+                file:read("*l")
+            end
+            if nextLine == "$TANK_LOADOUT_BEGIN" then
+                newPlayerTable['startingLoadouts']['tank']['primary'] = file:read("*l")
+                newPlayerTable['startingLoadouts']['tank']['secondary'] = file:read("*l")
+                newPlayerTable['startingLoadouts']['tank']['armor'] = file:read("*l")
+                file:read("*l")
+            end
+            if nextLine == "$GUNSLINGER_LOADOUT_BEGIN" then
+                newPlayerTable['startingLoadouts']['gunslinger']['primary'] = file:read("*l")
+                newPlayerTable['startingLoadouts']['gunslinger']['secondary'] = file:read("*l")
+                newPlayerTable['startingLoadouts']['gunslinger']['armor'] = file:read("*l")
+                file:read("*l")
+            end
+            if nextLine == "$BANDOLIER_LOADOUT_BEGIN" then
+                newPlayerTable['startingLoadouts']['bandolier']['primary'] = file:read("*l")
+                newPlayerTable['startingLoadouts']['bandolier']['secondary'] = file:read("*l")
+                newPlayerTable['startingLoadouts']['bandolier']['armor'] = file:read("*l")
+                file:read("*l")
+            end
+            if nextLine == "$EQUIPMENT_BEGIN" then
+                local ekey = file:read("*l")
+                if ekey ~= "$EQUIPMENT_END" then
+                    newPlayerTable['startingEquipment'] = ekey
+                    file:read("*l")
+                end
+            end
+            if nextLine=="$INVENTORY_BEGIN" then
+                local currentInventoryItem = file:read("*l")
+                while currentInventoryItem ~= "$INVENTORY_END" do
+                    if newPlayerTable['startingInventory'][currentInventoryItem] == nil then
+                        newPlayerTable['startingInventory'][currentInventoryItem] = currentInventoryItem
+                    end
+                    currentInventoryItem = file:read("*l")
+                end
+            end
+            if nextLine=="$PREFERRED_CLASS_BEGIN" then
+                newPlayerTable['preferredClass'] = file:read("*l")
+                file:read("*l")
+            end
+            if nextLine=="$EOF" then
+                EOF = true
+            end
+        end
+        file:close()
+    end
+    return newPlayerTable
 end
 
 

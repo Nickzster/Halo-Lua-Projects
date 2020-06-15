@@ -36,6 +36,9 @@ function parseCommand(playerIndex, command)
                 say(playerIndex, "Bosses cannot do that!")
             end
             return true
+        elseif args[1] == "save" then
+            player:savePlayer()
+            return true
         elseif args[1] == "equip" then
             if args[2] ~= nil then
                 player:setEquipment(args[2]) 
@@ -43,12 +46,24 @@ function parseCommand(playerIndex, command)
                 say(playerIndex, "You need to specify the equipment you want to equip!")
             end
             return true
+        elseif args[1] == "equipment" then
+            say(playerIndex, player:getEquipment():getName())
+            return true
         elseif args[1] == "armor" then
             if args[2] ~= nil then
                 player:setArmor(nil, args[2])
             else
                 say(playerIndex, "You need to specify the armor you want to equip!")
             end
+            return true
+        elseif args[1] == "reward" then
+            if tonumber(get_var(playerIndex, "$lvl")) ~= 4 then say("You need admin priviledges to execute this!") return true end
+            if args[2] == nil then say(playerIndex, "You need to specify a player index!") return true end
+            if args[3] == nil then say(playerIndex, "You need to specify a reward item!") return true end
+            if ITEM_LIST[args[3]] == nil then say(playerIndex, "You need to specify a valid item!") return true end
+            if player_present(tonumber(args[2])) == false then say(playerIndex, "You need to specify a present player!") return true end
+            local targetPlayerHash = get_var(tonumber(args[2]), "$hash")
+            player:addItemToInventory(args[3])
             return true
         elseif args[1] == "respawn" then
             kill(playerIndex)
