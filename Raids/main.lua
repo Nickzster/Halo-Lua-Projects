@@ -12,6 +12,7 @@
 -- import Raids.classes.VirtualObjects.Item end
 -- import Raids.util.ModifyDamage end
 -- import Raids.modules.io.WritePlayerToFile end
+-- import Raids.sapp.PlayerEvents.ActivateUltimateAbility end
 -- END_IMPORT
 
 
@@ -140,6 +141,21 @@ function handleDamage(damagedPlayerIndex, attackingPlayerIndex, damageTagId, Dam
 end
 
 function handleTick()
+    for i = 0,16 do
+        if player_present(i) and player_alive(i) then
+            local test = read_bit(get_dynamic_player(i) + 0x208, 4)
+            if test ~= nil and test == 1 then
+                local activateUltEvent = EventItem:new()
+                activateUltEvent:set(
+                    {['playerIndex']=i, ['hash']=get_var(i, "$hash")}, 
+                    nil, 
+                    function(props)  activateUltimateAbility(props.hash, props.playerIndex) end,
+                    0
+                )
+                EventTable:addEvent('PLAYER_' .. i .. '_ULT_ACTIVATE', activateUltEvent)
+            end
+        end
+    end
     PrintBossBar()
     EventTable:cycle()
 end

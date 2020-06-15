@@ -30,7 +30,7 @@ function parseCommand(playerIndex, command)
             end
             return true
         elseif args[1] == "ult" or args[1] == "ultimate" then
-            if player:getClass().boss == nil then
+            if player:getClass():getClassName() ~= "boss" then
                 activateUltimateAbility(hash, playerIndex)
             else
                 say(playerIndex, "Bosses cannot do that!")
@@ -48,11 +48,20 @@ function parseCommand(playerIndex, command)
                 kill(playerIndex)
            end
            return true
-        elseif args[1] == "sp" then
+        elseif args[1] == "test" then
+            -- Note: get_dynamic_player(playerIndex) is equivalent to m_player or m_object or m_unit
+            local playerCurrentWeap = read_word(get_dynamic_player(playerIndex) + 0x2F2)
+            if playerCurrentWeap == nil or playerCurrentWeap == 0 then
+                say(playerIndex, "Operation failed!")
+            else
+                say(playerIndex, "The value is: " .. playerCurrentWeap)
+            end
+            return true
+        elseif args[1] == "sound" then
             say_all("Spawning sound!")
             local weap = spawn_object("weap", "zteam\\objects\\weapons\\single\\battle_rifle\\h3\\piercer", 102.23, 417.59, 5)
             return true
-        elseif args[1] == "test" then
+        elseif args[1] == "spawn" then
             local weapon = args[2]
             if tonumber(get_var(playerIndex, "$lvl")) ~= 4 then
                 say(playerIndex, "You must be an admin to execute this command!")
