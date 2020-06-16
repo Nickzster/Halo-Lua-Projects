@@ -9,14 +9,12 @@
 
 
 function loadPlayer(playerIndex) 
-    local playerClass = 'dps'
     local hash = get_var(playerIndex, "$hash")
     local newPlayer = PlayerSchema:new():create(playerIndex)
+    local playerClass = newPlayer:getPreferredClass()
     --step two: initalize values, load player
     ACTIVE_PLAYER_LIST[hash] = newPlayer
-    if playerClass ~= "dps" and playerClass ~= "gunslinger" then
-        playerClass = "dps"
-    end
+    if playerClass ~= "dps" then playerClass = "dps" end
     changePlayerClass(playerIndex, playerClass)
     Balancer()
 end

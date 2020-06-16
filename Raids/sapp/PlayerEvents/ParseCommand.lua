@@ -8,6 +8,8 @@
 -- import Raids.sapp.PlayerEvents.Commands.ChangeBoss end
 -- import Raids.gameplay.Reward.Loot end
 -- import Raids.util.ProperClassNames end
+-- import Raids.modules.Events.EventTable end
+-- import Raids.modules.Events.EventItem end
 -- END_IMPORT
 
 function parseCommand(playerIndex, command)
@@ -50,10 +52,8 @@ function parseCommand(playerIndex, command)
             say(playerIndex, player:getEquipment():getName())
             return true
         elseif args[1] == "armor" then
-            if args[2] ~= nil then
-                player:setArmor(nil, args[2])
-            else
-                say(playerIndex, "You need to specify the armor you want to equip!")
+            if player:setArmor(nil, args[2]) then
+                kill(playerIndex)
             end
             return true
         elseif args[1] == "reward" then
@@ -67,6 +67,17 @@ function parseCommand(playerIndex, command)
             return true
         elseif args[1] == "respawn" then
             kill(playerIndex)
+            return true
+        elseif args[1] == "dialogtest" then
+            local tagref = spawn_object("vehi", "vehicles\\warthog\\raids\\torres\\wipe", 54.33,3.33,32.51)
+            local deleteDialog = EventItem:new()
+            deleteDialog:set({
+                ['deleteDialog'] = tagref
+            }, 
+            nil,
+            function(props) destroy_object(props.deleteDialog) end,
+            30 * 40)
+            EventTable:addEvent('TORRES_WIPE', deleteDialog)
             return true
         elseif args[1] == "loadout" then
            if player:setLoadout(nil, args[2], args[3]) then

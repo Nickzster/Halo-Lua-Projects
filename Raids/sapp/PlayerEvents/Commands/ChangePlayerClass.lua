@@ -18,7 +18,6 @@ CLASS_LIST = {
     ["healer"] = HealerSchema,
     ["tank"] = TankSchema,
     ["boss"] = BossSchema,
-    ["gunslinger"] = GunslingerSchema,
     ["bandolier"] = BandolierSchema
 }
 

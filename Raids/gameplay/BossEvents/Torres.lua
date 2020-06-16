@@ -6,8 +6,8 @@
 -- END_IMPORT
 
 SavantEventCompleted = function(props) 
-    say_all("Savant Deployed! It's near the center walkway!")
-    spawn_object("weap", "halo reach\\objects\\weapons\\support_high\\spartan_laser\\savant", 105.62, 342.36, -3)
+    say_all("Savant Deployed! We dropped it on the roof with the computer!")
+    spawn_object("weap", "bourrin\\halo3\\weapons\\spartan laser\\savant", 0,0,1)
 end
 
 LocationEventCompleted = function(props) 

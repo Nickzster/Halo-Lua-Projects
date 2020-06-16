@@ -54,7 +54,6 @@ ITEM_LIST = {
             bandolier=true
         }
     },
-    
     irradiator={
         description="Carbine",
         type="WEAPON",
@@ -86,7 +85,7 @@ ITEM_LIST = {
         description="Plasma Pistol",
         type="WEAPON",
         battery=true,
-        ref="zteam\\objects\\weapons\\single\\plasma_pistol\\h3\\faithful",
+        ref="h2\\objects\\weapons\\pistol\\plasma_pistol\\faithful",
         maxBattery=100,
         classes={
             healer=true
@@ -96,8 +95,28 @@ ITEM_LIST = {
         description="Plasma Rifle",
         type="WEAPON",
         battery=true,
-        ref="zteam\\objects\\weapons\\single\\plasma_rifle\\h3\\lightbringer",
+        ref="h2\\objects\\weapons\\rifle\\plasma_rifle\\lightbringer",
         maxBattery=100,
+        classes={
+            healer=true
+        }
+    },
+    piety={
+        description="Brute Plasma Rifle",
+        type="WEAPON",
+        battery=true,
+        maxBattery=100,
+        ref="h2\\objects\\weapons\\rifle\\brute_plasma_rifle\\piety",
+        classes={
+            healer=true
+        }
+    },
+    linearity={
+        description="Sentinel Beam",
+        type="WEAPON",
+        battery=true,
+        maxBattery=100,
+        ref="h2\\objects\\weapons\\support_low\\sentinel_beam\\linearity",
         classes={
             healer=true
         }
@@ -108,16 +127,6 @@ ITEM_LIST = {
         battery=true,
         maxBattery=100,
         ref="h4\\weapons\\covenant\\energy sword\\eviscerator",
-        classes={
-            gunslinger=true
-        }
-    },
-    linearity={
-        description="Focus Rifle",
-        type="WEAPON",
-        battery=true,
-        maxBattery=100,
-        ref="np\\objects\\weapons\\rifle\\focus_rifle\\hr\\linearity",
         classes={
             gunslinger=true
         }

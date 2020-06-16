@@ -31,7 +31,7 @@ LOOT_TABLE = {
         'mightofgordius',
         'shardofgordius',
     },
-    torres = {
+    torres_wip = {
         'torresshieldgenerator',
         'torresammopouch',
         'widowmaker',

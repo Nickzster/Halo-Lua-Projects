@@ -57,7 +57,7 @@ function OnScriptUnload()
     --         WritePlayerToFile(get_var(i, "$hash"))
     --     end
     -- end
-    BIPED_TAG_LIST = {}
+    -- BIPED_TAG_LIST = {}
     ACTIVE_PLAYER_LIST = {}
     ACTIVE_BOSSES = {}
     EVENT_TABLE = {}

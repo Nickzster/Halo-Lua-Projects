@@ -275,7 +275,6 @@ ITEM_LIST = {
             bandolier=true
         }
     },
-    
     irradiator={
         description="Carbine",
         type="WEAPON",
@@ -307,7 +306,7 @@ ITEM_LIST = {
         description="Plasma Pistol",
         type="WEAPON",
         battery=true,
-        ref="zteam\\objects\\weapons\\single\\plasma_pistol\\h3\\faithful",
+        ref="h2\\objects\\weapons\\pistol\\plasma_pistol\\faithful",
         maxBattery=100,
         classes={
             healer=true
@@ -317,8 +316,28 @@ ITEM_LIST = {
         description="Plasma Rifle",
         type="WEAPON",
         battery=true,
-        ref="zteam\\objects\\weapons\\single\\plasma_rifle\\h3\\lightbringer",
+        ref="h2\\objects\\weapons\\rifle\\plasma_rifle\\lightbringer",
         maxBattery=100,
+        classes={
+            healer=true
+        }
+    },
+    piety={
+        description="Brute Plasma Rifle",
+        type="WEAPON",
+        battery=true,
+        maxBattery=100,
+        ref="h2\\objects\\weapons\\rifle\\brute_plasma_rifle\\piety",
+        classes={
+            healer=true
+        }
+    },
+    linearity={
+        description="Sentinel Beam",
+        type="WEAPON",
+        battery=true,
+        maxBattery=100,
+        ref="h2\\objects\\weapons\\support_low\\sentinel_beam\\linearity",
         classes={
             healer=true
         }
@@ -329,16 +348,6 @@ ITEM_LIST = {
         battery=true,
         maxBattery=100,
         ref="h4\\weapons\\covenant\\energy sword\\eviscerator",
-        classes={
-            gunslinger=true
-        }
-    },
-    linearity={
-        description="Focus Rifle",
-        type="WEAPON",
-        battery=true,
-        maxBattery=100,
-        ref="np\\objects\\weapons\\rifle\\focus_rifle\\hr\\linearity",
         classes={
             gunslinger=true
         }
@@ -1498,7 +1507,6 @@ CLASS_LIST = {
     ["healer"] = HealerSchema,
     ["tank"] = TankSchema,
     ["boss"] = BossSchema,
-    ["gunslinger"] = GunslingerSchema,
     ["bandolier"] = BandolierSchema
 }
 
@@ -1526,14 +1534,12 @@ end
 
 
 function loadPlayer(playerIndex) 
-    local playerClass = 'dps'
     local hash = get_var(playerIndex, "$hash")
     local newPlayer = PlayerSchema:new():create(playerIndex)
+    local playerClass = newPlayer:getPreferredClass()
     --step two: initalize values, load player
     ACTIVE_PLAYER_LIST[hash] = newPlayer
-    if playerClass ~= "dps" and playerClass ~= "gunslinger" then
-        playerClass = "dps"
-    end
+    if playerClass ~= "dps" then playerClass = "dps" end
     changePlayerClass(playerIndex, playerClass)
     Balancer()
 end
@@ -1563,7 +1569,7 @@ LOOT_TABLE = {
         'mightofgordius',
         'shardofgordius',
     },
-    torres = {
+    torres_wip = {
         'torresshieldgenerator',
         'torresammopouch',
         'widowmaker',
@@ -1665,10 +1671,8 @@ function parseCommand(playerIndex, command)
             say(playerIndex, player:getEquipment():getName())
             return true
         elseif args[1] == "armor" then
-            if args[2] ~= nil then
-                player:setArmor(nil, args[2])
-            else
-                say(playerIndex, "You need to specify the armor you want to equip!")
+            if player:setArmor(nil, args[2]) then
+                kill(playerIndex)
             end
             return true
         elseif args[1] == "reward" then
@@ -1682,6 +1686,17 @@ function parseCommand(playerIndex, command)
             return true
         elseif args[1] == "respawn" then
             kill(playerIndex)
+            return true
+        elseif args[1] == "dialogtest" then
+            local tagref = spawn_object("vehi", "vehicles\\warthog\\raids\\torres\\wipe", 54.33,3.33,32.51)
+            local deleteDialog = EventItem:new()
+            deleteDialog:set({
+                ['deleteDialog'] = tagref
+            }, 
+            nil,
+            function(props) destroy_object(props.deleteDialog) end,
+            30 * 40)
+            EventTable:addEvent('TORRES_WIPE', deleteDialog)
             return true
         elseif args[1] == "loadout" then
            if player:setLoadout(nil, args[2], args[3]) then
@@ -1770,8 +1785,8 @@ function parseCommand(playerIndex, command)
     end
 end
 SavantEventCompleted = function(props) 
-    say_all("Savant Deployed! It's near the center walkway!")
-    spawn_object("weap", "halo reach\\objects\\weapons\\support_high\\spartan_laser\\savant", 105.62, 342.36, -3)
+    say_all("Savant Deployed! We dropped it on the roof with the computer!")
+    spawn_object("weap", "bourrin\\halo3\\weapons\\spartan laser\\savant", 0,0,1)
 end
 
 LocationEventCompleted = function(props) 
@@ -1967,7 +1982,7 @@ function OnScriptUnload()
     --         WritePlayerToFile(get_var(i, "$hash"))
     --     end
     -- end
-    BIPED_TAG_LIST = {}
+    -- BIPED_TAG_LIST = {}
     ACTIVE_PLAYER_LIST = {}
     ACTIVE_BOSSES = {}
     EVENT_TABLE = {}
