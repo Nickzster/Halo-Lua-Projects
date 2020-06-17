@@ -54,6 +54,15 @@ ITEM_LIST = {
             bandolier=true
         }
     },
+    lawman={
+        description="DMR",
+        type="WEAPON",
+        ref="bourrin\\weapons\\dmr\\lawman",
+        maxAmmo=500,
+        classes={
+            bandolier=true
+        }
+    },
     irradiator={
         description="Carbine",
         type="WEAPON",
@@ -395,7 +404,7 @@ ITEM_LIST = {
         description="Torres Boss",
         type="BOSS",
         ref="rangetest\\cmt\\characters\\evolved_h1-spirit\\cyborg\\bipeds\\torres",
-        maxHealth=1500,
+        maxHealth=3000,
         defense=0,
         classes={
             boss=true
@@ -436,6 +445,46 @@ ITEM_LIST = {
         type="ARMOR",
         ref="hcea\\characters\\cyborg\\spartan",
         maxHealth=100,
+        defense=0,
+        classes={
+            boss=true
+        }
+    },
+    backdraft={
+        description="Backdraft Boss",
+        type="BOSS",
+        ref="bourrin\\halo reach\\spartan\\male\\backdraft",
+        maxHealth=1200,
+        defense=0,
+        classes={
+            boss=true
+        }
+    },
+    boom={
+        description="Boom Boss",
+        type="BOSS",
+        ref="bourrin\\halo reach\\spartan\\male\\boom",
+        maxHealth=750,
+        defense=0,
+        classes={
+            boss=true
+        }
+    },
+    bewm={
+        description="Bewm Boss",
+        type="BOSS",
+        ref="bourrin\\halo reach\\spartan\\male\\buum",
+        maxHealth=800,
+        defense=0,
+        classes={
+            boss=true
+        }
+    },
+    griswald={
+        description="Griswald Boss",
+        type="BOSS",
+        ref="bourrin\\halo reach\\spartan\\male\\griswald",
+        maxHealth=900,
         defense=0,
         classes={
             boss=true

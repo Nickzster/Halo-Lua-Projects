@@ -275,6 +275,15 @@ ITEM_LIST = {
             bandolier=true
         }
     },
+    lawman={
+        description="DMR",
+        type="WEAPON",
+        ref="bourrin\\weapons\\dmr\\lawman",
+        maxAmmo=500,
+        classes={
+            bandolier=true
+        }
+    },
     irradiator={
         description="Carbine",
         type="WEAPON",
@@ -616,7 +625,7 @@ ITEM_LIST = {
         description="Torres Boss",
         type="BOSS",
         ref="rangetest\\cmt\\characters\\evolved_h1-spirit\\cyborg\\bipeds\\torres",
-        maxHealth=1500,
+        maxHealth=3000,
         defense=0,
         classes={
             boss=true
@@ -657,6 +666,46 @@ ITEM_LIST = {
         type="ARMOR",
         ref="hcea\\characters\\cyborg\\spartan",
         maxHealth=100,
+        defense=0,
+        classes={
+            boss=true
+        }
+    },
+    backdraft={
+        description="Backdraft Boss",
+        type="BOSS",
+        ref="bourrin\\halo reach\\spartan\\male\\backdraft",
+        maxHealth=1200,
+        defense=0,
+        classes={
+            boss=true
+        }
+    },
+    boom={
+        description="Boom Boss",
+        type="BOSS",
+        ref="bourrin\\halo reach\\spartan\\male\\boom",
+        maxHealth=750,
+        defense=0,
+        classes={
+            boss=true
+        }
+    },
+    bewm={
+        description="Bewm Boss",
+        type="BOSS",
+        ref="bourrin\\halo reach\\spartan\\male\\buum",
+        maxHealth=800,
+        defense=0,
+        classes={
+            boss=true
+        }
+    },
+    griswald={
+        description="Griswald Boss",
+        type="BOSS",
+        ref="bourrin\\halo reach\\spartan\\male\\griswald",
+        maxHealth=900,
         defense=0,
         classes={
             boss=true
@@ -1190,14 +1239,6 @@ end
 
 
 PlayerSchema['new'] = new
-DamageIgnoreSchema = ItemSchema:new()
-
-function DamageIgnoreSchema.computeNewDamage(self,baseDamage)
-    return baseDamage
-end
-
-DamageIgnoreSchema['equip'] = equip
-DamageIgnoreSchema['getModifier'] = getModifier
 DamageReductionSchema = ItemSchema:new()
 
 function DamageReductionSchema.computeNewDamage(self,baseDamage)
@@ -1249,23 +1290,6 @@ function CreateEquipment(equipmentKey)
         )
     end
 end
-function CreateArmor(key)
-    if ITEM_LIST[key] ~= nil
-    and ITEM_LIST[key].type == "ARMOR"
-    or ITEM_LIST[key].type == "BOSS"
-    then
-        return ArmorSchema:new():createArmor(
-            key,
-            ITEM_LIST[key].description,
-            ITEM_LIST[key].ref,
-            ITEM_LIST[key].classes,
-            ITEM_LIST[key].maxHealth,
-            ITEM_LIST[key].defense
-        )
-    else
-        return nil
-    end
-end
 DamageInvPeriod = ItemSchema:new()
 
 function DamageInvPeriod.computeNewDamage(self,baseDamage)
@@ -1301,6 +1325,31 @@ function CreateWeapon(key)
         return nil
     end
 end
+DamageIgnoreSchema = ItemSchema:new()
+
+function DamageIgnoreSchema.computeNewDamage(self,baseDamage)
+    return baseDamage
+end
+
+DamageIgnoreSchema['equip'] = equip
+DamageIgnoreSchema['getModifier'] = getModifier
+function CreateArmor(key)
+    if ITEM_LIST[key] ~= nil
+    and ITEM_LIST[key].type == "ARMOR"
+    or ITEM_LIST[key].type == "BOSS"
+    then
+        return ArmorSchema:new():createArmor(
+            key,
+            ITEM_LIST[key].description,
+            ITEM_LIST[key].ref,
+            ITEM_LIST[key].classes,
+            ITEM_LIST[key].maxHealth,
+            ITEM_LIST[key].defense
+        )
+    else
+        return nil
+    end
+end
 DamageBoosterSchema = ItemSchema:new()
 
 
@@ -1325,37 +1374,31 @@ function BossSchema.new(self)
     local newInstance = ClassSchema:new():instantiate("boss", 0, 0)
     return new(self, newInstance)
 end
-DPS_COOLDOWN_IN_SECONDS = 70
 
-DpsSchema = ClassSchema:new():instantiate("dps", DPS_COOLDOWN_IN_SECONDS * 30)
+GUNSLINGER_COOLDOWN_IN_SECONDS = 120
 
+GunslingerSchema = ClassSchema:new():instantiate("gunslinger", GUNSLINGER_COOLDOWN_IN_SECONDS * 30)
 
-function DpsSchema.ultimate(self, playerIndex)
-    say(playerIndex, "All of your weapons now have bottomless clip!")
-    execute_command("mag " .. playerIndex .. " 999 5")
+function GunslingerSchema.ultimate(self, playerIndex)
+    say(playerIndex, "Engaging active camoflage!")
+    execute_command('camo ' .. playerIndex .. " " .. 30)
     self:startCoolDown(playerIndex)
-    local key = "PLAYER_" .. playerIndex .. "_IS_EXECUTING_DPS_ULTIMATE"
-    local newEvent = EventItem:new()
-    newEvent:set({
-        ['playerIndex']=playerIndex
-    }, nil, function(props) say(props.playerIndex, "Your weapons are now back to normal.") execute_command("mag " .. props.playerIndex .. " 0 5") end, 10 * 30)
-    EventTable:addEvent(key, newEvent)
 end
+HEALER_COOLDOWN_IN_SECONDS = 75
 
-TANK_COOLDOWN_IN_SECONDS = 100
+HealerSchema=ClassSchema:new():instantiate("healer", HEALER_COOLDOWN_IN_SECONDS * 30)
 
-TankSchema=ClassSchema:new():instantiate("tank", TANK_COOLDOWN_IN_SECONDS * 30)
-
-function TankSchema.ultimate(self, playerIndex)
-    say(playerIndex, "You are now temporarly invincible!")
-    execute_command("god " .. playerIndex)
-    local key = "PLAYER_" .. playerIndex .. "_IS_EXECUTING_TANK_ULTIMATE"
+function HealerSchema.ultimate(self, playerIndex)
+    say(playerIndex, "Healing nearby players!")
+    for i=0,16 do 
+        if player_present(i) 
+        and ACTIVE_BOSSES[i] == nil
+        and GetPlayerDistance(playerIndex, i) <= 5 
+        or i == playerIndex then
+            execute_command("hp " .. i .. " 1.0")
+        end
+    end
     self:startCoolDown(playerIndex)
-    local ungodEvent = EventItem:new()
-    ungodEvent:set({
-        ['playerIndex']=playerIndex
-    }, nil, function(props) execute_command("ungod " .. props.playerIndex) say(props.playerIndex, "You are no longer invincible!") end, 10 * 30)
-    EventTable:addEvent(key, ungodEvent)
 end
 
 
@@ -1414,16 +1457,6 @@ function numberOfPlayersWithClass(class)
     end
     return numberOfPlayers
 end
-
-GUNSLINGER_COOLDOWN_IN_SECONDS = 120
-
-GunslingerSchema = ClassSchema:new():instantiate("gunslinger", GUNSLINGER_COOLDOWN_IN_SECONDS * 30)
-
-function GunslingerSchema.ultimate(self, playerIndex)
-    say(playerIndex, "Engaging active camoflage!")
-    execute_command('camo ' .. playerIndex .. " " .. 30)
-    self:startCoolDown(playerIndex)
-end
 BANDOLIER_COOLDOWN_IN_SECONDS = 75
 
 BandolierSchema=ClassSchema:new():instantiate("bandolier", BANDOLIER_COOLDOWN_IN_SECONDS * 30)
@@ -1442,25 +1475,50 @@ function BandolierSchema.ultimate(self, playerIndex)
     end
     self:startCoolDown(playerIndex)
 end
-HEALER_COOLDOWN_IN_SECONDS = 75
+TANK_COOLDOWN_IN_SECONDS = 100
 
-HealerSchema=ClassSchema:new():instantiate("healer", HEALER_COOLDOWN_IN_SECONDS * 30)
+TankSchema=ClassSchema:new():instantiate("tank", TANK_COOLDOWN_IN_SECONDS * 30)
 
-function HealerSchema.ultimate(self, playerIndex)
-    say(playerIndex, "Healing nearby players!")
-    for i=0,16 do 
-        if player_present(i) 
-        and ACTIVE_BOSSES[i] == nil
-        and GetPlayerDistance(playerIndex, i) <= 5 
-        or i == playerIndex then
-            execute_command("hp " .. i .. " 1.0")
-        end
-    end
+function TankSchema.ultimate(self, playerIndex)
+    say(playerIndex, "You are now temporarly invincible!")
+    execute_command("god " .. playerIndex)
+    local key = "PLAYER_" .. playerIndex .. "_IS_EXECUTING_TANK_ULTIMATE"
     self:startCoolDown(playerIndex)
+    local ungodEvent = EventItem:new()
+    ungodEvent:set({
+        ['playerIndex']=playerIndex
+    }, nil, function(props) execute_command("ungod " .. props.playerIndex) say(props.playerIndex, "You are no longer invincible!") end, 10 * 30)
+    EventTable:addEvent(key, ungodEvent)
 end
 
 
 
+DPS_COOLDOWN_IN_SECONDS = 70
+
+DpsSchema = ClassSchema:new():instantiate("dps", DPS_COOLDOWN_IN_SECONDS * 30)
+
+
+function DpsSchema.ultimate(self, playerIndex)
+    say(playerIndex, "All of your weapons now have bottomless clip!")
+    execute_command("mag " .. playerIndex .. " 999 5")
+    self:startCoolDown(playerIndex)
+    local key = "PLAYER_" .. playerIndex .. "_IS_EXECUTING_DPS_ULTIMATE"
+    local newEvent = EventItem:new()
+    newEvent:set({
+        ['playerIndex']=playerIndex
+    }, nil, function(props) say(props.playerIndex, "Your weapons are now back to normal.") execute_command("mag " .. props.playerIndex .. " 0 5") end, 10 * 30)
+    EventTable:addEvent(key, newEvent)
+end
+
+function displayProperClassName(improperClassName)
+    if OLD_CLASS_NAME_FACADE[improperClassName] ~= nil then return OLD_CLASS_NAME_FACADE[improperClassName] end
+    return improperClassName
+end
+
+function parseProperClassName(properClassName)
+    if NEW_CLASS_NAME_FACADE[properClassName] ~= nil then return NEW_CLASS_NAME_FACADE[properClassName] end
+    return properClassName
+end
 NEW_CLASS_NAME_FACADE = {
     soldier="dps",
     valiant="gunslinger",
@@ -1476,15 +1534,6 @@ OLD_CLASS_NAME_FACADE = {
 }
 
 
-function displayProperClassName(improperClassName)
-    if OLD_CLASS_NAME_FACADE[improperClassName] ~= nil then return OLD_CLASS_NAME_FACADE[improperClassName] end
-    return improperClassName
-end
-
-function parseProperClassName(properClassName)
-    if NEW_CLASS_NAME_FACADE[properClassName] ~= nil then return NEW_CLASS_NAME_FACADE[properClassName] end
-    return properClassName
-end
 function activateUltimateAbility(hash, playerIndex)
     if ACTIVE_PLAYER_LIST[hash]:getClass().cooldown == false then
         ACTIVE_PLAYER_LIST[hash]:getClass():ultimate(playerIndex)
@@ -1532,16 +1581,86 @@ function changePlayerClass(playerIndex, newClass)
     end
 end
 
+function ClearConsole(i)
+	for j=0,25 do
+		rprint(i, " ")
+	end
+end
 
-function loadPlayer(playerIndex) 
-    local hash = get_var(playerIndex, "$hash")
-    local newPlayer = PlayerSchema:new():create(playerIndex)
-    local playerClass = newPlayer:getPreferredClass()
-    --step two: initalize values, load player
-    ACTIVE_PLAYER_LIST[hash] = newPlayer
-    if playerClass ~= "dps" then playerClass = "dps" end
-    changePlayerClass(playerIndex, playerClass)
-    Balancer()
+function PrintHealthBar(currentHealth, maxHealth)
+    local length = 65
+	if currentHealth == -100 then
+		currentHealth = maxHealth
+	end
+	local healthBar = ""
+	for i=1,length do
+		if i > currentHealth/maxHealth*length then
+			healthBar = healthBar.."."
+		else
+    		healthBar = healthBar.."|"
+		end
+	end
+	return healthBar
+end
+
+function pickColor(health, maxHealth)
+    local healthRatio = health / maxHealth
+    if healthRatio >= 0.75 then
+        return "|nc15B500" --green
+    elseif healthRatio >= 0.5 and healthRatio < 0.75 then
+        return "|ncDBC900" --yellow
+    elseif healthRatio >= 0.25 and healthRatio < 0.5 then
+        return "|ncFC8003" --orange
+    else
+        return "|ncFC0303" --red
+    end
+end
+
+function PrintBossBar()
+    for key,_ in pairs(ACTIVE_BOSSES) do
+        local currentBoss = ACTIVE_BOSSES[key]
+        local currentBossInMemory = get_dynamic_player(key) 
+        local currentBossMaxHealth = currentBoss:getArmor():getMaxHealth()
+        local currentBossHealth = 0
+        if currentBossInMemory ~= 0 then
+            currentBossHealth = read_float(currentBossInMemory + 0xE0)*currentBoss:getArmor():getMaxHealth()
+        end
+        local chosenColor = pickColor(currentBossHealth, currentBossMaxHealth)
+        if player_alive(key) then
+            for i=1,16 do
+                if get_var(0, "$ticks")%5 == 1 then
+                    if player_present(i) then
+                        ClearConsole(i)
+                        rprint(i, "|c"..string.upper(currentBoss:getArmor():getName(), "$name").."'S HEALTH " .. math.floor(currentBossHealth) .. "/" .. currentBossMaxHealth ..chosenColor)
+                        rprint(i, "|c<"..PrintHealthBar(currentBossHealth, currentBossMaxHealth)..">"..chosenColor)
+                    end
+                end
+            end
+        else
+        end
+    end
+end
+
+
+function loadBipeds()
+    --Load in Biped Table
+    for key,_ in pairs(ITEM_LIST) do
+        if ITEM_LIST[key].type == "ARMOR" or ITEM_LIST[key].type == "BOSS" then
+            BIPED_TAG_LIST[key] = FindBipedTag(ITEM_LIST[key].ref)
+        end
+    end
+    --Load in default biped
+    local tag_array = read_dword(0x40440000)
+    for i=0,read_word(0x4044000C)-1 do
+        local tag = tag_array + i * 0x20
+        if(read_dword(tag) == 1835103335 and read_string(read_dword(tag + 0x10)) == "globals\\globals") then
+            local tag_data = read_dword(tag + 0x14)
+            local mp_info = read_dword(tag_data + 0x164 + 4)
+            for j=0,read_dword(tag_data + 0x164)-1 do
+                BIPED_TAG_LIST['DEFAULT'] = read_dword(mp_info + j * 160 + 0x10 + 0xC)
+            end
+        end
+    end
 end
 GREED_TABLE = nil
 NEED_TABLE = nil
@@ -1631,6 +1750,55 @@ function rewardLoot(props)
     end, 30 * 15)
     EventTable:addEvent('gordius_drop_1', rollEvent)
 end
+BOSS_WIPES = {
+    torres={
+        ref="vehicles\\warthog\\raids\\torres\\wipe",
+        loc={
+            x=54.33,
+            y=3.33,
+            z=32.51
+        }
+    }
+}
+SavantEventCompleted = function(props) 
+    say_all("Savant Deployed! We dropped it on the roof with the computer!")
+    spawn_object("weap", "bourrin\\halo3\\weapons\\spartan_laser\\savant", -18.52,-27.71,10)
+end
+
+LocationEventCompleted = function(props) 
+    say_all("Message Received. Savant Drop is on it's way!")
+    savantEventComplete = EventItem:new()
+    savantEventComplete:set({}, nil, SavantEventCompleted, 30 * 120)
+    EventTable:addEvent('savantEventComplete', savantEventComplete)
+end
+
+NotifyPlayersCompleted = function(props) 
+    say_all("Be on the look out for a special computer!")
+    locationEventComplete = EventItem:new()
+    locationEventComplete:set({}, function(props, time)
+        for i=1,16 do
+            if player_present(i) and player_alive(i) then
+                local hash = get_var(i, "$hash")
+                if ACTIVE_PLAYER_LIST[hash]:isInLocation("torres_event_1") then
+                    return true
+                end
+            end
+        end
+        return false
+    end, LocationEventCompleted, -1)
+    EventTable:addEvent("LocationEventTorres", locationEventComplete)
+end
+
+
+
+
+function unloadPlayer(playerIndex)
+    local hash = get_var(playerIndex, "$hash")
+    ACTIVE_PLAYER_LIST[hash]:delete() 
+    ACTIVE_PLAYER_LIST[hash] = nil
+    Balancer()
+end
+
 function parseCommand(playerIndex, command)
     if player_present(playerIndex) and player_alive(playerIndex) then
         args = {} 
@@ -1687,17 +1855,6 @@ function parseCommand(playerIndex, command)
         elseif args[1] == "respawn" then
             kill(playerIndex)
             return true
-        elseif args[1] == "dialogtest" then
-            local tagref = spawn_object("vehi", "vehicles\\warthog\\raids\\torres\\wipe", 54.33,3.33,32.51)
-            local deleteDialog = EventItem:new()
-            deleteDialog:set({
-                ['deleteDialog'] = tagref
-            }, 
-            nil,
-            function(props) destroy_object(props.deleteDialog) end,
-            30 * 40)
-            EventTable:addEvent('TORRES_WIPE', deleteDialog)
-            return true
         elseif args[1] == "loadout" then
            if player:setLoadout(nil, args[2], args[3]) then
                 kill(playerIndex)
@@ -1711,10 +1868,6 @@ function parseCommand(playerIndex, command)
             else
                 say(playerIndex, "The value is: " .. playerCurrentWeap)
             end
-            return true
-        elseif args[1] == "sound" then
-            say_all("Spawning sound!")
-            local weap = spawn_object("weap", "zteam\\objects\\weapons\\single\\battle_rifle\\h3\\piercer", 102.23, 417.59, 5)
             return true
         elseif args[1] == "spawn" then
             local weapon = args[2]
@@ -1735,6 +1888,30 @@ function parseCommand(playerIndex, command)
                 changeBoss(playerIndex, player, args[2])
             else
                 say(playerIndex, "You cannot do that!")
+            end
+            return true
+        elseif args[1] == "wipe" then
+            if player:getClass():getClassName() ~= "boss" then say(playerIndex, "You cannot execute this command!") end
+            local wipeDialog = player:getArmor(nil):getName()
+            player:setArmor(nil, "DEFAULT")
+            kill(playerIndex)
+            print(BOSS_WIPES[wipeDialog])
+            print(wipeDialog)
+            if BOSS_WIPES[wipeDialog] ~= nil then
+                print("Spawning wipe dialog!")
+                local tagref = spawn_object("vehi", 
+                BOSS_WIPES[wipeDialog].ref,
+                BOSS_WIPES[wipeDialog].loc.x,
+                BOSS_WIPES[wipeDialog].loc.y,
+                BOSS_WIPES[wipeDialog].loc.z)
+                local deleteDialog = EventItem:new()
+                deleteDialog:set({
+                    ['deleteDialog'] = tagref
+                }, 
+                nil,
+                function(props) destroy_object(props.deleteDialog) end,
+                30 * 60)
+                EventTable:addEvent('TORRES_WIPE', deleteDialog)
             end
             return true
         elseif args[1] == "whoami" then
@@ -1784,133 +1961,16 @@ function parseCommand(playerIndex, command)
         return false
     end
 end
-SavantEventCompleted = function(props) 
-    say_all("Savant Deployed! We dropped it on the roof with the computer!")
-    spawn_object("weap", "bourrin\\halo3\\weapons\\spartan laser\\savant", 0,0,1)
-end
 
-LocationEventCompleted = function(props) 
-    say_all("Message Received. Savant Drop is on it's way!")
-    savantEventComplete = EventItem:new()
-    savantEventComplete:set({}, nil, SavantEventCompleted, 30 * 120)
-    EventTable:addEvent('savantEventComplete', savantEventComplete)
-end
-
-NotifyPlayersCompleted = function(props) 
-    say_all("Be on the look out for a special computer!")
-    locationEventComplete = EventItem:new()
-    locationEventComplete:set({}, function(props, time)
-        for i=1,16 do
-            if player_present(i) then
-                local hash = get_var(i, "$hash")
-                if ACTIVE_PLAYER_LIST[hash]:isInLocation("torres_event_1") then
-                    return true
-                end
-            end
-        end
-        return false
-    end, LocationEventCompleted, -1)
-    EventTable:addEvent("LocationEventTorres", locationEventComplete)
-end
-
-
-function changeBoss(playerIndex, player, selectedBoss)
-    if BIPED_TAG_LIST[selectedBoss] ~= nil then
-        kill(playerIndex)
-        local playerClass = player:getClass()
-        player:setBoss(selectedBoss)
-        ACTIVE_BOSSES[playerIndex] = player
-        --TODO: Refactor this so that it can handle all bosses. 
-        --probably best to place this in one function.
-        if selectedBoss == "torres" then
-            newTorresEvent = EventItem:new()
-            newTorresEvent:set({}, nil, NotifyPlayersCompleted, 30 * 26)
-            EventTable:addEvent('TorresEvent', newTorresEvent)
-        end
-    else
-        say(playerIndex, "That boss does not exist!")
-    end
-end
-function ClearConsole(i)
-	for j=0,25 do
-		rprint(i, " ")
-	end
-end
-
-function PrintHealthBar(currentHealth, maxHealth)
-    local length = 65
-	if currentHealth == -100 then
-		currentHealth = maxHealth
-	end
-	local healthBar = ""
-	for i=1,length do
-		if i > currentHealth/maxHealth*length then
-			healthBar = healthBar.."."
-		else
-    		healthBar = healthBar.."|"
-		end
-	end
-	return healthBar
-end
-
-function pickColor(health, maxHealth)
-    local healthRatio = health / maxHealth
-    if healthRatio >= 0.75 then
-        return "|nc15B500" --green
-    elseif healthRatio >= 0.5 and healthRatio < 0.75 then
-        return "|ncDBC900" --yellow
-    elseif healthRatio >= 0.25 and healthRatio < 0.5 then
-        return "|ncFC8003" --orange
-    else
-        return "|ncFC0303" --red
-    end
-end
-
-function PrintBossBar()
-    for key,_ in pairs(ACTIVE_BOSSES) do
-        local currentBoss = ACTIVE_BOSSES[key]
-        local currentBossInMemory = get_dynamic_player(key) 
-        local currentBossMaxHealth = currentBoss:getArmor():getMaxHealth()
-        local currentBossHealth = 0
-        if currentBossInMemory ~= 0 then
-            currentBossHealth = read_float(currentBossInMemory + 0xE0)*currentBoss:getArmor():getMaxHealth()
-        end
-        local chosenColor = pickColor(currentBossHealth, currentBossMaxHealth)
-        if player_alive(key) then
-            for i=1,16 do
-                if get_var(0, "$ticks")%5 == 1 then
-                    if player_present(i) then
-                        ClearConsole(i)
-                        rprint(i, "|c"..string.upper(currentBoss:getArmor():getName(), "$name").."'S HEALTH " .. math.floor(currentBossHealth) .. "/" .. currentBossMaxHealth ..chosenColor)
-                        rprint(i, "|c<"..PrintHealthBar(currentBossHealth, currentBossMaxHealth)..">"..chosenColor)
-                    end
-                end
-            end
-        else
-        end
-    end
-end
-
-
-function loadBipeds()
-    --Load in Biped Table
-    for key,_ in pairs(ITEM_LIST) do
-        if ITEM_LIST[key].type == "ARMOR" or ITEM_LIST[key].type == "BOSS" then
-            BIPED_TAG_LIST[key] = FindBipedTag(ITEM_LIST[key].ref)
-        end
-    end
-    --Load in default biped
-    local tag_array = read_dword(0x40440000)
-    for i=0,read_word(0x4044000C)-1 do
-        local tag = tag_array + i * 0x20
-        if(read_dword(tag) == 1835103335 and read_string(read_dword(tag + 0x10)) == "globals\\globals") then
-            local tag_data = read_dword(tag + 0x14)
-            local mp_info = read_dword(tag_data + 0x164 + 4)
-            for j=0,read_dword(tag_data + 0x164)-1 do
-                BIPED_TAG_LIST['DEFAULT'] = read_dword(mp_info + j * 160 + 0x10 + 0xC)
-            end
-        end
-    end
+function loadPlayer(playerIndex) 
+    local hash = get_var(playerIndex, "$hash")
+    local newPlayer = PlayerSchema:new():create(playerIndex)
+    local playerClass = newPlayer:getPreferredClass()
+    --step two: initalize values, load player
+    ACTIVE_PLAYER_LIST[hash] = newPlayer
+    if playerClass ~= "dps" then playerClass = "dps" end
+    changePlayerClass(playerIndex, playerClass)
+    Balancer()
 end
 function modifyDamage(attackingEquipment, damagedEquipment, damage)
     local newDamage = damage
@@ -1930,15 +1990,23 @@ function modifyDamage(attackingEquipment, damagedEquipment, damage)
     end
     return newDamage
 end
-
-
-function unloadPlayer(playerIndex)
-    local hash = get_var(playerIndex, "$hash")
-    ACTIVE_PLAYER_LIST[hash]:delete() 
-    ACTIVE_PLAYER_LIST[hash] = nil
-    Balancer()
+function changeBoss(playerIndex, player, selectedBoss)
+    if BIPED_TAG_LIST[selectedBoss] ~= nil then
+        kill(playerIndex)
+        local playerClass = player:getClass()
+        player:setBoss(selectedBoss)
+        ACTIVE_BOSSES[playerIndex] = player
+        --TODO: Refactor this so that it can handle all bosses. 
+        --probably best to place this in one function.
+        if selectedBoss == "torres" then
+            newTorresEvent = EventItem:new()
+            newTorresEvent:set({}, nil, NotifyPlayersCompleted, 30 * 26)
+            EventTable:addEvent('TorresEvent', newTorresEvent)
+        end
+    else
+        say(playerIndex, "That boss does not exist!")
+    end
 end
-
 
 --Callbacks
 

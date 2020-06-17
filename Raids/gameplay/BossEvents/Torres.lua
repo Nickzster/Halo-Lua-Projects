@@ -7,7 +7,7 @@
 
 SavantEventCompleted = function(props) 
     say_all("Savant Deployed! We dropped it on the roof with the computer!")
-    spawn_object("weap", "bourrin\\halo3\\weapons\\spartan laser\\savant", 0,0,1)
+    spawn_object("weap", "bourrin\\halo3\\weapons\\spartan_laser\\savant", -18.52,-27.71,10)
 end
 
 LocationEventCompleted = function(props) 
@@ -22,7 +22,7 @@ NotifyPlayersCompleted = function(props)
     locationEventComplete = EventItem:new()
     locationEventComplete:set({}, function(props, time)
         for i=1,16 do
-            if player_present(i) then
+            if player_present(i) and player_alive(i) then
                 local hash = get_var(i, "$hash")
                 if ACTIVE_PLAYER_LIST[hash]:isInLocation("torres_event_1") then
                     return true

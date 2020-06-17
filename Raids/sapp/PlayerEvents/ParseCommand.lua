@@ -10,6 +10,7 @@
 -- import Raids.util.ProperClassNames end
 -- import Raids.modules.Events.EventTable end
 -- import Raids.modules.Events.EventItem end
+-- import Raids.gameplay.BossMechanics.Wipe end 
 -- END_IMPORT
 
 function parseCommand(playerIndex, command)
@@ -68,17 +69,6 @@ function parseCommand(playerIndex, command)
         elseif args[1] == "respawn" then
             kill(playerIndex)
             return true
-        elseif args[1] == "dialogtest" then
-            local tagref = spawn_object("vehi", "vehicles\\warthog\\raids\\torres\\wipe", 54.33,3.33,32.51)
-            local deleteDialog = EventItem:new()
-            deleteDialog:set({
-                ['deleteDialog'] = tagref
-            }, 
-            nil,
-            function(props) destroy_object(props.deleteDialog) end,
-            30 * 40)
-            EventTable:addEvent('TORRES_WIPE', deleteDialog)
-            return true
         elseif args[1] == "loadout" then
            if player:setLoadout(nil, args[2], args[3]) then
                 kill(playerIndex)
@@ -92,10 +82,6 @@ function parseCommand(playerIndex, command)
             else
                 say(playerIndex, "The value is: " .. playerCurrentWeap)
             end
-            return true
-        elseif args[1] == "sound" then
-            say_all("Spawning sound!")
-            local weap = spawn_object("weap", "zteam\\objects\\weapons\\single\\battle_rifle\\h3\\piercer", 102.23, 417.59, 5)
             return true
         elseif args[1] == "spawn" then
             local weapon = args[2]
@@ -116,6 +102,30 @@ function parseCommand(playerIndex, command)
                 changeBoss(playerIndex, player, args[2])
             else
                 say(playerIndex, "You cannot do that!")
+            end
+            return true
+        elseif args[1] == "wipe" then
+            if player:getClass():getClassName() ~= "boss" then say(playerIndex, "You cannot execute this command!") end
+            local wipeDialog = player:getArmor(nil):getName()
+            player:setArmor(nil, "DEFAULT")
+            kill(playerIndex)
+            print(BOSS_WIPES[wipeDialog])
+            print(wipeDialog)
+            if BOSS_WIPES[wipeDialog] ~= nil then
+                print("Spawning wipe dialog!")
+                local tagref = spawn_object("vehi", 
+                BOSS_WIPES[wipeDialog].ref,
+                BOSS_WIPES[wipeDialog].loc.x,
+                BOSS_WIPES[wipeDialog].loc.y,
+                BOSS_WIPES[wipeDialog].loc.z)
+                local deleteDialog = EventItem:new()
+                deleteDialog:set({
+                    ['deleteDialog'] = tagref
+                }, 
+                nil,
+                function(props) destroy_object(props.deleteDialog) end,
+                30 * 60)
+                EventTable:addEvent('TORRES_WIPE', deleteDialog)
             end
             return true
         elseif args[1] == "whoami" then
