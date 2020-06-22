@@ -625,7 +625,7 @@ ITEM_LIST = {
         description="Torres Boss",
         type="BOSS",
         ref="rangetest\\cmt\\characters\\evolved_h1-spirit\\cyborg\\bipeds\\torres",
-        maxHealth=3000,
+        maxHealth=27500,
         defense=0,
         classes={
             boss=true
@@ -675,7 +675,7 @@ ITEM_LIST = {
         description="Backdraft Boss",
         type="BOSS",
         ref="bourrin\\halo reach\\spartan\\male\\backdraft",
-        maxHealth=1200,
+        maxHealth=12000,
         defense=0,
         classes={
             boss=true
@@ -685,7 +685,7 @@ ITEM_LIST = {
         description="Boom Boss",
         type="BOSS",
         ref="bourrin\\halo reach\\spartan\\male\\boom",
-        maxHealth=750,
+        maxHealth=7500,
         defense=0,
         classes={
             boss=true
@@ -695,7 +695,7 @@ ITEM_LIST = {
         description="Bewm Boss",
         type="BOSS",
         ref="bourrin\\halo reach\\spartan\\male\\buum",
-        maxHealth=800,
+        maxHealth=8000,
         defense=0,
         classes={
             boss=true
@@ -705,7 +705,7 @@ ITEM_LIST = {
         description="Griswald Boss",
         type="BOSS",
         ref="bourrin\\halo reach\\spartan\\male\\griswald",
-        maxHealth=900,
+        maxHealth=9000,
         defense=0,
         classes={
             boss=true
@@ -876,7 +876,8 @@ PlayerSchema = {
     equipment=nil,
     locations=nil,
     preferredClass=nil,
-    class=nil
+    class=nil,
+    damage=0
 }
 
 
@@ -1141,6 +1142,18 @@ end
 
 function PlayerSchema.getArmor(self, key)
     return self.loadouts[self:getClassNameUtil(key)].armor
+end
+
+function PlayerSchema.addDamage(self, newDamage)
+    self.damage = self.damage + newDamage
+end
+
+function PlayerSchema.getDamageDealt(self)
+    return self.damage
+end
+
+function PlayerSchema.resetDamage(self)
+    self.damage = 0
 end
 
 function PlayerSchema.WritePlayerToFile(self)
@@ -1623,19 +1636,19 @@ function Balancer()
         NUMBER_OF_ALLOWED_TANKS = 1
         NUMBER_OF_ALLOWED_HEALERS = 2
         NUMBER_OF_ALLOWED_BANDOLIERS = 1
-        BOSS_MULTIPLIER = 3.0
+        BOSS_MULTIPLIER = 2.5
     elseif numberOfPlayers >= LG_MIN and numberOfPlayers <= LG_MAX then
         say_all("New Raid Size: Large")
         NUMBER_OF_ALLOWED_TANKS = 2
         NUMBER_OF_ALLOWED_HEALERS = 2
         NUMBER_OF_ALLOWED_BANDOLIERS = 1
-        BOSS_MULTIPLIER = 5.0
+        BOSS_MULTIPLIER = 3.75
     elseif numberOfPlayers >= XLG_MIN and numberOfPlayers <= XLG_MAX then
         say_all("New Raid Size: Xtra Large")
         NUMBER_OF_ALLOWED_TANKS = 2
         NUMBER_OF_ALLOWED_HEALERS = 2
         NUMBER_OF_ALLOWED_BANDOLIERS = 2
-        BOSS_MULTIPLIER = 10.0
+        BOSS_MULTIPLIER = 5.0
     end
 end
 
@@ -2188,8 +2201,9 @@ function PrintBossBar()
         if player_alive(key) then
             for i=1,16 do
                 if get_var(0, "$ticks")%5 == 1 then
-                    if player_present(i) then
+                    if player_present(i) and player_alive(i) then
                         ClearConsole(i)
+                        rprint(i, "|c Damage Dealt: " .. tostring(ACTIVE_PLAYER_LIST[get_var(i, "$hash")]:getDamageDealt()) .. "|nc00b3ff")
                         rprint(i, "|c"..string.upper(currentBoss:getArmor():getName(), "$name").."'S HEALTH " .. math.floor(currentBossHealth) .. "/" .. currentBossMaxHealth ..chosenColor)
                         rprint(i, "|c<"..PrintHealthBar(currentBossHealth, currentBossMaxHealth)..">"..chosenColor)
                     end
@@ -2317,6 +2331,11 @@ function handlePlayerDie(playerIndex, causer)
             ACTIVE_BOSSES[playerIndex] = nil
             playerClass:setArmor(nil, "DEFAULT")
             playDialog(bossName, "death")
+            for i=0,16 do
+                if player_present(i) then
+                    ACTIVE_PLAYER_LIST[get_var(i, "$hash")]:resetDamage()
+                end
+            end
         end
     end
 end
@@ -2353,6 +2372,9 @@ function handleDamage(damagedPlayerIndex, attackingPlayerIndex, damageTagId, Dam
                 say(damagedPlayerIndex, "You were dealt " .. newDamage .. " damage!")
                 say(attackingPlayerIndex, "You dealt " .. newDamage .. " damage!")
             end
+            if damagedPlayer:getClass():getClassName() == "boss" and attackingPlayer:getClass():getClassName() ~= "boss" then
+                attackingPlayer:addDamage(newDamage)
+            end
             return true,newDamage
         end
     end
@@ -2383,12 +2405,12 @@ function handleObjectSpawn(playerIndex, tagId, parentObjectId, newObjectId)
     if BIPED_TAG_LIST['DEFAULT'] == nil then 
         loadBipeds() 
     end
-    -- TODO: Fix this later
-    -- if #ACTIVE_BOSSES > 0 
-    -- and ACTIVE_PLAYER_LIST[get_var(playerIndex,"$hash")]:getClass():getClassName() ~= "boss" 
-    -- then 
-    --     return false 
-    -- end
+    --TODO: Fix this later
+    if player_present(playerIndex) and #ACTIVE_BOSSES > 0 then
+        if ACTIVE_PLAYER_LIST[get_var(playerIndex,"$hash")]:getClass():getClassName() ~= "boss" then
+            return false
+        end
+    end
     if player_present(playerIndex) and tagId == BIPED_TAG_LIST['DEFAULT'] then 
         local hash = get_var(playerIndex, "$hash")
         local currentPlayer = ACTIVE_PLAYER_LIST[hash]

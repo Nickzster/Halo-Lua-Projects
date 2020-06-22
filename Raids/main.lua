@@ -100,6 +100,11 @@ function handlePlayerDie(playerIndex, causer)
             ACTIVE_BOSSES[playerIndex] = nil
             playerClass:setArmor(nil, "DEFAULT")
             playDialog(bossName, "death")
+            for i=0,16 do
+                if player_present(i) then
+                    ACTIVE_PLAYER_LIST[get_var(i, "$hash")]:resetDamage()
+                end
+            end
         end
     end
 end
@@ -136,6 +141,9 @@ function handleDamage(damagedPlayerIndex, attackingPlayerIndex, damageTagId, Dam
                 say(damagedPlayerIndex, "You were dealt " .. newDamage .. " damage!")
                 say(attackingPlayerIndex, "You dealt " .. newDamage .. " damage!")
             end
+            if damagedPlayer:getClass():getClassName() == "boss" and attackingPlayer:getClass():getClassName() ~= "boss" then
+                attackingPlayer:addDamage(newDamage)
+            end
             return true,newDamage
         end
     end
@@ -166,12 +174,12 @@ function handleObjectSpawn(playerIndex, tagId, parentObjectId, newObjectId)
     if BIPED_TAG_LIST['DEFAULT'] == nil then 
         loadBipeds() 
     end
-    -- TODO: Fix this later
-    -- if #ACTIVE_BOSSES > 0 
-    -- and ACTIVE_PLAYER_LIST[get_var(playerIndex,"$hash")]:getClass():getClassName() ~= "boss" 
-    -- then 
-    --     return false 
-    -- end
+    --TODO: Fix this later
+    if player_present(playerIndex) and #ACTIVE_BOSSES > 0 then
+        if ACTIVE_PLAYER_LIST[get_var(playerIndex,"$hash")]:getClass():getClassName() ~= "boss" then
+            return false
+        end
+    end
     if player_present(playerIndex) and tagId == BIPED_TAG_LIST['DEFAULT'] then 
         local hash = get_var(playerIndex, "$hash")
         local currentPlayer = ACTIVE_PLAYER_LIST[hash]

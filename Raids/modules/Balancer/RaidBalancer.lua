@@ -31,19 +31,19 @@ function Balancer()
         NUMBER_OF_ALLOWED_TANKS = 1
         NUMBER_OF_ALLOWED_HEALERS = 2
         NUMBER_OF_ALLOWED_BANDOLIERS = 1
-        BOSS_MULTIPLIER = 3.0
+        BOSS_MULTIPLIER = 2.5
     elseif numberOfPlayers >= LG_MIN and numberOfPlayers <= LG_MAX then
         say_all("New Raid Size: Large")
         NUMBER_OF_ALLOWED_TANKS = 2
         NUMBER_OF_ALLOWED_HEALERS = 2
         NUMBER_OF_ALLOWED_BANDOLIERS = 1
-        BOSS_MULTIPLIER = 5.0
+        BOSS_MULTIPLIER = 3.75
     elseif numberOfPlayers >= XLG_MIN and numberOfPlayers <= XLG_MAX then
         say_all("New Raid Size: Xtra Large")
         NUMBER_OF_ALLOWED_TANKS = 2
         NUMBER_OF_ALLOWED_HEALERS = 2
         NUMBER_OF_ALLOWED_BANDOLIERS = 2
-        BOSS_MULTIPLIER = 10.0
+        BOSS_MULTIPLIER = 5.0
     end
 end
 

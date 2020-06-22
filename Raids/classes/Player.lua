@@ -19,7 +19,8 @@ PlayerSchema = {
     equipment=nil,
     locations=nil,
     preferredClass=nil,
-    class=nil
+    class=nil,
+    damage=0
 }
 
 
@@ -284,6 +285,18 @@ end
 
 function PlayerSchema.getArmor(self, key)
     return self.loadouts[self:getClassNameUtil(key)].armor
+end
+
+function PlayerSchema.addDamage(self, newDamage)
+    self.damage = self.damage + newDamage
+end
+
+function PlayerSchema.getDamageDealt(self)
+    return self.damage
+end
+
+function PlayerSchema.resetDamage(self)
+    self.damage = 0
 end
 
 function PlayerSchema.WritePlayerToFile(self)

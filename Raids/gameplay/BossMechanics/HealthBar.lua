@@ -71,8 +71,9 @@ function PrintBossBar()
         if player_alive(key) then
             for i=1,16 do
                 if get_var(0, "$ticks")%5 == 1 then
-                    if player_present(i) then
+                    if player_present(i) and player_alive(i) then
                         ClearConsole(i)
+                        rprint(i, "|c Damage Dealt: " .. tostring(ACTIVE_PLAYER_LIST[get_var(i, "$hash")]:getDamageDealt()) .. "|nc00b3ff")
                         rprint(i, "|c"..string.upper(currentBoss:getArmor():getName(), "$name").."'S HEALTH " .. math.floor(currentBossHealth) .. "/" .. currentBossMaxHealth ..chosenColor)
                         rprint(i, "|c<"..PrintHealthBar(currentBossHealth, currentBossMaxHealth)..">"..chosenColor)
                     end
