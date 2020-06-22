@@ -1,6 +1,8 @@
 -- BEGIN_IMPORT
 -- import Raids.classes.Boss end
 -- import Raids.globals.values end
+-- import Raids.gameplay.BossEvents.PlaySound end
+-- import Raids.globals.Dialog end
 -- END_IMPORT
 
 function ClearConsole(i)
@@ -23,6 +25,23 @@ function PrintHealthBar(currentHealth, maxHealth)
 		end
 	end
 	return healthBar
+end
+
+function playHealthDialog(health, maxHealth, currentBoss)
+    local healthRatio = health / maxHealth
+    if player_alive(currentBoss:getPlayerIndex()) then
+        if healthRatio <= 0.98 and healthRatio > 0.90 then
+            playDialog(currentBoss:getArmor():getName(), 'health_bracket_98')
+        elseif healthRatio <= 0.90 and healthRatio > 0.75 then
+            playDialog(currentBoss:getArmor():getName(), 'health_bracket_90')
+        elseif healthRatio <= 0.75 and healthRatio > 0.50 then
+            playDialog(currentBoss:getArmor():getName(), 'health_bracket_75')
+        elseif healthRatio <= 0.50 and healthRatio > 0.25 then
+            playDialog(currentBoss:getArmor():getName(), 'health_bracket_50')
+        elseif healthRatio <= 0.25 then
+            playDialog(currentBoss:getArmor():getName(), 'health_bracket_5')
+        end
+    end
 end
 
 function pickColor(health, maxHealth)
@@ -48,6 +67,7 @@ function PrintBossBar()
             currentBossHealth = read_float(currentBossInMemory + 0xE0)*currentBoss:getArmor():getMaxHealth()
         end
         local chosenColor = pickColor(currentBossHealth, currentBossMaxHealth)
+        playHealthDialog(currentBossHealth, currentBossMaxHealth, currentBoss)
         if player_alive(key) then
             for i=1,16 do
                 if get_var(0, "$ticks")%5 == 1 then

@@ -3,10 +3,13 @@
 -- import Raids.classes.Player end
 -- import Raids.modules.Events.EventItem end
 -- import Raids.modules.Events.EventTable end
+-- import Raids.gameplay.BossEvents.PlaySound end
+-- import Raids.globals.Dialog end
 -- END_IMPORT
 
 SavantEventCompleted = function(props) 
     say_all("Savant Deployed! We dropped it on the roof with the computer!")
+    playDialog("torres","savant_spawn")
     spawn_object("weap", "bourrin\\halo3\\weapons\\spartan_laser\\savant", -18.52,-27.71,10)
 end
 
@@ -19,6 +22,7 @@ end
 
 NotifyPlayersCompleted = function(props) 
     say_all("Be on the look out for a special computer!")
+    playDialog("torres","savant_inbound")
     locationEventComplete = EventItem:new()
     locationEventComplete:set({}, function(props, time)
         for i=1,16 do

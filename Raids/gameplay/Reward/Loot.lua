@@ -15,6 +15,7 @@ NEED_TABLE = nil
 
 PRETTY_TABLE={
     gordius="Gordius",
+    torres="Torres",
     mightofgordius="Might of Gordius",
     shardofgordius="Shard of Gordius",
     widowmaker="Widow Maker",
@@ -31,7 +32,7 @@ LOOT_TABLE = {
         'mightofgordius',
         'shardofgordius',
     },
-    torres_wip = {
+    torres = {
         'torresshieldgenerator',
         'torresammopouch',
         'widowmaker',
@@ -56,10 +57,10 @@ end
 
 function rewardLoot(props)
     local bossName = props.BOSS
-    print("Rewarding loot!")
+    print("\nRewarding loot!")
     print(bossName)
     if LOOT_TABLE[bossName] == nil then return end
-    print("Dropping loot for " .. bossName)
+    print("\nDropping loot for " .. bossName)
     math.randomseed(os.time())
     local number = math.random(6)
     local item = LOOT_TABLE[bossName][number]
@@ -91,5 +92,5 @@ function rewardLoot(props)
             say_all("The player who won is no longer present, so the item is destroyed!")
         end
     end, 30 * 15)
-    EventTable:addEvent('gordius_drop_1', rollEvent)
+    EventTable:addEvent(bossName.. '_drop_1', rollEvent)
 end

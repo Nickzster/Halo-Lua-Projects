@@ -10,7 +10,8 @@
 -- import Raids.util.ProperClassNames end
 -- import Raids.modules.Events.EventTable end
 -- import Raids.modules.Events.EventItem end
--- import Raids.gameplay.BossMechanics.Wipe end 
+-- import Raids.gameplay.BossEvents.PlaySound end
+-- import Raids.globals.Dialog end
 -- END_IMPORT
 
 function parseCommand(playerIndex, command)
@@ -53,8 +54,12 @@ function parseCommand(playerIndex, command)
             say(playerIndex, player:getEquipment():getName())
             return true
         elseif args[1] == "armor" then
-            if player:setArmor(nil, args[2]) then
-                kill(playerIndex)
+            if #ACTIVE_BOSSES == 0 then
+                if player:setArmor(nil, args[2]) then
+                    kill(playerIndex)
+                end
+            else
+                say(playerIndex, "You cannot change your armor during a boss event!")
             end
             return true
         elseif args[1] == "reward" then
@@ -67,12 +72,20 @@ function parseCommand(playerIndex, command)
             player:addItemToInventory(args[3])
             return true
         elseif args[1] == "respawn" then
-            kill(playerIndex)
+            if #ACTIVE_BOSSES == 0 then
+                kill(playerIndex)
+            else
+                say(playerIndex, "You cannot respawn during a boss event!")
+            end
             return true
         elseif args[1] == "loadout" then
-           if player:setLoadout(nil, args[2], args[3]) then
-                kill(playerIndex)
-           end
+            if #ACTIVE_BOSSES == 0 then
+                if player:setLoadout(nil, args[2], args[3]) then
+                        kill(playerIndex)
+                end
+            else 
+                say(playerIndex, "You cannot change your loadout during a boss event!")
+            end
            return true
         elseif args[1] == "test" then
             -- Note: get_dynamic_player(playerIndex) is equivalent to m_player or m_object or m_unit
@@ -105,28 +118,11 @@ function parseCommand(playerIndex, command)
             end
             return true
         elseif args[1] == "wipe" then
-            if player:getClass():getClassName() ~= "boss" then say(playerIndex, "You cannot execute this command!") end
-            local wipeDialog = player:getArmor(nil):getName()
+            if player:getClass():getClassName() ~= "boss" then say(playerIndex, "You cannot execute this command!") return true end
+            local boss = player:getArmor(nil):getName()
             player:setArmor(nil, "DEFAULT")
             kill(playerIndex)
-            print(BOSS_WIPES[wipeDialog])
-            print(wipeDialog)
-            if BOSS_WIPES[wipeDialog] ~= nil then
-                print("Spawning wipe dialog!")
-                local tagref = spawn_object("vehi", 
-                BOSS_WIPES[wipeDialog].ref,
-                BOSS_WIPES[wipeDialog].loc.x,
-                BOSS_WIPES[wipeDialog].loc.y,
-                BOSS_WIPES[wipeDialog].loc.z)
-                local deleteDialog = EventItem:new()
-                deleteDialog:set({
-                    ['deleteDialog'] = tagref
-                }, 
-                nil,
-                function(props) destroy_object(props.deleteDialog) end,
-                30 * 60)
-                EventTable:addEvent('TORRES_WIPE', deleteDialog)
-            end
+            playDialog(boss, "wipe")
             return true
         elseif args[1] == "whoami" then
             say(playerIndex, "You are a " .. displayProperClassName(player:getClass():getClassName()))

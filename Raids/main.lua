@@ -12,6 +12,8 @@
 -- import Raids.classes.VirtualObjects.Item end
 -- import Raids.util.ModifyDamage end
 -- import Raids.sapp.PlayerEvents.ActivateUltimateAbility end
+-- import Raids.gameplay.BossEvents.PlaySound end
+-- import Raids.globals.Dialog end
 -- END_IMPORT
 
 
@@ -97,6 +99,7 @@ function handlePlayerDie(playerIndex, causer)
             EventTable:addEvent(bossName, lootEvent)
             ACTIVE_BOSSES[playerIndex] = nil
             playerClass:setArmor(nil, "DEFAULT")
+            playDialog(bossName, "death")
         end
     end
 end
@@ -163,13 +166,15 @@ function handleObjectSpawn(playerIndex, tagId, parentObjectId, newObjectId)
     if BIPED_TAG_LIST['DEFAULT'] == nil then 
         loadBipeds() 
     end
+    -- TODO: Fix this later
+    -- if #ACTIVE_BOSSES > 0 
+    -- and ACTIVE_PLAYER_LIST[get_var(playerIndex,"$hash")]:getClass():getClassName() ~= "boss" 
+    -- then 
+    --     return false 
+    -- end
     if player_present(playerIndex) and tagId == BIPED_TAG_LIST['DEFAULT'] then 
         local hash = get_var(playerIndex, "$hash")
         local currentPlayer = ACTIVE_PLAYER_LIST[hash]
-        local playerGuard = get_dynamic_player(playerIndex)
-        if playerGuard ~= 0 then
-            write_float(playerGuard + 0xD8, currentPlayer:getArmor():getMaxHealth())
-        end
         return true,BIPED_TAG_LIST[currentPlayer:getArmor():getName()]
     end
 end
@@ -187,8 +192,14 @@ end
 function handleSpawn(playerIndex)
     local hash = get_var(playerIndex, "$hash")
     local currentPlayer = ACTIVE_PLAYER_LIST[hash]
+    local playerGuard = get_dynamic_player(playerIndex)
+    if playerGuard ~= 0 then
+        write_float(playerGuard + 0xD8, currentPlayer:getArmor():getMaxHealth())
+    end
     if currentPlayer:getClass():getClassName() ~= "boss" then
         execute_command('wdel ' .. playerIndex .. ' 5')
+    else
+        playDialog(currentPlayer:getArmor():getName(), 'spawn')
     end
     if currentPlayer:getSecondaryWeapon() ~= nil then
         assign_weapon(spawn_object("weap", currentPlayer:getSecondaryWeapon():getRef()), tonumber(playerIndex))

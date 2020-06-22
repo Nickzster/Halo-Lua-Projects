@@ -499,5 +499,15 @@ ITEM_LIST = {
         description="The Shard of Gordius protects you from damage!",
         type="DAMAGE_REDUCE",
         modifier=0.1
+    },
+    torresshieldgenerator={
+        description="Torres's Shield Generator protects you from damage!",
+        type="DAMAGE_REDUCE",
+        modifier=0.1
+    },
+    torresammopouch={
+        description="Torres's Ammo Pouch boosts your damage!",
+        type="DAMAGE_BOOST",
+        modifier=0.1
     }
 }
