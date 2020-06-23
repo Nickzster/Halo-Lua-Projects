@@ -150,6 +150,7 @@ class PQueue:
 
 def parseTopOfFile(file):
     try:
+
         file = open(file, "r")
         files = []
         while True:
@@ -162,8 +163,12 @@ def parseTopOfFile(file):
                 break
             else:
                 importStatement = nextLine.split(" ")
-                if importStatement[1] != 'import':
-                    raise Exception("Invalid Import Statement in file " + file + " !")
+                if importStatement[0] == "\n":
+                    raise Exception("===> Check the spacing in your files! <===")
+                elif importStatement[1] != 'import':
+                    raise Exception("===> Invalid Import Statement in file " + file + " ! <===")
+                elif len(importStatement) != 4:
+                    raise Exception("===> One of your import statements is missing an '--', 'import', or 'end' statement! <===")
                 else:
                     directories = importStatement[2].split(".")
                     fileDir = os.getcwd()
@@ -173,8 +178,10 @@ def parseTopOfFile(file):
                     files.append(fileDir)
         return files
     except Exception as err:
-        print("ERROR!")
+        print("=========================================================================")
+        print("# # # ERROR! # # #")
         print(err)
+        print("=========================================================================")
         return False
 
 

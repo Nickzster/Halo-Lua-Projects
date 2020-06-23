@@ -1,9 +1,8 @@
 -- BEGIN_IMPORT
 -- import Raids.classes.VirtualObjects.Types.Equipment.DamageBooster end
 -- import Raids.classes.VirtualObjects.Types.Equipment.DamageIgnore end
--- import Raids.classes.VirtualObjects.Types.Equipment.DamageInvPeriod end
+-- import Raids.classes.VirtualObjects.Types.Equipment.DamageCritStrike end
 -- import Raids.classes.VirtualObjects.Types.Equipment.DamageReduction end
--- import Raids.classes.VirtualObjects.Types.Equipment.Healing end
 -- END_IMPORT
 
 function CreateEquipment(equipmentKey)
@@ -13,7 +12,8 @@ function CreateEquipment(equipmentKey)
             ITEM_LIST[equipmentKey].description,
             nil,
             nil,
-            ITEM_LIST[equipmentKey].modifier
+            ITEM_LIST[equipmentKey].modifier,
+            nil
         )
     elseif ITEM_LIST[equipmentKey].type == "DAMAGE_REDUCE" then
         return DamageReductionSchema:new():equip(
@@ -21,15 +21,17 @@ function CreateEquipment(equipmentKey)
             ITEM_LIST[equipmentKey].description,
             nil,
             nil,
-            ITEM_LIST[equipmentKey].modifier
+            ITEM_LIST[equipmentKey].modifier,
+            nil
         )
-    elseif ITEM_LIST[equipmentKey].type == "DAMAGE_INVINCIBILITY" then
-        return DamageInvPeriodSchema:new():equip(
+    elseif ITEM_LIST[equipmentKey].type == "DAMAGE_CRIT_STRIKE" then
+        return DamageCritStrikeSchema:new():equip(
             equipmentKey,
             ITEM_LIST[equipmentKey].description,
             nil,
             nil,
-            ITEM_LIST[equipmentKey].modifier
+            ITEM_LIST[equipmentKey].modifier,
+            ITEM_LIST[equipmentKey].rng
         )
     elseif ITEM_LIST[equipmentKey].type == "DAMAGE_IGNORE" then
         return DamageIgnoreSchema:new():equip(
@@ -37,7 +39,8 @@ function CreateEquipment(equipmentKey)
             ITEM_LIST[equipmentKey].description,
             nil,
             nil,
-            ITEM_LIST[equipmentKey].modifier
+            nil,
+            ITEM_LIST[equipmentKey].rng
         )
     elseif ITEM_LIST[equipmentKey].type == "HEAL" then
         return HealingSchema:new():equip(
@@ -45,7 +48,8 @@ function CreateEquipment(equipmentKey)
             ITEM_LIST[equipmentKey].description,
             nil,
             nil,
-            ITEM_LIST[equipmentKey].modifier
+            ITEM_LIST[equipmentKey].modifier,
+            nil
         )
     end
 end

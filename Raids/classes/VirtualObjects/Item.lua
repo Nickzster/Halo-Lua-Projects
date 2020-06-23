@@ -37,19 +37,3 @@ function ItemSchema.isCompatible(self, className)
     if classes == nil or classes ~= nil and self.classes[className] == nil then return false end
     return true
 end 
-
-
-    --TODO: Reimplement this in a different function or scope.
-    -- if self.type == "HEAL" then
-    --     local key = 'HEALING_MODIFIER_FOR_PLAYER_' ..playerIndex
-    --     local newHealthRegenModifier = EventItem:new()
-    --     newHealthRegenModifier:set({
-    --         ['playerIndex'] = playerIndex
-    --     }, function (props, time)
-    --         --TODO: Implement health modifier here
-    --     end, function(props)
-    --         --TODO: Implement a complete method here
-    --     end, -1)
-    --     EVENT_TABLE[key] = newHealthRegenModifier
-    --     self.key = key
-    -- end

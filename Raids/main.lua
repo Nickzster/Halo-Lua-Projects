@@ -174,12 +174,7 @@ function handleObjectSpawn(playerIndex, tagId, parentObjectId, newObjectId)
     if BIPED_TAG_LIST['DEFAULT'] == nil then 
         loadBipeds() 
     end
-    --TODO: Fix this later
-    if player_present(playerIndex) and #ACTIVE_BOSSES > 0 then
-        if ACTIVE_PLAYER_LIST[get_var(playerIndex,"$hash")]:getClass():getClassName() ~= "boss" then
-            return false
-        end
-    end
+    local bossCount = 0
     if player_present(playerIndex) and tagId == BIPED_TAG_LIST['DEFAULT'] then 
         local hash = get_var(playerIndex, "$hash")
         local currentPlayer = ACTIVE_PLAYER_LIST[hash]
@@ -193,6 +188,14 @@ function handlePrespawn(playerIndex)
         local hash = get_var(playerIndex, "$hash")
         if ACTIVE_PLAYER_LIST[hash]:getClass():getClassName() == "boss" then
             execute_command("t ".. tostring(playerIndex) .." ".. tostring(ACTIVE_PLAYER_LIST[hash]:getArmor():getName()))
+            return
+        end
+        local bossCount = 0
+        for k,v in pairs(ACTIVE_BOSSES) do
+            bossCount = bossCount + 1 
+        end
+        if bossCount > 0 then
+            execute_command("t " .. tostring(playerIndex) .. " timeout")
         end
     end
 end

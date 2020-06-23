@@ -10,6 +10,7 @@ AmmoWeapon['createWeapon'] = createWeapon
 AmmoWeapon['getMaxAmmo'] = getMaxAmmo
 AmmoWeapon['getModifier'] = getModifier
 
+
 function AmmoWeapon.setAmmo(self, playerIndex, weaponIndex)
     execute_command("ammo " .. playerIndex .. " " .. self:getMaxAmmo() .. " " .. weaponIndex)
 end

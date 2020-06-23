@@ -7,7 +7,7 @@ DamageBoosterSchema = ItemSchema:new()
 
 
 function DamageBoosterSchema.computeNewDamage(self,baseDamage)
-    return baseDamage + (baseDamage * self:getModifier())
+    return baseDamage * self:getModifier()
 end
 
 DamageBoosterSchema['equip'] = equip

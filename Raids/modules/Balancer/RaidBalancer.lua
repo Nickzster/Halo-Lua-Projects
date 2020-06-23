@@ -3,7 +3,10 @@
 -- END_IMPORT
 
 function Balancer()
-    local numberOfPlayers = #ACTIVE_PLAYER_LIST
+    local numberOfPlayers = 0
+    for k,v in pairs(ACTIVE_PLAYER_LIST) do
+        numberOfPlayers = numberOfPlayers + 1
+    end
     local XSM_MIN = 0
     local XSM_MAX = 4
     local SM_MIN = 5
@@ -23,7 +26,7 @@ function Balancer()
     elseif numberOfPlayers >= SM_MIN and numberOfPlayers <= SM_MAX then
         say_all("New Raid Size: Small")
         NUMBER_OF_ALLOWED_TANKS = 1
-        NUMBER_OF_ALLOWED_HEALERS = 1
+        NUMBER_OF_ALLOWED_HEALERS = 2
         NUMBER_OF_ALLOWED_BANDOLIERS = 1
         BOSS_MULTIPLIER = 1.5
     elseif numberOfPlayers >= MED_MIN and numberOfPlayers <= MED_MAX then

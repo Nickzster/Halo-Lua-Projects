@@ -5,7 +5,7 @@
 DamageReductionSchema = ItemSchema:new()
 
 function DamageReductionSchema.computeNewDamage(self,baseDamage)
-    return baseDamage - (baseDamage * self:getModifier())
+    return baseDamage / self:getModifier()
 end
 
 DamageReductionSchema['equip'] = equip

@@ -157,7 +157,13 @@ function PlayerSchema.checkForItem(self, item)
 end
 
 function PlayerSchema.removeItemFromInventory(self,itemName)
-    self.inventory[itemName] = nil
+    if self:getItemFromInventory(itemName) ~= nil then
+        say(self.playerIndex, "Item: ".. itemName .. " has been removed from your inventory!")
+        self.inventory[itemName] = nil
+        return true
+    else
+        return false
+    end
 end
 
 function PlayerSchema.getInventory(self)

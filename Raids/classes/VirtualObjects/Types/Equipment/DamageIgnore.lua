@@ -6,8 +6,11 @@
 DamageIgnoreSchema = ItemSchema:new()
 
 function DamageIgnoreSchema.computeNewDamage(self,baseDamage)
-    return baseDamage
+    math.randomseed(os.time())
+    local ignore = math.random(1, self:getRng())
+    if ignore == 1 then return 0 else return baseDamage end
 end
 
 DamageIgnoreSchema['equip'] = equip
 DamageIgnoreSchema['getModifier'] = getModifier
+DamageIgnoreSchema['getRng'] = getRng

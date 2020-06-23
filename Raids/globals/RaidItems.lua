@@ -2,11 +2,12 @@
 
 --types
 -- WEAPON- A reference to a weapon file
+-- ARMOR: Different Armors that can be worn.
 -- DAMAGE_BOOST: Multiplies the incoming base damage for a weapon by the modifier amount, and adds it to the base damage value.
 -- DAMAGE_REDUCE: Multiplies the incoming base damage for a weapon by the modifier amount, and subtracts it from the base damage value.
--- DAMAGE_INVINCIBILITY_PERIOD: Specifies the length of invunerability the item has in ticks.
+-- DAMAGE_CRIT_STRIKE: Specifies the upper bounds of the RNG to double the damage.
 -- DAMAGE_IGNORE: Specifies the upper bounds of the RNG to ignore damage.
--- HEAL: Specifies the amount of health to regenerate every second.
+-- BOSS: A boss that the player(s) will encounter!
 
 ITEM_LIST = {
     piercer={
@@ -490,24 +491,76 @@ ITEM_LIST = {
             boss=true
         }
     },
+    armorpiercingone={
+        description="Increases your damage output!",
+        type="DAMAGE_BOOST",
+        modifier=1.1
+    },
+    armorpiercingtwo={
+        description="Increases your damage output!",
+        type="DAMAGE_BOOST",
+        modifier=1.2
+    },
+    armorpiercingthree={
+        description="Increases your damage output!",
+        type="DAMAGE_BOOST",
+        modifier=1.3
+    },
+    shieldgeneratorone={
+        description="Decrases the amount of damage you take!",
+        type="DAMAGE_REDUCE",
+        modifier=1.1
+    },
+    shieldgeneratortwo={
+        description="Decrases the amount of damage you take!",
+        type="DAMAGE_REDUCE",
+        modifier=1.2
+    },
+    shieldgeneratorthree={
+        description="Decrases the amount of damage you take!",
+        type="DAMAGE_REDUCE",
+        modifier=1.3
+    },
+    luckybullet={
+        description="Has a chance to increase your damage significantly!",
+        type="DAMAGE_CRIT_STRIKE",
+        rng=15,
+        modifier=3
+    },
+    luckytabi={
+        description="Has a chance to completely ignore damage!",
+        type="DAMAGE_IGNORE",
+        rng=15
+    },
+    godlytabi={
+        description="If you wear this, you're practically invincible!",
+        type="DAMAGE_IGNORE",
+        rng=2
+    },
+    godlybullet={
+        description="If you wear this, you're doing the reaper's work for him!",
+        type="DAMAGE_CRIT_STRIKE",
+        rng=2,
+        modifier=10
+    },
     mightofgordius = {
         description="The Might of Gordius increases your damage!",
         type="DAMAGE_BOOST",
-        modifier=0.1
+        modifier=1.5
     },
     shardofgordius = {
         description="The Shard of Gordius protects you from damage!",
         type="DAMAGE_REDUCE",
-        modifier=0.1
+        modifier=1.5
     },
     torresshieldgenerator={
         description="Torres's Shield Generator protects you from damage!",
         type="DAMAGE_REDUCE",
-        modifier=0.1
+        modifier=1.5
     },
     torresammopouch={
         description="Torres's Ammo Pouch boosts your damage!",
         type="DAMAGE_BOOST",
-        modifier=0.1
+        modifier=1.5
     }
 }

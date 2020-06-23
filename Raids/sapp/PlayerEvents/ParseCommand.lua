@@ -12,6 +12,7 @@
 -- import Raids.modules.Events.EventItem end
 -- import Raids.gameplay.BossEvents.PlaySound end
 -- import Raids.globals.Dialog end
+-- import Raids.util.ViewItem end
 -- END_IMPORT
 
 function parseCommand(playerIndex, command)
@@ -69,7 +70,15 @@ function parseCommand(playerIndex, command)
             if ITEM_LIST[args[3]] == nil then say(playerIndex, "You need to specify a valid item!") return true end
             if player_present(tonumber(args[2])) == false then say(playerIndex, "You need to specify a present player!") return true end
             local targetPlayerHash = get_var(tonumber(args[2]), "$hash")
-            player:addItemToInventory(args[3])
+            ACTIVE_PLAYER_LIST[targetPlayerHash]:addItemToInventory(args[3])
+            return true
+        elseif args[1] == "remove" then
+            if tonumber(get_var(playerIndex, "$lvl")) ~= 4 then say("You need admin priviledges to execute this!") return true end
+            if args[2] == nil then say(playerIndex, "You need to specify a player index!") return true end
+            if args[3] == nil then say(playerIndex, "You need to speicify an item to remove!") return true end
+            if player_present(tonumber(args[2])) == false then say(playerIndex, "You need to specify a present player!") return true end
+            local targetPlayerHash = get_var(tonumber(args[2]), "$hash")
+            ACTIVE_PLAYER_LIST[targetPlayerHash]:removeItemFromInventory(args[3])
             return true
         elseif args[1] == "respawn" then
             if #ACTIVE_BOSSES == 0 then
@@ -121,20 +130,20 @@ function parseCommand(playerIndex, command)
             if player:getClass():getClassName() ~= "boss" then say(playerIndex, "You cannot execute this command!") return true end
             local boss = player:getArmor(nil):getName()
             player:setArmor(nil, "DEFAULT")
+            for i=0,16 do
+                if player_present(i) then
+                    kill(i)
+                end
+            end
             kill(playerIndex)
             playDialog(boss, "wipe")
             return true
         elseif args[1] == "whoami" then
             say(playerIndex, "You are a " .. displayProperClassName(player:getClass():getClassName()))
             return true
-        elseif args[1] == "moreinfo" then
+        elseif args[1] == "moreinfo" or args[1] == "more" then
             if ITEM_LIST[args[2]] ~= nil then
-                say(playerIndex, "=======================================")
-                if ITEM_LIST[args[2]].type then say(playerIndex, "Type: " .. ITEM_LIST[args[2]].type) end
-                if ITEM_LIST[args[2]].description then say(playerIndex, "Description: " .. ITEM_LIST[args[2]].description) end
-                if ITEM_LIST[args[2]].defense then say(playerIndex, "Defense: " .. ITEM_LIST[args[2]].defense) end
-                if ITEM_LIST[args[2]].maxHealth then say(playerIndex, "Health: " .. ITEM_LIST[args[2]].maxHealth) end
-                say(playerIndex, "=======================================")
+                ViewItem(ITEM_LIST[args[2]], playerIndex)
             else
                 say(playerIndex, "That item does not exist!")
             end
