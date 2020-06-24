@@ -33,6 +33,7 @@ function OnScriptLoad()
     register_callback(cb['EVENT_PRESPAWN'], "handlePrespawn")
     register_callback(cb['EVENT_GAME_END'],"OnGameEnd")
     register_callback(cb['EVENT_GAME_START'], "OnGameStart")
+    loadBipeds() 
     for i=0,16 do
         if player_present(i) then
             loadPlayer(i)
