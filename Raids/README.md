@@ -8,7 +8,7 @@
 
 ### Classes
 
-- Each class in raids serves a function that is essential to killing the boss. Each class has a set of weapons to choose from, and an ultimate ability. Players can also use equipment to enhance their player's damage, damage reduction, and the amount of health that they regen each second.
+- Each class in raids serves a function that is essential to killing the boss. Each class has a set of weapons to choose from, and an ultimate ability. Players can also use equipment to enhance their player's damage, damage reduction, dodge, and critical stike.
 
 ## Spartan (Tank)
 
