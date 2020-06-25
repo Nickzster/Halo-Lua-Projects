@@ -305,7 +305,41 @@ function PlayerSchema.resetDamage(self)
     self.damage = 0
 end
 
+function PlayerSchema.buildFileObject(self)
+   return {
+        dps={
+            primary=self:getPrimaryWeapon('dps'):getName(),
+            secondary=self:getSecondaryWeapon('dps'):getName(),
+            armor=self:getArmor('dps'):getName()
+        },
+        healer={
+            primary=self:getPrimaryWeapon('healer'):getName(),
+            secondary=self:getSecondaryWeapon('healer'):getName(),
+            armor=self:getArmor('healer'):getName()
+        },
+        tank={
+            primary=self:getPrimaryWeapon('tank'):getName(),
+            secondary=self:getSecondaryWeapon('tank'):getName(),
+            armor=self:getArmor('tank'):getName()
+        },
+        gunslinger={
+            primary=self:getPrimaryWeapon('gunslinger'):getName(),
+            secondary=self:getSecondaryWeapon('gunslinger'):getName(),
+            armor=self:getArmor('gunslinger'):getName()
+        },
+        bandolier={
+            primary=self:getPrimaryWeapon('bandolier'):getName(),
+            secondary=self:getSecondaryWeapon('bandolier'):getName(),
+            armor=self:getArmor('bandolier'):getName()
+        },
+        inventory=self:getInventory(),
+        equipment=self:getEquipment():getName(),
+        preferredClass=self:getPreferredClass()
+    }
+end
+
 function PlayerSchema.WritePlayerToFile(self)
+    local fileObject = self:buildFileObject()
     local hash = get_var(self:getPlayerIndex(), "$hash")
     local fileName = "raids_data_files/"..hash
     local file = io.open(fileName, "w")
@@ -323,25 +357,26 @@ function PlayerSchema.WritePlayerToFile(self)
         for key,_ in pairs(classNames) do
             if key ~= "boss" then 
                 file:write("$"..classNames[key] .. "_LOADOUT_BEGIN\n")
-                file:write(self:getPrimaryWeapon(key):getName().."\n")
-                file:write(self:getSecondaryWeapon(key):getName().."\n")
-                file:write(self:getArmor(key):getName().."\n") 
+                file:write(fileObject[key]['primary'] .."\n")
+                file:write(fileObject[key]['secondary'] .."\n")
+                file:write(fileObject[key]['armor'] .."\n") 
                 file:write("$"..classNames[key] .. "_LOADOUT_END\n")
             end
         end
-        local playerInventory = self:getInventory()
+        local playerInventory = fileObject['inventory']
         file:write("$INVENTORY_BEGIN\n")
         for key,_ in pairs(playerInventory) do
             file:write(key.."\n")
         end
         file:write("$INVENTORY_END\n")
         file:write("$EQUIPMENT_BEGIN\n")
-        if self:getEquipment() ~= nil then
-            file:write(self:getEquipment():getName().."\n")
+        local playerEquipment = fileObject['equipment']
+        if playerEquipment ~= nil then
+            file:write(playerEquipment.."\n")
         end
         file:write("$EQUIPMENT_END\n")
         file:write("$PREFERRED_CLASS_BEGIN\n")
-        file:write(self:getPreferredClass()..'\n')
+        file:write(fileObject['preferredClass']..'\n')
         file:write("$PREFERRED_CLASS_END\n")
         file:write("$EOF")
         file:close()

@@ -1,6 +1,11 @@
 -- BEGIN_IMPORT
 -- import Raids.globals.values end
 -- import Raids.classes.Player end
+-- import Raids.globals.RaidItems end
+-- import Raids.globals.ItemList.Armors end
+-- import Raids.globals.ItemList.Bosses end
+-- import Raids.globals.ItemList.Equipments end
+-- import Raids.globals.ItemList.Weapons end
 -- import Raids.sapp.Loaders.LoadBipeds end
 -- import Raids.sapp.PlayerEvents.LoadPlayer end
 -- import Raids.sapp.PlayerEvents.UnloadPlayer end
@@ -14,10 +19,26 @@
 -- import Raids.sapp.PlayerEvents.ActivateUltimateAbility end
 -- import Raids.gameplay.BossEvents.PlaySound end
 -- import Raids.globals.Dialog end
+-- import Raids.gameplay.Reward.Crates end
 -- END_IMPORT
 
 
 --Callbacks
+
+function buildItemTable()
+    for k,v in pairs(ArmorList) do
+        ITEM_LIST[k] = v
+    end
+    for k,v in pairs(BossList) do
+        ITEM_LIST[k] = v
+    end
+    for k,v in pairs(EquipmentList) do
+        ITEM_LIST[k] = v
+    end
+    for k,v in pairs(WeaponList) do
+        ITEM_LIST[k] = v
+    end
+end
 
 function OnScriptLoad()
     register_callback(cb['EVENT_COMMAND'], "handleCommand")
@@ -33,6 +54,7 @@ function OnScriptLoad()
     register_callback(cb['EVENT_PRESPAWN'], "handlePrespawn")
     register_callback(cb['EVENT_GAME_END'],"OnGameEnd")
     register_callback(cb['EVENT_GAME_START'], "OnGameStart")
+    buildItemTable()
     loadBipeds() 
     for i=0,16 do
         if player_present(i) then
@@ -40,6 +62,7 @@ function OnScriptLoad()
             kill(i)
         end
     end
+
 end
 
 function OnScriptUnload()
@@ -64,6 +87,7 @@ function OnScriptUnload()
     ACTIVE_PLAYER_LIST = {}
     ACTIVE_BOSSES = {}
     EVENT_TABLE = {}
+    ITEM_LIST = {}
 end
 
 OnGameStart = OnScriptLoad
@@ -74,8 +98,25 @@ function handleAreaEnter(playerIndex, areaEntered)
     if player_present(playerIndex) then
         local hash = get_var(playerIndex, "$hash")
         local player = ACTIVE_PLAYER_LIST[hash]
-        say(playerIndex, "You approach " .. LOCATIONS[areaEntered])
+        if LOCATIONS[areaEntered] == nil then say(playerIndex, areaEntered)
+        else say(playerIndex, LOCATIONS[areaEntered])
+        end
         player:setLocation(areaEntered)
+        if areaEntered == "iron_crate" and IRON_CRATE_LOOTERS[hash] == nil then
+            CRATES:execute("IronCrate", player)
+            IRON_CRATE_LOOTERS[hash] = true
+            return
+        elseif areaEntered == "gold_crate" and GOLD_CRATE_HAS_BEEN_LOOTED == false then
+            CRATES:execute("GoldCrate", player)
+            GOLD_CRATE_HAS_BEEN_LOOTED = true
+        elseif areaEntered == "crystal_crate" and CRYSTAL_CRATE_HAS_BEEN_LOOTED == false then
+            CRATES:execute("CrystalCrate", player)
+            CRYSTAL_CRATE_HAS_BEEN_LOOTED = true
+            return 
+        else
+            say(playerIndex, "This crate has already been looted!")
+            return
+        end
     end
 end
 
@@ -83,7 +124,6 @@ function handleAreaExit(playerIndex, areaExited)
     if player_present(playerIndex) then 
         local hash = get_var(playerIndex, "$hash")
         local player = ACTIVE_PLAYER_LIST[hash]
-        say(playerIndex, "You walk away from " .. LOCATIONS[areaExited])
         player:removeLocation(areaExited)
     end
 end

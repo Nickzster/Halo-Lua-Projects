@@ -5,6 +5,7 @@
 function ViewItem(item, playerIndex)
     rprint(playerIndex, "|c --------------------------------------------------------------- |nc00b3ff")
     local type = item['type']
+    rprint(playerIndex, "|c Name: " .. item['pretty'] .. "|nc00b3ff" )
     rprint(playerIndex, "|c Type: " .. type .. "|nc00b3ff")
     rprint(playerIndex, "|c Description: " .. item['description'] .. "|nc00b3ff")
     if type == 'WEAPON' then

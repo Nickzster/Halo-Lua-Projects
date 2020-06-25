@@ -1,7 +1,10 @@
 api_version="1.10.1.0"
 
 LOCATIONS= {
-    ["torres_event_1"] = "an important computer!"
+    ["torres_event_1"] = "You approach an important computer!",
+    ["iron_crate"] = "You have found an Iron Crate!",
+    ["gold_crate"] = "You have found a Gold Crate!",
+    ["crystal_crate"] = "You have found a Crystal Crate!"
 }
 
 BIPED_TAG_LIST = {}
@@ -215,561 +218,11 @@ end
 -- DAMAGE_IGNORE: Specifies the upper bounds of the RNG to ignore damage.
 -- BOSS: A boss that the player(s) will encounter!
 
-ITEM_LIST = {
-    piercer={
-        description="Battle Rifle",
-        type="WEAPON",
-        ref="zteam\\objects\\weapons\\single\\battle_rifle\\h3\\piercer",
-        maxAmmo=684,
-        classes={
-            dps=true
-        }
-    },
-    reliable={
-        description="Assault Rifle",
-        type="WEAPON",
-        ref="zteam\\objects\\weapons\\single\\assault_rifle\\h3\\reliable",
-        maxAmmo=676,
-        classes={
-            dps=true
-        }
-    },
-    accelerator={
-        description="MA5K",
-        type="WEAPON",
-        ref="altis\\weapons\\br\\accelerator",
-        maxAmmo=676,
-        classes={
-            bandolier=true
-        }
-    },
-    limitless={
-        description="MG",
-        type="WEAPON",
-        ref="rangetest\\cmt\\weapons\\spv3\\human\\turret\\limitless",
-        maxAmmo=600,
-        classes={
-            bandolier=true
-        }
-    },
-    lobber={
-        description="Grenade Launcher",
-        type="WEAPON",
-        ref="zteam\\objects\\weapons\\single\\grenade_launcher\\hr\\lobber",
-        maxAmmo=40,
-        classes={
-            bandolier=true
-        }
-    },
-    lawman={
-        description="DMR",
-        type="WEAPON",
-        ref="bourrin\\weapons\\dmr\\lawman",
-        maxAmmo=500,
-        classes={
-            bandolier=true
-        }
-    },
-    irradiator={
-        description="Carbine",
-        type="WEAPON",
-        ref="zteam\\objects\\weapons\\single\\covenant_carbine\\h3\\irradiator",
-        maxAmmo=636,
-        classes={
-            gunslinger=true
-        }
-    },
-    brassknuckle={
-        description="Mauler",
-        type="WEAPON",
-        ref="zteam\\objects\\weapons\\single\\mauler\\h3\\brassknuckle",
-        maxAmmo=505,
-        classes={
-            tank=true
-        }
-    },
-    rampart={
-        description="Spiker",
-        type="WEAPON",
-        ref="zteam\\objects\\weapons\\single\\spike_rifle\\h3\\rampart",
-        maxAmmo=1000,
-        classes={
-            tank=true
-        }
-    },
-    faithful={
-        description="Plasma Pistol",
-        type="WEAPON",
-        battery=true,
-        ref="h2\\objects\\weapons\\pistol\\plasma_pistol\\faithful",
-        maxBattery=100,
-        classes={
-            healer=true
-        }
-    },
-    lightbringer={
-        description="Plasma Rifle",
-        type="WEAPON",
-        battery=true,
-        ref="h2\\objects\\weapons\\rifle\\plasma_rifle\\lightbringer",
-        maxBattery=100,
-        classes={
-            healer=true
-        }
-    },
-    piety={
-        description="Brute Plasma Rifle",
-        type="WEAPON",
-        battery=true,
-        maxBattery=100,
-        ref="h2\\objects\\weapons\\rifle\\brute_plasma_rifle\\piety",
-        classes={
-            healer=true
-        }
-    },
-    linearity={
-        description="Sentinel Beam",
-        type="WEAPON",
-        battery=true,
-        maxBattery=100,
-        ref="h2\\objects\\weapons\\support_low\\sentinel_beam\\linearity",
-        classes={
-            healer=true
-        }
-    },
-    eviscerator={
-        description="Energy Sword",
-        type="WEAPON",
-        battery=true,
-        maxBattery=100,
-        ref="h4\\weapons\\covenant\\energy sword\\eviscerator",
-        classes={
-            gunslinger=true
-        }
-    },
-    headhunter={
-        description="Beam Rifle",
-        type="WEAPON",
-        battery=true,
-        maxBattery=100,
-        ref="zteam\\objects\\weapons\\single\\beam_rifle\\h3\\headhunter",
-        classes={
-            gunslinger=true
-        }
-    },
-    discordant={
-        description="Fuel Rod Cannon",
-        type="WEAPON",
-        ref="halo3\\weapons\\'plasma cannon'\\discordant",
-        maxAmmo=30,
-        classes={
-            gunslinger=true
-        }
-    },
-    concusser={
-        description="Concussion Rifle",
-        type="WEAPON",
-        ref="zteam\\objects\\weapons\\single\\concussion_rifle\\hr\\concusser",
-        maxAmmo=606,
-        classes={
-            gunslinger=true
-        }
-    },
-    thor={
-        description="Gravity Hammer",
-        type="WEAPON",
-        battery=true,
-        maxBattery=100,
-        ref="zteam\\objects\\weapons\\single\\gravity_hammer\\h3\\thor",
-        classes={
-            tank=true
-        }
-    },
-    kingsglaive={
-        description="Brute Shot",
-        type="WEAPON",
-        maxAmmo=42,
-        ref="zteam\\objects\\weapons\\single\\brute_shot\\h3_6rounds\\kingsglaive",
-        classes={
-            tank=true
-        }
-    },
-    charity={
-        description="Pistol",
-        type="WEAPON",
-        maxAmmo=500,
-        ref="zteam\\objects\\weapons\\single\\magnum\\h1\\charity",
-        classes={
-            healer=true
-        }
-    },
-    grimreaper={
-        description="Rocket Launcher",
-        type="WEAPON",
-        maxAmmo=8,
-        ref="zteam\\objects\\weapons\\single\\rocket_launcher\\hr\\grimreaper",
-        classes={
-            dps=true
-        }
-    },
-    deathwarrant={
-        description="Shotgun",
-        type="WEAPON",
-        maxAmmo=60,
-        ref="zteam\\objects\\weapons\\single\\shotgun\\h3\\deathwarrant",
-        classes={
-            tank=true
-        }
-    },
-    chicagotypewriter={
-        description="SMG",
-        type="WEAPON",
-        maxAmmo=400,
-        ref="zteam\\objects\\weapons\\single\\smg\\h3\\chicagotypewriter",
-        classes={
-            healer=true
-        }
-    },
-    widowmaker={
-        description="Sniper Rifle",
-        type="WEAPON",
-        maxAmmo=20,
-        ref="halo3\\weapons\\sniper rifle\\widowmaker",
-        classes={
-            dps=true
-        }
-    },
-    covert={
-        description="Ma5K Tactical Rifle",
-        type="WEAPON",
-        maxAmmo=250,
-        ref="altis\\weapons\\br_spec_ops\\covert",
-        classes={
-            dps=true
-        }
-    },
-    negotiator={
-        description="Gauss Rifle",
-        type="WEAPON",
-        maxAmmo=40,
-        ref="np\\objects\\weapons\\rifle\\gauss_sniper_rifle\\hm\\negotiator",
-        classes={
-            dps=true
-        }
-    },
-    dpsstd={
-        description="Standard ODST Armor",
-        type="ARMOR",
-        ref="characters\\cyborg_mp\\soldier",
-        maxHealth=100,
-        defense=0,
-        classes={
-            dps=true
-        }
-    },
-    dpstierone={
-        description="Tier 1 Soldier Armor",
-        type="ARMOR",
-        ref="characters\\cyborg_mp\\soldier1",
-        maxHealth=115,
-        defense=0,
-        classes={
-            dps=true
-        }
-    },
-    dpstiertwo={
-        description="Tier 2 Soldier Armor",
-        type="ARMOR",
-        ref="characters\\cyborg_mp\\soldier2",
-        maxHealth=130,
-        defense=0,
-        classes={
-            dps=true
-        }
-    },
-    healerstd={
-        description="Standard ODST armor for medics.",
-        type="ARMOR",
-        ref="characters\\cyborg_mp\\medic",
-        maxHealth=100,
-        defense=0,
-        classes={
-            healer=true
-        }
-    },
-    healertierone={
-        description="Tier 1 Medic Armor",
-        type="ARMOR",
-        ref="characters\\cyborg_mp\\medic1",
-        maxHealth=115,
-        defense=0,
-        classes={
-            healer=true
-        }
-    },
-    healertiertwo={
-        description="Tier 2 Medic Armor",
-        type="ARMOR",
-        ref="characters\\cyborg_mp\\medic2",
-        maxHealth=130,
-        defense=0,
-        classes={
-            healer=true
-        }
-    },
-    tankstd={
-        description="Standard MK 6 armor for tanks",
-        type="ARMOR",
-        ref="hcea\\characters\\cyborg\\spartan",
-        maxHealth=500,
-        defense=0,
-        classes={
-            tank=true
-        }
-    },
-    tanktierone={
-        description="Tier 1 Spartan Armor",
-        type="ARMOR",
-        ref="zteam\\objects\\characters\\spartan\\h3\\spartan1",
-        maxHealth=550,
-        defense=0,
-        classes={
-            tank=true
-        }
-    },
-    tanktiertwo={
-        description="Tier 2 Spartan Armor",
-        type="ARMOR",
-        ref="zteam\\objects\\characters\\spartan\\h3\\spartan2",
-        maxHealth=600,
-        defense=0,
-        classes={
-            tank=true
-        }
-    },
-    bandolierstd={
-        description="Standard Marine armor for Bandoliers",
-        type="ARMOR",
-        ref="bourrin\\halo reach\\marine-to-spartan\\bandolier",
-        maxHealth=115,
-        defense=0,
-        classes={
-            bandolier=true
-        }
-    },
-    bandoliertiertwo={
-        description="Tier 2 Bandolier Armor",
-        type="ARMOR",
-        ref="bourrin\\halo reach\\marine-to-spartan\\bandolier2",
-        maxHealth=130,
-        defense=0,
-        classes={
-            bandolier=true
-        }
-    },
-    gunslingerstd={
-        description="Standard Elite armor for Gunslingers",
-        type="ARMOR",
-        ref="np\\objects\\characters\\elite\\h3\\bipeds\\valiant",
-        maxHealth=100,
-        defense=0,
-        classes={
-            gunslinger=true
-        }
-    },
-    gunslingertierone={
-        description="Tier 1 Valiant Armor",
-        type="ARMOR",
-        ref="np\\objects\\characters\\elite\\hm\\bipeds\\valiant1",
-        maxHealth=115,
-        defense=0,
-        classes={
-            gunslinger=true
-        }
-    },
-    gunslingertiertwo={
-        description="Tier 2 Valiant Armor",
-        type="ARMOR",
-        ref="np\\objects\\characters\\elite\\hm\\bipeds\\valiant2",
-        maxHealth=130,
-        defense=0,
-        classes={
-            gunslinger=true
-        }
-    },
-    scourge={
-        description="Scourge Boss",
-        type="BOSS",
-        ref="h2spp\\characters\\flood\\juggernaut\\scourge",
-        maxHealth=5000,
-        defense=0,
-        classes={
-            boss=true
-        }
-    },
-    torres={
-        description="Torres Boss",
-        type="BOSS",
-        ref="rangetest\\cmt\\characters\\evolved_h1-spirit\\cyborg\\bipeds\\torres",
-        maxHealth=27500,
-        defense=0,
-        classes={
-            boss=true
-        }
-    },
-    eliminator={
-        description="Eliminator Boss",
-        type="BOSS",
-        ref="rangetest\\cmt\\characters\\spv3\\forerunner\\enforcer\\bipeds\\eliminator",
-        maxHealth=2000,
-        defense=0,
-        classes={
-            boss=true
-        }
-    },
-    kreyul={
-        description="Kreyul Boss",
-        type="BOSS",
-        ref="shdwslyr\\reach_elite\\ultra\\kreyul",
-        maxHealth=1000,
-        defense=0,
-        classes={
-            boss=true
-        }
-    },
-    gordius={
-        description="Gordius Boss",
-        type="BOSS",
-        ref="cmt\\characters\\evolved\\covenant\\hunter\\bipeds\\gordius",
-        maxHealth=4000,
-        defense=0,
-        classes={
-            boss=true
-        }
-    },
-    DEFAULT={
-        description="Default Map Biped",
-        type="ARMOR",
-        ref="hcea\\characters\\cyborg\\spartan",
-        maxHealth=100,
-        defense=0,
-        classes={
-            boss=true
-        }
-    },
-    backdraft={
-        description="Backdraft Boss",
-        type="BOSS",
-        ref="bourrin\\halo reach\\spartan\\male\\backdraft",
-        maxHealth=12000,
-        defense=0,
-        classes={
-            boss=true
-        }
-    },
-    boom={
-        description="Boom Boss",
-        type="BOSS",
-        ref="bourrin\\halo reach\\spartan\\male\\boom",
-        maxHealth=7500,
-        defense=0,
-        classes={
-            boss=true
-        }
-    },
-    bewm={
-        description="Bewm Boss",
-        type="BOSS",
-        ref="bourrin\\halo reach\\spartan\\male\\buum",
-        maxHealth=8000,
-        defense=0,
-        classes={
-            boss=true
-        }
-    },
-    griswald={
-        description="Griswald Boss",
-        type="BOSS",
-        ref="bourrin\\halo reach\\spartan\\male\\griswald",
-        maxHealth=9000,
-        defense=0,
-        classes={
-            boss=true
-        }
-    },
-    armorpiercingone={
-        description="Increases your damage output!",
-        type="DAMAGE_BOOST",
-        modifier=1.1
-    },
-    armorpiercingtwo={
-        description="Increases your damage output!",
-        type="DAMAGE_BOOST",
-        modifier=1.2
-    },
-    armorpiercingthree={
-        description="Increases your damage output!",
-        type="DAMAGE_BOOST",
-        modifier=1.3
-    },
-    shieldgeneratorone={
-        description="Decrases the amount of damage you take!",
-        type="DAMAGE_REDUCE",
-        modifier=1.1
-    },
-    shieldgeneratortwo={
-        description="Decrases the amount of damage you take!",
-        type="DAMAGE_REDUCE",
-        modifier=1.2
-    },
-    shieldgeneratorthree={
-        description="Decrases the amount of damage you take!",
-        type="DAMAGE_REDUCE",
-        modifier=1.3
-    },
-    luckybullet={
-        description="Has a chance to increase your damage significantly!",
-        type="DAMAGE_CRIT_STRIKE",
-        rng=15,
-        modifier=3
-    },
-    luckytabi={
-        description="Has a chance to completely ignore damage!",
-        type="DAMAGE_IGNORE",
-        rng=15
-    },
-    godlytabi={
-        description="If you wear this, you're practically invincible!",
-        type="DAMAGE_IGNORE",
-        rng=2
-    },
-    godlybullet={
-        description="If you wear this, you're doing the reaper's work for him!",
-        type="DAMAGE_CRIT_STRIKE",
-        rng=2,
-        modifier=10
-    },
-    mightofgordius = {
-        description="The Might of Gordius increases your damage!",
-        type="DAMAGE_BOOST",
-        modifier=1.5
-    },
-    shardofgordius = {
-        description="The Shard of Gordius protects you from damage!",
-        type="DAMAGE_REDUCE",
-        modifier=1.5
-    },
-    torresshieldgenerator={
-        description="Torres's Shield Generator protects you from damage!",
-        type="DAMAGE_REDUCE",
-        modifier=1.5
-    },
-    torresammopouch={
-        description="Torres's Ammo Pouch boosts your damage!",
-        type="DAMAGE_BOOST",
-        modifier=1.5
-    }
-}
+ITEM_LIST = {}
+
+
+
+
 
 equip = function(self, name, description, ref, classes, modifier, rng)
     self.name = name
@@ -845,6 +298,15 @@ end
 
 
 
+BatteryWeapon = ItemSchema:new()
+
+BatteryWeapon['createWeapon'] = createWeapon
+BatteryWeapon['getMaxAmmo'] = getMaxAmmo
+BatteryWeapon['getModifier'] = getModifier
+
+function BatteryWeapon.setAmmo(self, playerIndex, weaponIndex)
+    execute_command("battery " .. playerIndex .. " 100 " .. weaponIndex)
+end
 AmmoWeapon = ItemSchema:new()
 
 AmmoWeapon['createWeapon'] = createWeapon
@@ -854,15 +316,6 @@ AmmoWeapon['getModifier'] = getModifier
 
 function AmmoWeapon.setAmmo(self, playerIndex, weaponIndex)
     execute_command("ammo " .. playerIndex .. " " .. self:getMaxAmmo() .. " " .. weaponIndex)
-end
-BatteryWeapon = ItemSchema:new()
-
-BatteryWeapon['createWeapon'] = createWeapon
-BatteryWeapon['getMaxAmmo'] = getMaxAmmo
-BatteryWeapon['getModifier'] = getModifier
-
-function BatteryWeapon.setAmmo(self, playerIndex, weaponIndex)
-    execute_command("battery " .. playerIndex .. " 100 " .. weaponIndex)
 end
 ArmorSchema=ItemSchema:new()
 
@@ -897,15 +350,6 @@ end
 
 
 
-DamageBoosterSchema = ItemSchema:new()
-
-
-function DamageBoosterSchema.computeNewDamage(self,baseDamage)
-    return baseDamage * self:getModifier()
-end
-
-DamageBoosterSchema['equip'] = equip
-DamageBoosterSchema['getModifier'] = getModifier
 PlayerSchema = {
     playerIndex=nil,
     loadouts=nil,
@@ -1199,7 +643,41 @@ function PlayerSchema.resetDamage(self)
     self.damage = 0
 end
 
+function PlayerSchema.buildFileObject(self)
+   return {
+        dps={
+            primary=self:getPrimaryWeapon('dps'):getName(),
+            secondary=self:getSecondaryWeapon('dps'):getName(),
+            armor=self:getArmor('dps'):getName()
+        },
+        healer={
+            primary=self:getPrimaryWeapon('healer'):getName(),
+            secondary=self:getSecondaryWeapon('healer'):getName(),
+            armor=self:getArmor('healer'):getName()
+        },
+        tank={
+            primary=self:getPrimaryWeapon('tank'):getName(),
+            secondary=self:getSecondaryWeapon('tank'):getName(),
+            armor=self:getArmor('tank'):getName()
+        },
+        gunslinger={
+            primary=self:getPrimaryWeapon('gunslinger'):getName(),
+            secondary=self:getSecondaryWeapon('gunslinger'):getName(),
+            armor=self:getArmor('gunslinger'):getName()
+        },
+        bandolier={
+            primary=self:getPrimaryWeapon('bandolier'):getName(),
+            secondary=self:getSecondaryWeapon('bandolier'):getName(),
+            armor=self:getArmor('bandolier'):getName()
+        },
+        inventory=self:getInventory(),
+        equipment=self:getEquipment():getName(),
+        preferredClass=self:getPreferredClass()
+    }
+end
+
 function PlayerSchema.WritePlayerToFile(self)
+    local fileObject = self:buildFileObject()
     local hash = get_var(self:getPlayerIndex(), "$hash")
     local fileName = "raids_data_files/"..hash
     local file = io.open(fileName, "w")
@@ -1217,25 +695,26 @@ function PlayerSchema.WritePlayerToFile(self)
         for key,_ in pairs(classNames) do
             if key ~= "boss" then 
                 file:write("$"..classNames[key] .. "_LOADOUT_BEGIN\n")
-                file:write(self:getPrimaryWeapon(key):getName().."\n")
-                file:write(self:getSecondaryWeapon(key):getName().."\n")
-                file:write(self:getArmor(key):getName().."\n") 
+                file:write(fileObject[key]['primary'] .."\n")
+                file:write(fileObject[key]['secondary'] .."\n")
+                file:write(fileObject[key]['armor'] .."\n") 
                 file:write("$"..classNames[key] .. "_LOADOUT_END\n")
             end
         end
-        local playerInventory = self:getInventory()
+        local playerInventory = fileObject['inventory']
         file:write("$INVENTORY_BEGIN\n")
         for key,_ in pairs(playerInventory) do
             file:write(key.."\n")
         end
         file:write("$INVENTORY_END\n")
         file:write("$EQUIPMENT_BEGIN\n")
-        if self:getEquipment() ~= nil then
-            file:write(self:getEquipment():getName().."\n")
+        local playerEquipment = fileObject['equipment']
+        if playerEquipment ~= nil then
+            file:write(playerEquipment.."\n")
         end
         file:write("$EQUIPMENT_END\n")
         file:write("$PREFERRED_CLASS_BEGIN\n")
-        file:write(self:getPreferredClass()..'\n')
+        file:write(fileObject['preferredClass']..'\n')
         file:write("$PREFERRED_CLASS_END\n")
         file:write("$EOF")
         file:close()
@@ -1311,23 +790,6 @@ end
 
 
 PlayerSchema['new'] = new
-function CreateArmor(key)
-    if ITEM_LIST[key] ~= nil
-    and ITEM_LIST[key].type == "ARMOR"
-    or ITEM_LIST[key].type == "BOSS"
-    then
-        return ArmorSchema:new():createArmor(
-            key,
-            ITEM_LIST[key].description,
-            ITEM_LIST[key].ref,
-            ITEM_LIST[key].classes,
-            ITEM_LIST[key].maxHealth,
-            ITEM_LIST[key].defense
-        )
-    else
-        return nil
-    end
-end
 function CreateEquipment(equipmentKey)
     if ITEM_LIST[equipmentKey].type == "DAMAGE_BOOST" then
         return DamageBoosterSchema:new():equip(
@@ -1376,25 +838,6 @@ function CreateEquipment(equipmentKey)
         )
     end
 end
-DamageReductionSchema = ItemSchema:new()
-
-function DamageReductionSchema.computeNewDamage(self,baseDamage)
-    return baseDamage / self:getModifier()
-end
-
-DamageReductionSchema['equip'] = equip
-DamageReductionSchema['getModifier'] = getModifier
-DamageIgnoreSchema = ItemSchema:new()
-
-function DamageIgnoreSchema.computeNewDamage(self,baseDamage)
-    math.randomseed(os.time())
-    local ignore = math.random(1, self:getRng())
-    if ignore == 1 then return 0 else return baseDamage end
-end
-
-DamageIgnoreSchema['equip'] = equip
-DamageIgnoreSchema['getModifier'] = getModifier
-DamageIgnoreSchema['getRng'] = getRng
 function CreateWeapon(key)
     if ITEM_LIST[key] ~= nil
     and ITEM_LIST[key].type == "WEAPON" 
@@ -1422,6 +865,31 @@ function CreateWeapon(key)
         return nil
     end
 end
+function CreateArmor(key)
+    if ITEM_LIST[key] ~= nil
+    and ITEM_LIST[key].type == "ARMOR"
+    or ITEM_LIST[key].type == "BOSS"
+    then
+        return ArmorSchema:new():createArmor(
+            key,
+            ITEM_LIST[key].description,
+            ITEM_LIST[key].ref,
+            ITEM_LIST[key].classes,
+            ITEM_LIST[key].maxHealth,
+            ITEM_LIST[key].defense
+        )
+    else
+        return nil
+    end
+end
+DamageReductionSchema = ItemSchema:new()
+
+function DamageReductionSchema.computeNewDamage(self,baseDamage)
+    return baseDamage / self:getModifier()
+end
+
+DamageReductionSchema['equip'] = equip
+DamageReductionSchema['getModifier'] = getModifier
 DamageCritStrikeSchema = ItemSchema:new()
 
 function DamageCritStrikeSchema.computeNewDamage(self,baseDamage)
@@ -1434,6 +902,26 @@ end
 DamageCritStrikeSchema['equip'] = equip
 DamageCritStrikeSchema['getModifier'] = getModifier
 DamageCritStrikeSchema['getRng'] = getRng
+DamageIgnoreSchema = ItemSchema:new()
+
+function DamageIgnoreSchema.computeNewDamage(self,baseDamage)
+    math.randomseed(os.time())
+    local ignore = math.random(1, self:getRng())
+    if ignore == 1 then return 0 else return baseDamage end
+end
+
+DamageIgnoreSchema['equip'] = equip
+DamageIgnoreSchema['getModifier'] = getModifier
+DamageIgnoreSchema['getRng'] = getRng
+DamageBoosterSchema = ItemSchema:new()
+
+
+function DamageBoosterSchema.computeNewDamage(self,baseDamage)
+    return baseDamage * self:getModifier()
+end
+
+DamageBoosterSchema['equip'] = equip
+DamageBoosterSchema['getModifier'] = getModifier
 function GetPlayerDistance(index1, index2)
 	local p1 = get_dynamic_player(index1)
 	local p2 = get_dynamic_player(index2)
@@ -1633,6 +1121,43 @@ function BossSchema.new(self)
     local newInstance = ClassSchema:new():instantiate("boss", 0, 0)
     return new(self, newInstance)
 end
+HEALER_COOLDOWN_IN_SECONDS = 75
+
+HealerSchema=ClassSchema:new():instantiate("healer", HEALER_COOLDOWN_IN_SECONDS * 30)
+
+function HealerSchema.ultimate(self, playerIndex)
+    say(playerIndex, "Healing nearby players!")
+    for i=0,16 do 
+        if player_present(i) 
+        and ACTIVE_BOSSES[i] == nil
+        and GetPlayerDistance(playerIndex, i) <= 5 
+        or i == playerIndex then
+            execute_command("hp " .. i .. " 1.0")
+        end
+    end
+    self:startCoolDown(playerIndex)
+end
+
+
+
+BANDOLIER_COOLDOWN_IN_SECONDS = 75
+
+BandolierSchema=ClassSchema:new():instantiate("bandolier", BANDOLIER_COOLDOWN_IN_SECONDS * 30)
+
+function BandolierSchema.ultimate(self, playerIndex)
+    say(playerIndex, "Giving all nearby players ammo!")
+    for i=0, 16 do
+        if player_present(i) 
+        and ACTIVE_BOSSES[i] == nil 
+        and GetPlayerDistance(playerIndex, i) <= 5
+        or i == playerIndex then
+            local currentPlayer = ACTIVE_PLAYER_LIST[get_var(i, "$hash")]
+            currentPlayer:getPrimaryWeapon():setAmmo(i, 4)
+            currentPlayer:getSecondaryWeapon():setAmmo(i, 3)
+        end
+    end
+    self:startCoolDown(playerIndex)
+end
 function playDialog(bossName, variant)
     if BOSS_DIALOG[bossName] == nil 
     or BOSS_DIALOG[bossName][variant] == nil 
@@ -1659,6 +1184,51 @@ function playDialog(bossName, variant)
     EventTable:addEvent(bossName .. "_" .. variant, deleteDialog)
     BOSS_DIALOG[bossName][variant].played = true
 end
+
+GUNSLINGER_COOLDOWN_IN_SECONDS = 120
+
+GunslingerSchema = ClassSchema:new():instantiate("gunslinger", GUNSLINGER_COOLDOWN_IN_SECONDS * 30)
+
+function GunslingerSchema.ultimate(self, playerIndex)
+    say(playerIndex, "Engaging active camoflage!")
+    execute_command('camo ' .. playerIndex .. " " .. 30)
+    self:startCoolDown(playerIndex)
+end
+TANK_COOLDOWN_IN_SECONDS = 100
+
+TankSchema=ClassSchema:new():instantiate("tank", TANK_COOLDOWN_IN_SECONDS * 30)
+
+function TankSchema.ultimate(self, playerIndex)
+    say(playerIndex, "You are now temporarly invincible!")
+    execute_command("god " .. playerIndex)
+    local key = "PLAYER_" .. playerIndex .. "_IS_EXECUTING_TANK_ULTIMATE"
+    self:startCoolDown(playerIndex)
+    local ungodEvent = EventItem:new()
+    ungodEvent:set({
+        ['playerIndex']=playerIndex
+    }, nil, function(props) execute_command("ungod " .. props.playerIndex) say(props.playerIndex, "You are no longer invincible!") end, 10 * 30)
+    EventTable:addEvent(key, ungodEvent)
+end
+
+
+
+DPS_COOLDOWN_IN_SECONDS = 70
+
+DpsSchema = ClassSchema:new():instantiate("dps", DPS_COOLDOWN_IN_SECONDS * 30)
+
+
+function DpsSchema.ultimate(self, playerIndex)
+    say(playerIndex, "All of your weapons now have bottomless clip!")
+    execute_command("mag " .. playerIndex .. " 999 5")
+    self:startCoolDown(playerIndex)
+    local key = "PLAYER_" .. playerIndex .. "_IS_EXECUTING_DPS_ULTIMATE"
+    local newEvent = EventItem:new()
+    newEvent:set({
+        ['playerIndex']=playerIndex
+    }, nil, function(props) say(props.playerIndex, "Your weapons are now back to normal.") execute_command("mag " .. props.playerIndex .. " 0 5") end, 10 * 30)
+    EventTable:addEvent(key, newEvent)
+end
+
 function Balancer()
     local numberOfPlayers = 0
     for k,v in pairs(ACTIVE_PLAYER_LIST) do
@@ -1716,97 +1286,6 @@ function numberOfPlayersWithClass(class)
     end
     return numberOfPlayers
 end
-HEALER_COOLDOWN_IN_SECONDS = 75
-
-HealerSchema=ClassSchema:new():instantiate("healer", HEALER_COOLDOWN_IN_SECONDS * 30)
-
-function HealerSchema.ultimate(self, playerIndex)
-    say(playerIndex, "Healing nearby players!")
-    for i=0,16 do 
-        if player_present(i) 
-        and ACTIVE_BOSSES[i] == nil
-        and GetPlayerDistance(playerIndex, i) <= 5 
-        or i == playerIndex then
-            execute_command("hp " .. i .. " 1.0")
-        end
-    end
-    self:startCoolDown(playerIndex)
-end
-
-
-
-BANDOLIER_COOLDOWN_IN_SECONDS = 75
-
-BandolierSchema=ClassSchema:new():instantiate("bandolier", BANDOLIER_COOLDOWN_IN_SECONDS * 30)
-
-function BandolierSchema.ultimate(self, playerIndex)
-    say(playerIndex, "Giving all nearby players ammo!")
-    for i=0, 16 do
-        if player_present(i) 
-        and ACTIVE_BOSSES[i] == nil 
-        and GetPlayerDistance(playerIndex, i) <= 5
-        or i == playerIndex then
-            local currentPlayer = ACTIVE_PLAYER_LIST[get_var(i, "$hash")]
-            currentPlayer:getPrimaryWeapon():setAmmo(i, 4)
-            currentPlayer:getSecondaryWeapon():setAmmo(i, 3)
-        end
-    end
-    self:startCoolDown(playerIndex)
-end
-
-GUNSLINGER_COOLDOWN_IN_SECONDS = 120
-
-GunslingerSchema = ClassSchema:new():instantiate("gunslinger", GUNSLINGER_COOLDOWN_IN_SECONDS * 30)
-
-function GunslingerSchema.ultimate(self, playerIndex)
-    say(playerIndex, "Engaging active camoflage!")
-    execute_command('camo ' .. playerIndex .. " " .. 30)
-    self:startCoolDown(playerIndex)
-end
-TANK_COOLDOWN_IN_SECONDS = 100
-
-TankSchema=ClassSchema:new():instantiate("tank", TANK_COOLDOWN_IN_SECONDS * 30)
-
-function TankSchema.ultimate(self, playerIndex)
-    say(playerIndex, "You are now temporarly invincible!")
-    execute_command("god " .. playerIndex)
-    local key = "PLAYER_" .. playerIndex .. "_IS_EXECUTING_TANK_ULTIMATE"
-    self:startCoolDown(playerIndex)
-    local ungodEvent = EventItem:new()
-    ungodEvent:set({
-        ['playerIndex']=playerIndex
-    }, nil, function(props) execute_command("ungod " .. props.playerIndex) say(props.playerIndex, "You are no longer invincible!") end, 10 * 30)
-    EventTable:addEvent(key, ungodEvent)
-end
-
-
-
-DPS_COOLDOWN_IN_SECONDS = 70
-
-DpsSchema = ClassSchema:new():instantiate("dps", DPS_COOLDOWN_IN_SECONDS * 30)
-
-
-function DpsSchema.ultimate(self, playerIndex)
-    say(playerIndex, "All of your weapons now have bottomless clip!")
-    execute_command("mag " .. playerIndex .. " 999 5")
-    self:startCoolDown(playerIndex)
-    local key = "PLAYER_" .. playerIndex .. "_IS_EXECUTING_DPS_ULTIMATE"
-    local newEvent = EventItem:new()
-    newEvent:set({
-        ['playerIndex']=playerIndex
-    }, nil, function(props) say(props.playerIndex, "Your weapons are now back to normal.") execute_command("mag " .. props.playerIndex .. " 0 5") end, 10 * 30)
-    EventTable:addEvent(key, newEvent)
-end
-
-function displayProperClassName(improperClassName)
-    if OLD_CLASS_NAME_FACADE[improperClassName] ~= nil then return OLD_CLASS_NAME_FACADE[improperClassName] end
-    return improperClassName
-end
-
-function parseProperClassName(properClassName)
-    if NEW_CLASS_NAME_FACADE[properClassName] ~= nil then return NEW_CLASS_NAME_FACADE[properClassName] end
-    return properClassName
-end
 NEW_CLASS_NAME_FACADE = {
     soldier="dps",
     valiant="gunslinger",
@@ -1822,14 +1301,14 @@ OLD_CLASS_NAME_FACADE = {
 }
 
 
-function FindBipedTag(TagName)
-    local tag_array = read_dword(0x40440000)
-    for i=0,read_word(0x4044000C)-1 do
-        local tag = tag_array + i * 0x20
-        if(read_dword(tag) == 1651077220 and read_string(read_dword(tag + 0x10)) == TagName) then
-            return read_dword(tag + 0xC)
-        end
-    end
+function displayProperClassName(improperClassName)
+    if OLD_CLASS_NAME_FACADE[improperClassName] ~= nil then return OLD_CLASS_NAME_FACADE[improperClassName] end
+    return improperClassName
+end
+
+function parseProperClassName(properClassName)
+    if NEW_CLASS_NAME_FACADE[properClassName] ~= nil then return NEW_CLASS_NAME_FACADE[properClassName] end
+    return properClassName
 end
 CLASS_LIST = {
     ["dps"] = DpsSchema,
@@ -1869,6 +1348,562 @@ function activateUltimateAbility(hash, playerIndex)
         say(playerIndex, "You can use your ultimate ability in " .. math.ceil(remainingTime / 30) .. " seconds!")
     end
 end
+function FindBipedTag(TagName)
+    local tag_array = read_dword(0x40440000)
+    for i=0,read_word(0x4044000C)-1 do
+        local tag = tag_array + i * 0x20
+        if(read_dword(tag) == 1651077220 and read_string(read_dword(tag + 0x10)) == TagName) then
+            return read_dword(tag + 0xC)
+        end
+    end
+end
+function ViewItem(item, playerIndex)
+    rprint(playerIndex, "|c --------------------------------------------------------------- |nc00b3ff")
+    local type = item['type']
+    rprint(playerIndex, "|c Name: " .. item['pretty'] .. "|nc00b3ff" )
+    rprint(playerIndex, "|c Type: " .. type .. "|nc00b3ff")
+    rprint(playerIndex, "|c Description: " .. item['description'] .. "|nc00b3ff")
+    if type == 'WEAPON' then
+        rprint(playerIndex, "|c Max Ammo: " .. item['maxAmmo'] .. "|nc00b3ff")
+    elseif type=="ARMOR" then
+        rprint(playerIndex, "|c Max Health: " .. item['maxHealth'] .. "| Defense: " .. item['defense'] .. "|nc00b3ff")
+    elseif type == 'DAMAGE_BOOST' or type == "DAMAGE_REDUCE" then
+        rprint(playerIndex, "|c Modifier: x" .. item['modifier'] .. "|nc00b3ff")
+    elseif type == "DAMAGE_CRIT_STRIKE" then
+        rprint(playerIndex, "|c RNG Value: " .. item['rng'] .. "|nc00b3ff")
+        rprint(playerIndex, "|c Damage Modifier: x" .. item['modifier'] .. "|nc00b3ff")
+    elseif type == "DAMAGE_IGNORE" then
+        rprint(playerIndex, "|c RNG Value: " .. item['rng'] .. "|nc00b3ff")
+    elseif type == "BOSS" then
+        rprint(playerIndex, "|c Defense: " .. item['defense'] .. " | X Small Raid: " .. item['maxHealth']*1.0 .. "|nc00b3ff")
+        rprint(playerIndex, "|c Small Raid: " .. item['maxHealth']*1.5 .. " | Medium Raid: " .. item['maxHealth']*2.5 .. "|nc00b3ff" )
+        rprint(playerIndex, "|c Large Raid: " .. item['maxHealth']*3.75 .. " | X Large Raid:  " .. item['maxHealth']*5.0 .. "|nc00b3ff" )
+    end
+    rprint(playerIndex, "|c --------------------------------------------------------------- |nc00b3ff")
+end
+function loadBipeds()
+    --Load in Biped Table
+    for key,_ in pairs(ITEM_LIST) do
+        if ITEM_LIST[key].type == "ARMOR" or ITEM_LIST[key].type == "BOSS" then
+            BIPED_TAG_LIST[key] = FindBipedTag(ITEM_LIST[key].ref)
+        end
+    end
+    --Load in default biped
+    local tag_array = read_dword(0x40440000)
+    for i=0,read_word(0x4044000C)-1 do
+        local tag = tag_array + i * 0x20
+        if(read_dword(tag) == 1835103335 and read_string(read_dword(tag + 0x10)) == "globals\\globals") then
+            local tag_data = read_dword(tag + 0x14)
+            local mp_info = read_dword(tag_data + 0x164 + 4)
+            for j=0,read_dword(tag_data + 0x164)-1 do
+                BIPED_TAG_LIST['DEFAULT'] = read_dword(mp_info + j * 160 + 0x10 + 0xC)
+            end
+        end
+    end
+end
+BossList = {
+    scourge={
+        pretty="Scourge",
+        description="Scourge Boss",
+        type="BOSS",
+        ref="h2spp\\characters\\flood\\juggernaut\\scourge",
+        maxHealth=35000,
+        defense=0,
+        classes={
+            boss=true
+        }
+    },
+    torres={
+        pretty="Torres",
+        description="Torres Boss",
+        type="BOSS",
+        ref="rangetest\\cmt\\characters\\evolved_h1-spirit\\cyborg\\bipeds\\torres",
+        maxHealth=27500,
+        defense=0,
+        classes={
+            boss=true
+        }
+    },
+    eliminator={
+        pretty="Eliminator",
+        description="Eliminator Boss",
+        type="BOSS",
+        ref="rangetest\\cmt\\characters\\spv3\\forerunner\\enforcer\\bipeds\\eliminator",
+        maxHealth=21000,
+        defense=0,
+        classes={
+            boss=true
+        }
+    },
+    kreyul={
+        pretty="Kreyul",
+        description="Kreyul Boss",
+        type="BOSS",
+        ref="shdwslyr\\reach_elite\\ultra\\kreyul",
+        maxHealth=1000,
+        defense=0,
+        classes={
+            boss=true
+        }
+    },
+    gordius={
+        pretty="Gordius",
+        description="Gordius Boss",
+        type="BOSS",
+        ref="cmt\\characters\\evolved\\covenant\\hunter\\bipeds\\gordius",
+        maxHealth=4000,
+        defense=0,
+        classes={
+            boss=true
+        }
+    },
+    DEFAULT={
+        pretty="DEFAULT",
+        description="Default Map Biped",
+        type="ARMOR",
+        ref="hcea\\characters\\cyborg\\spartan",
+        maxHealth=100,
+        defense=0,
+        classes={
+            boss=true
+        }
+    },
+    backdraft={
+        pretty="Backdraft",
+        description="Backdraft Boss",
+        type="BOSS",
+        ref="bourrin\\halo reach\\spartan\\male\\backdraft",
+        maxHealth=12000,
+        defense=0,
+        classes={
+            boss=true
+        }
+    },
+    boom={
+        pretty="Boom",
+        description="Boom Boss",
+        type="BOSS",
+        ref="bourrin\\halo reach\\spartan\\male\\boom",
+        maxHealth=7500,
+        defense=0,
+        classes={
+            boss=true
+        }
+    },
+    bewm={
+        pretty="Bewm",
+        description="Bewm Boss",
+        type="BOSS",
+        ref="bourrin\\halo reach\\spartan\\male\\buum",
+        maxHealth=8000,
+        defense=0,
+        classes={
+            boss=true
+        }
+    },
+    griswald={
+        pretty="Griswald",
+        description="Griswald Boss",
+        type="BOSS",
+        ref="bourrin\\halo reach\\spartan\\male\\griswald",
+        maxHealth=9000,
+        defense=0,
+        classes={
+            boss=true
+        }
+    },
+}
+
+WeaponList = {
+    piercer={
+        pretty="Piercer (BR)",
+        description="Battle Rifle",
+        type="WEAPON",
+        ref="zteam\\objects\\weapons\\single\\battle_rifle\\h3\\piercer",
+        maxAmmo=684,
+        classes={
+            dps=true
+        }
+    },
+    reliable={
+        pretty="Reliable (AR)",
+        description="Assault Rifle",
+        type="WEAPON",
+        ref="zteam\\objects\\weapons\\single\\assault_rifle\\h3\\reliable",
+        maxAmmo=676,
+        classes={
+            dps=true
+        }
+    },
+    accelerator={
+        pretty="Accelerator (MA5K)",
+        description="MA5K",
+        type="WEAPON",
+        ref="altis\\weapons\\br\\accelerator",
+        maxAmmo=676,
+        classes={
+            bandolier=true
+        }
+    },
+    limitless={
+        pretty="Limitless (MG)",
+        description="MG",
+        type="WEAPON",
+        ref="rangetest\\cmt\\weapons\\spv3\\human\\turret\\limitless",
+        maxAmmo=600,
+        classes={
+            bandolier=true
+        }
+    },
+    lobber={
+        pretty="Lobber (GL)",
+        description="Grenade Launcher",
+        type="WEAPON",
+        ref="zteam\\objects\\weapons\\single\\grenade_launcher\\hr\\lobber",
+        maxAmmo=40,
+        classes={
+            bandolier=true
+        }
+    },
+    lawman={
+        pretty="Lawman (DMR)",
+        description="DMR",
+        type="WEAPON",
+        ref="bourrin\\weapons\\dmr\\lawman",
+        maxAmmo=500,
+        classes={
+            bandolier=true
+        }
+    },
+    irradiator={
+        pretty="Irradiator (Carbine)",
+        description="Carbine",
+        type="WEAPON",
+        ref="zteam\\objects\\weapons\\single\\covenant_carbine\\h3\\irradiator",
+        maxAmmo=636,
+        classes={
+            gunslinger=true
+        }
+    },
+    brassknuckle={
+        pretty="Brass Knuckle (Mauler)",
+        description="Mauler",
+        type="WEAPON",
+        ref="zteam\\objects\\weapons\\single\\mauler\\h3\\brassknuckle",
+        maxAmmo=505,
+        classes={
+            tank=true
+        }
+    },
+    rampart={
+        pretty="Rampart (Spiker)",
+        description="Spiker",
+        type="WEAPON",
+        ref="zteam\\objects\\weapons\\single\\spike_rifle\\h3\\rampart",
+        maxAmmo=1000,
+        classes={
+            tank=true
+        }
+    },
+    faithful={
+        pretty = "Faithful (PP)",
+        description="Plasma Pistol",
+        type="WEAPON",
+        battery=true,
+        ref="h2\\objects\\weapons\\pistol\\plasma_pistol\\faithful",
+        maxBattery=100,
+        classes={
+            healer=true
+        }
+    },
+    lightbringer={
+        pretty = "Lightbringer (PR)",
+        description="Plasma Rifle",
+        type="WEAPON",
+        battery=true,
+        ref="h2\\objects\\weapons\\rifle\\plasma_rifle\\lightbringer",
+        maxBattery=100,
+        classes={
+            healer=true
+        }
+    },
+    piety={
+        pretty = "Piety (BPR)",
+        description="Brute Plasma Rifle",
+        type="WEAPON",
+        battery=true,
+        maxBattery=100,
+        ref="h2\\objects\\weapons\\rifle\\brute_plasma_rifle\\piety",
+        classes={
+            healer=true
+        }
+    },
+    linearity={
+        pretty="Linearity (Sentinel Beam)",
+        description="Sentinel Beam",
+        type="WEAPON",
+        battery=true,
+        maxBattery=100,
+        ref="h2\\objects\\weapons\\support_low\\sentinel_beam\\linearity",
+        classes={
+            healer=true
+        }
+    },
+    eviscerator={
+        pretty="Eviscerator (Sword)",
+        description="Energy Sword",
+        type="WEAPON",
+        battery=true,
+        maxBattery=100,
+        ref="h4\\weapons\\covenant\\energy sword\\eviscerator",
+        classes={
+            gunslinger=true
+        }
+    },
+    headhunter={
+        pretty = "Headhunter (Beam Rifle)",
+        description="Beam Rifle",
+        type="WEAPON",
+        battery=true,
+        maxBattery=100,
+        ref="zteam\\objects\\weapons\\single\\beam_rifle\\h3\\headhunter",
+        classes={
+            gunslinger=true
+        }
+    },
+    discordant={
+        pretty="Discordant (FRG)",
+        description="Fuel Rod Cannon",
+        type="WEAPON",
+        ref="halo3\\weapons\\'plasma cannon'\\discordant",
+        maxAmmo=30,
+        classes={
+            gunslinger=true
+        }
+    },
+    concusser={
+        pretty="Concusser (Concussion Rifle)",
+        description="Concussion Rifle",
+        type="WEAPON",
+        ref="zteam\\objects\\weapons\\single\\concussion_rifle\\hr\\concusser",
+        maxAmmo=606,
+        classes={
+            gunslinger=true
+        }
+    },
+    thor={
+        pretty="Thor (Gravity Hammer)",
+        description="Gravity Hammer",
+        type="WEAPON",
+        battery=true,
+        maxBattery=100,
+        ref="zteam\\objects\\weapons\\single\\gravity_hammer\\h3\\thor",
+        classes={
+            tank=true
+        }
+    },
+    kingsglaive={
+        pretty="King's Glaive (Brute Shot)",
+        description="Brute Shot",
+        type="WEAPON",
+        maxAmmo=42,
+        ref="zteam\\objects\\weapons\\single\\brute_shot\\h3_6rounds\\kingsglaive",
+        classes={
+            tank=true
+        }
+    },
+    charity={
+        pretty="Charity (Pistol)",
+        description="Pistol",
+        type="WEAPON",
+        maxAmmo=500,
+        ref="zteam\\objects\\weapons\\single\\magnum\\h1\\charity",
+        classes={
+            healer=true
+        }
+    },
+    grimreaper={
+        pretty="Grim Reaper (RL)",
+        description="Rocket Launcher",
+        type="WEAPON",
+        maxAmmo=8,
+        ref="zteam\\objects\\weapons\\single\\rocket_launcher\\hr\\grimreaper",
+        classes={
+            dps=true
+        }
+    },
+    deathwarrant={
+        pretty ="Death Warrant (SG)",
+        description="Shotgun",
+        type="WEAPON",
+        maxAmmo=60,
+        ref="zteam\\objects\\weapons\\single\\shotgun\\h3\\deathwarrant",
+        classes={
+            tank=true
+        }
+    },
+    chicagotypewriter={
+        pretty="Chicago Type Writer (SMG)",
+        description="SMG",
+        type="WEAPON",
+        maxAmmo=400,
+        ref="zteam\\objects\\weapons\\single\\smg\\h3\\chicagotypewriter",
+        classes={
+            healer=true
+        }
+    },
+    widowmaker={
+        pretty="Widow Maker (SR)",
+        description="Sniper Rifle",
+        type="WEAPON",
+        maxAmmo=20,
+        ref="halo3\\weapons\\sniper rifle\\widowmaker",
+        classes={
+            dps=true
+        }
+    },
+    covert={
+        pretty="Covert (MA5KT)",
+        description="Ma5K Tactical Rifle",
+        type="WEAPON",
+        maxAmmo=250,
+        ref="altis\\weapons\\br_spec_ops\\covert",
+        classes={
+            dps=true
+        }
+    },
+    negotiator={
+        pretty="Negotiator (Gauss Rifle)",
+        description="Gauss Rifle",
+        type="WEAPON",
+        maxAmmo=40,
+        ref="np\\objects\\weapons\\rifle\\gauss_sniper_rifle\\hm\\negotiator",
+        classes={
+            dps=true
+        }
+    },
+
+}
+
+function modifyDamage(attackingEquipment, damagedEquipment, damage)
+    local newDamage = damage
+    if attackingEquipment ~= nil and attackingEquipment:getType() == "OUTPUT_DAMAGE" then
+        newDamage = newDamage + (newDamage * attackingEquipment:getModifier())
+    end
+    if damagedEquipment ~= nil then
+        if damagedEquipment:getType() == "INPUT_DAMAGE" then
+            newDamage = newDamage - (newDamage * damagedEquipment:getModifier())
+        elseif damagedEquipment:getType() == "INVINCIBILITY" then
+            --TODO: Refactor this properly in future
+            newDamage = newDamage - (newDamage * damagedEquipment:getModifier())
+        elseif damagedEquipment:getType() == "IGNORE" then
+            local random = math.random(1, damagedEquipment:getModifier())
+            if random == 1 then newDamage = 0 end
+        end
+    end
+    return newDamage
+end
+IRON_CRATE_LOOTERS = {}
+
+GOLD_CRATE_HAS_BEEN_LOOTED = false
+
+CRYSTAL_CRATE_HAS_BEEN_LOOTED = false
+
+function reward(player, lootTable)
+    math.randomseed(os.time())
+    local number = math.random(4)
+    local item = lootTable[number]
+    if player_present(player:getPlayerIndex()) then
+        say_all(get_var(player:getPlayerIndex(), "$name") .. " just looted a " .. ITEM_LIST[item].pretty)
+    end
+    player:addItemToInventory(item)
+end
+
+IronCrateTierOne = {
+    'armorpiercingone',
+    'shieldgeneratorone',
+    'luckybulletone',
+    'luckytabione'
+}
+
+IronCrateTierTwo = {
+    'armorpiercingtwo',
+    'shieldgeneratortwo',
+    'luckybullettwo',
+    'luckytabitwo'
+}
+
+IronCrateTierThree =  {
+    'armorpiercingthree',
+    'shieldgeneratorthree',
+    'luckybulletthree',
+    'luckytabithree'
+}
+
+GoldCrateTierOne = {
+    'dpstierone',
+    'healertierone',
+    'bandoliertiertwo',
+    'tanktierone'
+}
+
+GoldCrateTierTwo = {
+    'dpstiertwo',
+    'healertiertwo',
+    'bandoliertiertwo',
+    'tanktiertwo'
+}
+
+CrystalCrateTierOne = {
+    'widowmaker',
+    'piety',
+    'lobber',
+    'grimreaper'
+}
+CrystalCrateTierTwo = {
+    'widowmaker',
+    'piety',
+    'lobber',
+    'grimreaper'
+}
+CrystalCrateTierThree = {
+    'widowmaker',
+    'piety',
+    'lobber',
+    'grimreaper'
+}
+CrystalCrateTierFour = {
+    'widowmaker',
+    'piety',
+    'lobber',
+    'grimreaper'
+}
+
+
+CRATES = {
+    IronCrate=function(player) 
+        reward(player, IronCrateTierOne)
+    end,
+    GoldCrate=function(player) 
+        reward(player, GoldCrateTierOne)
+    end,
+    CrystalCrate=function(player) 
+        reward(player, CrystalCrateTierOne)
+    end,
+}
+
+function CRATES.execute(self, crateName, player)
+    CRATES[crateName](player)
+end
+
+
+function unloadPlayer(playerIndex)
+    local hash = get_var(playerIndex, "$hash")
+    ACTIVE_PLAYER_LIST[hash]:delete() 
+    ACTIVE_PLAYER_LIST[hash] = nil
+    Balancer()
+end
+
 GREED_TABLE = nil
 NEED_TABLE = nil
 
@@ -1876,16 +1911,6 @@ NEED_TABLE = nil
 -- WHEN MODIFYING LOOT TABLE
 -- ADD ITEMS TO LOOT TABLE
 -- AND PRETTY TABLE!!!
-
-PRETTY_TABLE={
-    gordius="Gordius",
-    torres="Torres",
-    mightofgordius="Might of Gordius",
-    shardofgordius="Shard of Gordius",
-    widowmaker="Widow Maker",
-    torresshieldgenerator="Torres's Shield Generator",
-    torresammopouch="Torres's Ammo Pouch"
-}
 
 LOOT_TABLE = {
     gordius = {
@@ -1921,9 +1946,10 @@ end
 
 function rewardLoot(props)
     local bossName = props.BOSS
+    if LOOT_TABLE[bossName] == nil then return end
+    local itemName = ITEM_LIST[item].pretty
     print("\nRewarding loot!")
     print(bossName)
-    if LOOT_TABLE[bossName] == nil then return end
     print("\nDropping loot for " .. bossName)
     math.randomseed(os.time())
     local number = math.random(6)
@@ -1933,7 +1959,7 @@ function rewardLoot(props)
     GREED_TABLE = {}
     NEED_TABLE = {}
     rollEvent = EventItem:new()
-    say_all("Boss " .. PRETTY_TABLE[bossName] .. " drops loot " .. PRETTY_TABLE[item])
+    say_all("Boss " .. bossName .. " drops loot " .. itemName)
     say_all("Roll /greed or /need to receive this item.")
     rollEvent:set({
         winningItem=item
@@ -1949,7 +1975,7 @@ function rewardLoot(props)
             return
         end
         if player_present(winner) then
-            say_all(get_var(winner, "$name") .. " wins item " .. PRETTY_TABLE[winningItem])
+            say_all(get_var(winner, "$name") .. " wins item " .. itemName)
             local hash = get_var(winner, "$hash")
             ACTIVE_PLAYER_LIST[hash]:addItemToInventory(winningItem)
         else
@@ -1957,6 +1983,338 @@ function rewardLoot(props)
         end
     end, 30 * 15)
     EventTable:addEvent(bossName.. '_drop_1', rollEvent)
+end
+SavantEventCompleted = function(props) 
+    say_all("Savant Deployed! We dropped it on the roof with the computer!")
+    playDialog("torres","savant_spawn")
+    spawn_object("weap", "bourrin\\halo3\\weapons\\spartan_laser\\savant", -18.52,-27.71,10)
+end
+
+LocationEventCompleted = function(props) 
+    say_all("Message Received. Savant Drop is on it's way!")
+    savantEventComplete = EventItem:new()
+    savantEventComplete:set({}, nil, SavantEventCompleted, 30 * 120)
+    EventTable:addEvent('savantEventComplete', savantEventComplete)
+end
+
+NotifyPlayersCompleted = function(props) 
+    say_all("Be on the look out for a special computer!")
+    playDialog("torres","savant_inbound")
+    locationEventComplete = EventItem:new()
+    locationEventComplete:set({}, function(props, time)
+        for i=1,16 do
+            if player_present(i) and player_alive(i) then
+                local hash = get_var(i, "$hash")
+                if ACTIVE_PLAYER_LIST[hash]:isInLocation("torres_event_1") then
+                    return true
+                end
+            end
+        end
+        return false
+    end, LocationEventCompleted, -1)
+    EventTable:addEvent("LocationEventTorres", locationEventComplete)
+end
+
+
+ArmorList = {
+    dpsstd={
+        pretty="DPS T0",
+        description="Standard ODST Armor",
+        type="ARMOR",
+        ref="characters\\cyborg_mp\\soldier",
+        maxHealth=100,
+        defense=0,
+        classes={
+            dps=true
+        }
+    },
+    dpstierone={
+        pretty="DPS T1",
+        description="Tier 1 Soldier Armor",
+        type="ARMOR",
+        ref="characters\\cyborg_mp\\soldier1",
+        maxHealth=115,
+        defense=0,
+        classes={
+            dps=true
+        }
+    },
+    dpstiertwo={
+        pretty="DPS T2",
+        description="Tier 2 Soldier Armor",
+        type="ARMOR",
+        ref="characters\\cyborg_mp\\soldier2",
+        maxHealth=130,
+        defense=0,
+        classes={
+            dps=true
+        }
+    },
+    healerstd={
+        pretty="Healer T0",
+        description="Standard ODST armor for medics.",
+        type="ARMOR",
+        ref="characters\\cyborg_mp\\medic",
+        maxHealth=100,
+        defense=0,
+        classes={
+            healer=true
+        }
+    },
+    healertierone={
+        pretty="Healer T1",
+        description="Tier 1 Medic Armor",
+        type="ARMOR",
+        ref="characters\\cyborg_mp\\medic1",
+        maxHealth=115,
+        defense=0,
+        classes={
+            healer=true
+        }
+    },
+    healertiertwo={
+        pretty="Healer T2",
+        description="Tier 2 Medic Armor",
+        type="ARMOR",
+        ref="characters\\cyborg_mp\\medic2",
+        maxHealth=130,
+        defense=0,
+        classes={
+            healer=true
+        }
+    },
+    tankstd={
+        pretty="Tank T0",
+        description="Standard MK 6 armor for tanks",
+        type="ARMOR",
+        ref="hcea\\characters\\cyborg\\spartan",
+        maxHealth=500,
+        defense=0,
+        classes={
+            tank=true
+        }
+    },
+    tanktierone={
+        pretty="Tank T1",
+        description="Tier 1 Spartan Armor",
+        type="ARMOR",
+        ref="zteam\\objects\\characters\\spartan\\h3\\spartan1",
+        maxHealth=550,
+        defense=0,
+        classes={
+            tank=true
+        }
+    },
+    tanktiertwo={
+        pretty="Tank T2",
+        description="Tier 2 Spartan Armor",
+        type="ARMOR",
+        ref="zteam\\objects\\characters\\spartan\\h3\\spartan2",
+        maxHealth=600,
+        defense=0,
+        classes={
+            tank=true
+        }
+    },
+    bandolierstd={
+        pretty="Bandolier T1",
+        description="Standard Marine armor for Bandoliers",
+        type="ARMOR",
+        ref="bourrin\\halo reach\\marine-to-spartan\\bandolier",
+        maxHealth=115,
+        defense=0,
+        classes={
+            bandolier=true
+        }
+    },
+    bandoliertiertwo={
+        pretty="Bandolier T2",
+        description="Tier 2 Bandolier Armor",
+        type="ARMOR",
+        ref="bourrin\\halo reach\\marine-to-spartan\\bandolier2",
+        maxHealth=130,
+        defense=0,
+        classes={
+            bandolier=true
+        }
+    },
+    gunslingerstd={
+        pretty="Gunslinger T0",
+        description="Standard Elite armor for Gunslingers",
+        type="ARMOR",
+        ref="np\\objects\\characters\\elite\\h3\\bipeds\\valiant",
+        maxHealth=100,
+        defense=0,
+        classes={
+            gunslinger=true
+        }
+    },
+    gunslingertierone={
+        pretty="Gunslinger T1",
+        description="Tier 1 Valiant Armor",
+        type="ARMOR",
+        ref="np\\objects\\characters\\elite\\hm\\bipeds\\valiant1",
+        maxHealth=115,
+        defense=0,
+        classes={
+            gunslinger=true
+        }
+    },
+    gunslingertiertwo={
+        pretty="Gunslinger T2",
+        description="Tier 2 Valiant Armor",
+        type="ARMOR",
+        ref="np\\objects\\characters\\elite\\hm\\bipeds\\valiant2",
+        maxHealth=130,
+        defense=0,
+        classes={
+            gunslinger=true
+        }
+    },
+}
+
+
+function loadPlayer(playerIndex) 
+    local hash = get_var(playerIndex, "$hash")
+    local newPlayer = PlayerSchema:new():create(playerIndex)
+    local playerClass = newPlayer:getPreferredClass()
+    --step two: initalize values, load player
+    ACTIVE_PLAYER_LIST[hash] = newPlayer
+    if playerClass ~= "dps" then playerClass = "dps" end
+    changePlayerClass(playerIndex, playerClass)
+    Balancer()
+end
+EquipmentList = {
+    armorpiercingone={
+        pretty="Armor Piercing 1",
+        description="Increases your damage output!",
+        type="DAMAGE_BOOST",
+        modifier=1.1
+    },
+    armorpiercingtwo={
+        pretty="Armor Piercing 2",
+        description="Increases your damage output!",
+        type="DAMAGE_BOOST",
+        modifier=1.2
+    },
+    armorpiercingthree={
+        pretty="Armor Piercing 3",
+        description="Increases your damage output!",
+        type="DAMAGE_BOOST",
+        modifier=1.3
+    },
+    shieldgeneratorone={
+        pretty="Shield Generator 1",
+        description="Decrases the amount of damage you take!",
+        type="DAMAGE_REDUCE",
+        modifier=1.1
+    },
+    shieldgeneratortwo={
+        pretty="Shield Generator 2",
+        description="Decrases the amount of damage you take!",
+        type="DAMAGE_REDUCE",
+        modifier=1.2
+    },
+    shieldgeneratorthree={
+        pretty="Shield Generator 3",
+        description="Decrases the amount of damage you take!",
+        type="DAMAGE_REDUCE",
+        modifier=1.3
+    },
+    luckybulletone={
+        pretty="Lucky Bullet 1",
+        description="Has a chance to increase your damage significantly!",
+        type="DAMAGE_CRIT_STRIKE",
+        rng=15,
+        modifier=3
+    },
+    luckybullettwo={
+        pretty="Lucky Bullet 2",
+        description="Has a chance to increase your damage significantly!",
+        type="DAMAGE_CRIT_STRIKE",
+        rng=15,
+        modifier=3
+    },
+    luckybulletthree={
+        pretty="Lucky Bullet 3",
+        description="Has a chance to increase your damage significantly!",
+        type="DAMAGE_CRIT_STRIKE",
+        rng=15,
+        modifier=3
+    },
+    luckytabione={
+        pretty="Lucky Tabi 1",
+        description="Has a chance to completely ignore damage!",
+        type="DAMAGE_IGNORE",
+        rng=15
+    },
+    luckytabitwo={
+        pretty="Lucky Tabi 2",
+        description="Has a chance to completely ignore damage!",
+        type="DAMAGE_IGNORE",
+        rng=15
+    },
+    luckytabithree={
+        pretty="Lucky Tabi 3",
+        description="Has a chance to completely ignore damage!",
+        type="DAMAGE_IGNORE",
+        rng=15
+    },
+    godlytabi={
+        pretty="Godly Tabi",
+        description="If you wear this, you're practically invincible!",
+        type="DAMAGE_IGNORE",
+        rng=2
+    },
+    godlybullet={
+        pretty="Godly Bullet",
+        description="If you wear this, you're doing the reaper's work for him!",
+        type="DAMAGE_CRIT_STRIKE",
+        rng=2,
+        modifier=10
+    },
+    mightofgordius = {
+        pretty="Might of Gordius",
+        description="The Might of Gordius increases your damage!",
+        type="DAMAGE_BOOST",
+        modifier=1.5
+    },
+    shardofgordius = {
+        pretty="Shard of Gordius",
+        description="The Shard of Gordius protects you from damage!",
+        type="DAMAGE_REDUCE",
+        modifier=1.5
+    },
+    torresshieldgenerator={
+        pretty="Torres's Shield Generator",
+        description="Torres's Shield Generator protects you from damage!",
+        type="DAMAGE_REDUCE",
+        modifier=1.5
+    },
+    torresammopouch={
+        pretty="Torres's Ammo Pouch",
+        description="Torres's Ammo Pouch boosts your damage!",
+        type="DAMAGE_BOOST",
+        modifier=1.5
+    }
+
+}
+function changeBoss(playerIndex, player, selectedBoss)
+    if BIPED_TAG_LIST[selectedBoss] ~= nil then
+        kill(playerIndex)
+        local playerClass = player:getClass()
+        player:setBoss(selectedBoss)
+        ACTIVE_BOSSES[playerIndex] = player
+        --TODO: Refactor this so that it can handle all bosses. 
+        --probably best to place this in one function.
+        if selectedBoss == "torres" then
+            newTorresEvent = EventItem:new()
+            newTorresEvent:set({}, nil, NotifyPlayersCompleted, 30 * 26)
+            EventTable:addEvent('TorresEvent', newTorresEvent)
+        end
+    else
+        say(playerIndex, "That boss does not exist!")
+    end
 end
 function parseCommand(playerIndex, command)
     if player_present(playerIndex) and player_alive(playerIndex) then
@@ -2123,53 +2481,6 @@ function parseCommand(playerIndex, command)
         return false
     end
 end
-function loadBipeds()
-    --Load in Biped Table
-    for key,_ in pairs(ITEM_LIST) do
-        if ITEM_LIST[key].type == "ARMOR" or ITEM_LIST[key].type == "BOSS" then
-            BIPED_TAG_LIST[key] = FindBipedTag(ITEM_LIST[key].ref)
-        end
-    end
-    --Load in default biped
-    local tag_array = read_dword(0x40440000)
-    for i=0,read_word(0x4044000C)-1 do
-        local tag = tag_array + i * 0x20
-        if(read_dword(tag) == 1835103335 and read_string(read_dword(tag + 0x10)) == "globals\\globals") then
-            local tag_data = read_dword(tag + 0x14)
-            local mp_info = read_dword(tag_data + 0x164 + 4)
-            for j=0,read_dword(tag_data + 0x164)-1 do
-                BIPED_TAG_LIST['DEFAULT'] = read_dword(mp_info + j * 160 + 0x10 + 0xC)
-            end
-        end
-    end
-end
-function modifyDamage(attackingEquipment, damagedEquipment, damage)
-    local newDamage = damage
-    if attackingEquipment ~= nil and attackingEquipment:getType() == "OUTPUT_DAMAGE" then
-        newDamage = newDamage + (newDamage * attackingEquipment:getModifier())
-    end
-    if damagedEquipment ~= nil then
-        if damagedEquipment:getType() == "INPUT_DAMAGE" then
-            newDamage = newDamage - (newDamage * damagedEquipment:getModifier())
-        elseif damagedEquipment:getType() == "INVINCIBILITY" then
-            --TODO: Refactor this properly in future
-            newDamage = newDamage - (newDamage * damagedEquipment:getModifier())
-        elseif damagedEquipment:getType() == "IGNORE" then
-            local random = math.random(1, damagedEquipment:getModifier())
-            if random == 1 then newDamage = 0 end
-        end
-    end
-    return newDamage
-end
-
-
-function unloadPlayer(playerIndex)
-    local hash = get_var(playerIndex, "$hash")
-    ACTIVE_PLAYER_LIST[hash]:delete() 
-    ACTIVE_PLAYER_LIST[hash] = nil
-    Balancer()
-end
-
 function ClearConsole(i)
 	for j=0,25 do
 		rprint(i, " ")
@@ -2250,91 +2561,23 @@ function PrintBossBar()
 end
 
 
-function changeBoss(playerIndex, player, selectedBoss)
-    if BIPED_TAG_LIST[selectedBoss] ~= nil then
-        kill(playerIndex)
-        local playerClass = player:getClass()
-        player:setBoss(selectedBoss)
-        ACTIVE_BOSSES[playerIndex] = player
-        --TODO: Refactor this so that it can handle all bosses. 
-        --probably best to place this in one function.
-        if selectedBoss == "torres" then
-            newTorresEvent = EventItem:new()
-            newTorresEvent:set({}, nil, NotifyPlayersCompleted, 30 * 26)
-            EventTable:addEvent('TorresEvent', newTorresEvent)
-        end
-    else
-        say(playerIndex, "That boss does not exist!")
-    end
-end
-
-function loadPlayer(playerIndex) 
-    local hash = get_var(playerIndex, "$hash")
-    local newPlayer = PlayerSchema:new():create(playerIndex)
-    local playerClass = newPlayer:getPreferredClass()
-    --step two: initalize values, load player
-    ACTIVE_PLAYER_LIST[hash] = newPlayer
-    if playerClass ~= "dps" then playerClass = "dps" end
-    changePlayerClass(playerIndex, playerClass)
-    Balancer()
-end
-SavantEventCompleted = function(props) 
-    say_all("Savant Deployed! We dropped it on the roof with the computer!")
-    playDialog("torres","savant_spawn")
-    spawn_object("weap", "bourrin\\halo3\\weapons\\spartan_laser\\savant", -18.52,-27.71,10)
-end
-
-LocationEventCompleted = function(props) 
-    say_all("Message Received. Savant Drop is on it's way!")
-    savantEventComplete = EventItem:new()
-    savantEventComplete:set({}, nil, SavantEventCompleted, 30 * 120)
-    EventTable:addEvent('savantEventComplete', savantEventComplete)
-end
-
-NotifyPlayersCompleted = function(props) 
-    say_all("Be on the look out for a special computer!")
-    playDialog("torres","savant_inbound")
-    locationEventComplete = EventItem:new()
-    locationEventComplete:set({}, function(props, time)
-        for i=1,16 do
-            if player_present(i) and player_alive(i) then
-                local hash = get_var(i, "$hash")
-                if ACTIVE_PLAYER_LIST[hash]:isInLocation("torres_event_1") then
-                    return true
-                end
-            end
-        end
-        return false
-    end, LocationEventCompleted, -1)
-    EventTable:addEvent("LocationEventTorres", locationEventComplete)
-end
-
-
-function ViewItem(item, playerIndex)
-    rprint(playerIndex, "|c --------------------------------------------------------------- |nc00b3ff")
-    local type = item['type']
-    rprint(playerIndex, "|c Type: " .. type .. "|nc00b3ff")
-    rprint(playerIndex, "|c Description: " .. item['description'] .. "|nc00b3ff")
-    if type == 'WEAPON' then
-        rprint(playerIndex, "|c Max Ammo: " .. item['maxAmmo'] .. "|nc00b3ff")
-    elseif type=="ARMOR" then
-        rprint(playerIndex, "|c Max Health: " .. item['maxHealth'] .. "| Defense: " .. item['defense'] .. "|nc00b3ff")
-    elseif type == 'DAMAGE_BOOST' or type == "DAMAGE_REDUCE" then
-        rprint(playerIndex, "|c Modifier: x" .. item['modifier'] .. "|nc00b3ff")
-    elseif type == "DAMAGE_CRIT_STRIKE" then
-        rprint(playerIndex, "|c RNG Value: " .. item['rng'] .. "|nc00b3ff")
-        rprint(playerIndex, "|c Damage Modifier: x" .. item['modifier'] .. "|nc00b3ff")
-    elseif type == "DAMAGE_IGNORE" then
-        rprint(playerIndex, "|c RNG Value: " .. item['rng'] .. "|nc00b3ff")
-    elseif type == "BOSS" then
-        rprint(playerIndex, "|c Defense: " .. item['defense'] .. " | X Small Raid: " .. item['maxHealth']*1.0 .. "|nc00b3ff")
-        rprint(playerIndex, "|c Small Raid: " .. item['maxHealth']*1.5 .. " | Medium Raid: " .. item['maxHealth']*2.5 .. "|nc00b3ff" )
-        rprint(playerIndex, "|c Large Raid: " .. item['maxHealth']*3.75 .. " | X Large Raid:  " .. item['maxHealth']*5.0 .. "|nc00b3ff" )
-    end
-    rprint(playerIndex, "|c --------------------------------------------------------------- |nc00b3ff")
-end
 
 --Callbacks
+
+function buildItemTable()
+    for k,v in pairs(ArmorList) do
+        ITEM_LIST[k] = v
+    end
+    for k,v in pairs(BossList) do
+        ITEM_LIST[k] = v
+    end
+    for k,v in pairs(EquipmentList) do
+        ITEM_LIST[k] = v
+    end
+    for k,v in pairs(WeaponList) do
+        ITEM_LIST[k] = v
+    end
+end
 
 function OnScriptLoad()
     register_callback(cb['EVENT_COMMAND'], "handleCommand")
@@ -2350,6 +2593,7 @@ function OnScriptLoad()
     register_callback(cb['EVENT_PRESPAWN'], "handlePrespawn")
     register_callback(cb['EVENT_GAME_END'],"OnGameEnd")
     register_callback(cb['EVENT_GAME_START'], "OnGameStart")
+    buildItemTable()
     loadBipeds() 
     for i=0,16 do
         if player_present(i) then
@@ -2357,6 +2601,7 @@ function OnScriptLoad()
             kill(i)
         end
     end
+
 end
 
 function OnScriptUnload()
@@ -2381,6 +2626,7 @@ function OnScriptUnload()
     ACTIVE_PLAYER_LIST = {}
     ACTIVE_BOSSES = {}
     EVENT_TABLE = {}
+    ITEM_LIST = {}
 end
 
 OnGameStart = OnScriptLoad
@@ -2391,8 +2637,25 @@ function handleAreaEnter(playerIndex, areaEntered)
     if player_present(playerIndex) then
         local hash = get_var(playerIndex, "$hash")
         local player = ACTIVE_PLAYER_LIST[hash]
-        say(playerIndex, "You approach " .. LOCATIONS[areaEntered])
+        if LOCATIONS[areaEntered] == nil then say(playerIndex, areaEntered)
+        else say(playerIndex, LOCATIONS[areaEntered])
+        end
         player:setLocation(areaEntered)
+        if areaEntered == "iron_crate" and IRON_CRATE_LOOTERS[hash] == nil then
+            CRATES:execute("IronCrate", player)
+            IRON_CRATE_LOOTERS[hash] = true
+            return
+        elseif areaEntered == "gold_crate" and GOLD_CRATE_HAS_BEEN_LOOTED == false then
+            CRATES:execute("GoldCrate", player)
+            GOLD_CRATE_HAS_BEEN_LOOTED = true
+        elseif areaEntered == "crystal_crate" and CRYSTAL_CRATE_HAS_BEEN_LOOTED == false then
+            CRATES:execute("CrystalCrate", player)
+            CRYSTAL_CRATE_HAS_BEEN_LOOTED = true
+            return 
+        else
+            say(playerIndex, "This crate has already been looted!")
+            return
+        end
     end
 end
 
@@ -2400,7 +2663,6 @@ function handleAreaExit(playerIndex, areaExited)
     if player_present(playerIndex) then 
         local hash = get_var(playerIndex, "$hash")
         local player = ACTIVE_PLAYER_LIST[hash]
-        say(playerIndex, "You walk away from " .. LOCATIONS[areaExited])
         player:removeLocation(areaExited)
     end
 end

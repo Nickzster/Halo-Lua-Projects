@@ -1,6 +1,9 @@
 -- NO_IMPORTS
 LOCATIONS= {
-    ["torres_event_1"] = "an important computer!"
+    ["torres_event_1"] = "You approach an important computer!",
+    ["iron_crate"] = "You have found an Iron Crate!",
+    ["gold_crate"] = "You have found a Gold Crate!",
+    ["crystal_crate"] = "You have found a Crystal Crate!"
 }
 
 BIPED_TAG_LIST = {}

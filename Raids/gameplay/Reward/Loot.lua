@@ -13,16 +13,6 @@ NEED_TABLE = nil
 -- ADD ITEMS TO LOOT TABLE
 -- AND PRETTY TABLE!!!
 
-PRETTY_TABLE={
-    gordius="Gordius",
-    torres="Torres",
-    mightofgordius="Might of Gordius",
-    shardofgordius="Shard of Gordius",
-    widowmaker="Widow Maker",
-    torresshieldgenerator="Torres's Shield Generator",
-    torresammopouch="Torres's Ammo Pouch"
-}
-
 LOOT_TABLE = {
     gordius = {
         'mightofgordius',
@@ -57,9 +47,10 @@ end
 
 function rewardLoot(props)
     local bossName = props.BOSS
+    if LOOT_TABLE[bossName] == nil then return end
+    local itemName = ITEM_LIST[item].pretty
     print("\nRewarding loot!")
     print(bossName)
-    if LOOT_TABLE[bossName] == nil then return end
     print("\nDropping loot for " .. bossName)
     math.randomseed(os.time())
     local number = math.random(6)
@@ -69,7 +60,7 @@ function rewardLoot(props)
     GREED_TABLE = {}
     NEED_TABLE = {}
     rollEvent = EventItem:new()
-    say_all("Boss " .. PRETTY_TABLE[bossName] .. " drops loot " .. PRETTY_TABLE[item])
+    say_all("Boss " .. bossName .. " drops loot " .. itemName)
     say_all("Roll /greed or /need to receive this item.")
     rollEvent:set({
         winningItem=item
@@ -85,7 +76,7 @@ function rewardLoot(props)
             return
         end
         if player_present(winner) then
-            say_all(get_var(winner, "$name") .. " wins item " .. PRETTY_TABLE[winningItem])
+            say_all(get_var(winner, "$name") .. " wins item " .. itemName)
             local hash = get_var(winner, "$hash")
             ACTIVE_PLAYER_LIST[hash]:addItemToInventory(winningItem)
         else
