@@ -1,9 +1,15 @@
 -- NO_IMPORTS
 LOCATIONS= {
     ["torres_event_1"] = "You approach an important computer!",
-    ["iron_crate"] = "You have found an Iron Crate!",
-    ["gold_crate"] = "You have found a Gold Crate!",
-    ["crystal_crate"] = "You have found a Crystal Crate!"
+    ["standardcrate"] = "You have found a crate!",
+    ["heroiccrate"] = "You have found a Heroic crate!",
+    ["legendarycrate"] = "You have found a Legendary crate!",
+    ["mythiccrate"] = "You have found a Mythic crate!",
+    ["eclipsecrate"] = "You have found an Eclipse crate!",
+    ["novacrate"] = "You have found a Nova crate!",
+    ["forerunnercrate"] = "You have found a Forerunner crate!",
+    ["reclaimercrate"] = "You have found a Reclaimer crate!",
+    ["inheritorcrate"] = "You have found an Inheritor crate!",
 }
 
 BIPED_TAG_LIST = {}

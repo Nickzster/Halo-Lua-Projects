@@ -4,95 +4,94 @@
 -- import Raids.globals.values end
 -- END_IMPORT
 
-IRON_CRATE_LOOTERS = {}
+STANDARD_CRATE_LOOTERS = {}
 
-GOLD_CRATE_HAS_BEEN_LOOTED = false
 
-CRYSTAL_CRATE_HAS_BEEN_LOOTED = false
+Crates = {
+    standardcrate = {
+        numberOfItems=4,
+        contents={
+            'armorpiercing',
+            'shieldgenerator',
+            'luckybullet',
+            'luckytabi'
+        }
+    },
+    heroiccrate = {
+        numberOfItems=7,
+        contents={
+            'dpstierone',
+            'tanktierone',
+            'healertierone',
+            'deathwarrant',
+            'charity',
+            'widowmaker',
+            'lawman'
+        }
+    },
+    legendarycrate = {
+        numberOfItems=8,
+        contents={
+            'dpstiertwo',
+            'tanktiertwo',
+            'healertiertwo',
+            'bandoliertiertwo',
+            'chicagotypewriter',
+            'kingsglaive',
+            'lobber',
+            'covert'
+        }
+    },
+    mythiccrate = {
+        numberOfItems=3,
+        contents={
+            'thor',
+            'grimreaper',
+            'piety'
+        }
+    },
+    eclipsecrate={
+        numberOfItems=2,
+        contents={
+            'linearity',
+            'lawman'
+        }
+    }
+}
 
-function reward(player, lootTable)
+function handleCrate(player, crateName)
+    local contents = Crates[crateName]['contents']
+    local numberOfItems = Crates[crateName]['numberOfItems']
     math.randomseed(os.time())
-    local number = math.random(4)
-    local item = lootTable[number]
+    local number = math.random(numberOfItems)
+    local item = contents[number]
+    print("\n\n#####################################################")
+    print("The loot event rolls a " .. number)
+    print("The " .. ITEM_LIST[item].pretty .. " is looted!")
+    print("#####################################################\n\n")
     if player_present(player:getPlayerIndex()) then
         say_all(get_var(player:getPlayerIndex(), "$name") .. " just looted a " .. ITEM_LIST[item].pretty)
+        player:addItemToInventory(item)
     end
-    player:addItemToInventory(item)
 end
 
-IronCrateTierOne = {
-    'armorpiercingone',
-    'shieldgeneratorone',
-    'luckybulletone',
-    'luckytabione'
-}
-
-IronCrateTierTwo = {
-    'armorpiercingtwo',
-    'shieldgeneratortwo',
-    'luckybullettwo',
-    'luckytabitwo'
-}
-
-IronCrateTierThree =  {
-    'armorpiercingthree',
-    'shieldgeneratorthree',
-    'luckybulletthree',
-    'luckytabithree'
-}
-
-GoldCrateTierOne = {
-    'dpstierone',
-    'healertierone',
-    'bandoliertiertwo',
-    'tanktierone'
-}
-
-GoldCrateTierTwo = {
-    'dpstiertwo',
-    'healertiertwo',
-    'bandoliertiertwo',
-    'tanktiertwo'
-}
-
-CrystalCrateTierOne = {
-    'widowmaker',
-    'piety',
-    'lobber',
-    'grimreaper'
-}
-CrystalCrateTierTwo = {
-    'widowmaker',
-    'piety',
-    'lobber',
-    'grimreaper'
-}
-CrystalCrateTierThree = {
-    'widowmaker',
-    'piety',
-    'lobber',
-    'grimreaper'
-}
-CrystalCrateTierFour = {
-    'widowmaker',
-    'piety',
-    'lobber',
-    'grimreaper'
-}
-
-
-CRATES = {
-    IronCrate=function(player) 
-        reward(player, IronCrateTierOne)
-    end,
-    GoldCrate=function(player) 
-        reward(player, GoldCrateTierOne)
-    end,
-    CrystalCrate=function(player) 
-        reward(player, CrystalCrateTierOne)
-    end,
-}
-
-function CRATES.execute(self, crateName, player)
-    CRATES[crateName](player)
+function reward(player, crateName)
+    if Crates[crateName] ~= nil then
+        local keyname = crateName .. "key"
+        if crateName == "standardcrate" then
+            if STANDARD_CRATE_LOOTERS[get_var(player:getPlayerIndex(), "$hash")] == nil then
+                STANDARD_CRATE_LOOTERS[get_var(player:getPlayerIndex(), "$hash")] = true
+                handleCrate(player, crateName)
+            else
+                say(player:getPlayerIndex(), "You have already looted this crate!")
+            end
+        else
+            if player:checkForItem(keyname) then
+                handleCrate(player, crateName)
+                player:removeItemFromInventory(keyname)
+            else
+                say(player:getPlayerIndex(), "You need a " .. ITEM_LIST[keyname].pretty .. " to loot this chest!")
+            end
+        end
+    end
 end

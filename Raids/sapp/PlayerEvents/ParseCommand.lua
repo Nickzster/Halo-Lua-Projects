@@ -148,9 +148,15 @@ function parseCommand(playerIndex, command)
                 say(playerIndex, "That item does not exist!")
             end
             return true
-        --TODO: Index the want and need rolls based on player
-        --TODO: Add class checks on roll commands in future
+        elseif args[1] == "own" then
+            if ITEM_LIST[args[2]] == nil then say(playerIndex, "This is not a valid item!") return true end
+            if player:checkForItem(args[2]) then say(playerIndex, "You have item: " .. ITEM_LIST[args[2]].pretty)
+            else say(playerIndex, "You do not have item: " .. ITEM_LIST[args[2]].pretty)
+            end   
+            return true
         elseif args[1] == "greed" then
+            --TODO: Index the want and need rolls based on player
+            --TODO: Add class checks on roll commands in future
             if GREED_TABLE ~= nil and GREED_TABLE[playerIndex] == nil and NEED_TABLE[playerIndex] == nil then
                 math.randomseed(os.time())
                 local lootRoll = math.random(100)

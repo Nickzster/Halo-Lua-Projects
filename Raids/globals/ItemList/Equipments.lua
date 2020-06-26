@@ -1,80 +1,30 @@
 -- NO_IMPORTS
 
 EquipmentList = {
-    armorpiercingone={
+    armorpiercing={
         pretty="Armor Piercing 1",
         description="Increases your damage output!",
         type="DAMAGE_BOOST",
-        modifier=1.1
+        modifier=1.4
     },
-    armorpiercingtwo={
-        pretty="Armor Piercing 2",
-        description="Increases your damage output!",
-        type="DAMAGE_BOOST",
-        modifier=1.2
-    },
-    armorpiercingthree={
-        pretty="Armor Piercing 3",
-        description="Increases your damage output!",
-        type="DAMAGE_BOOST",
-        modifier=1.3
-    },
-    shieldgeneratorone={
+    shieldgenerator={
         pretty="Shield Generator 1",
         description="Decrases the amount of damage you take!",
         type="DAMAGE_REDUCE",
-        modifier=1.1
+        modifier=1.4
     },
-    shieldgeneratortwo={
-        pretty="Shield Generator 2",
-        description="Decrases the amount of damage you take!",
-        type="DAMAGE_REDUCE",
-        modifier=1.2
-    },
-    shieldgeneratorthree={
-        pretty="Shield Generator 3",
-        description="Decrases the amount of damage you take!",
-        type="DAMAGE_REDUCE",
-        modifier=1.3
-    },
-    luckybulletone={
+    luckybullet={
         pretty="Lucky Bullet 1",
         description="Has a chance to increase your damage significantly!",
         type="DAMAGE_CRIT_STRIKE",
-        rng=15,
+        rng=20,
         modifier=3
     },
-    luckybullettwo={
-        pretty="Lucky Bullet 2",
-        description="Has a chance to increase your damage significantly!",
-        type="DAMAGE_CRIT_STRIKE",
-        rng=15,
-        modifier=3
-    },
-    luckybulletthree={
-        pretty="Lucky Bullet 3",
-        description="Has a chance to increase your damage significantly!",
-        type="DAMAGE_CRIT_STRIKE",
-        rng=15,
-        modifier=3
-    },
-    luckytabione={
+    luckytabi={
         pretty="Lucky Tabi 1",
         description="Has a chance to completely ignore damage!",
         type="DAMAGE_IGNORE",
-        rng=15
-    },
-    luckytabitwo={
-        pretty="Lucky Tabi 2",
-        description="Has a chance to completely ignore damage!",
-        type="DAMAGE_IGNORE",
-        rng=15
-    },
-    luckytabithree={
-        pretty="Lucky Tabi 3",
-        description="Has a chance to completely ignore damage!",
-        type="DAMAGE_IGNORE",
-        rng=15
+        rng=20
     },
     godlytabi={
         pretty="Godly Tabi",
@@ -112,6 +62,17 @@ EquipmentList = {
         description="Torres's Ammo Pouch boosts your damage!",
         type="DAMAGE_BOOST",
         modifier=1.5
+    },
+    eliminatorshield={
+        pretty = "The Eliminator's Shield",
+        description="The Eliminator's Shield graces you with protection.",
+        type="DAMAGE_IGNORE",
+        rng=5
+    },
+    beamoflight={
+        pretty="The Beam of Light",
+        description="The Beam of Light boosts your damage!",
+        type="DAMAGE_BOOST",
+        modifier=2.0
     }
-
 }
