@@ -2,7 +2,7 @@
 
 ArmorList = {
     dpsstd={
-        pretty="DPS T0",
+        pretty="DPS (Starting Level)",
         description="Standard ODST Armor",
         type="ARMOR",
         ref="characters\\cyborg_mp\\soldier",
@@ -12,9 +12,9 @@ ArmorList = {
             dps=true
         }
     },
-    dpstierone={
-        pretty="DPS T1",
-        description="Tier 1 Soldier Armor",
+    dpsheroic={
+        pretty="DPS (Heroic Level)",
+        description="(Heroic) Soldier Armor",
         type="ARMOR",
         ref="characters\\cyborg_mp\\soldier1",
         maxHealth=115,
@@ -23,9 +23,9 @@ ArmorList = {
             dps=true
         }
     },
-    dpstiertwo={
-        pretty="DPS T2",
-        description="Tier 2 Soldier Armor",
+    dpslegendary={
+        pretty="DPS (Legendary Level)",
+        description="(Legendary) Soldier Armor",
         type="ARMOR",
         ref="characters\\cyborg_mp\\soldier2",
         maxHealth=130,
@@ -35,7 +35,7 @@ ArmorList = {
         }
     },
     healerstd={
-        pretty="Healer T0",
+        pretty="Healer (Starting Level)",
         description="Standard ODST armor for medics.",
         type="ARMOR",
         ref="characters\\cyborg_mp\\medic",
@@ -45,9 +45,9 @@ ArmorList = {
             healer=true
         }
     },
-    healertierone={
-        pretty="Healer T1",
-        description="Tier 1 Medic Armor",
+    healerheroic={
+        pretty="Healer (Heroic Level)",
+        description="(Heroic) Medic Armor",
         type="ARMOR",
         ref="characters\\cyborg_mp\\medic1",
         maxHealth=115,
@@ -56,9 +56,9 @@ ArmorList = {
             healer=true
         }
     },
-    healertiertwo={
-        pretty="Healer T2",
-        description="Tier 2 Medic Armor",
+    healerlegendary={
+        pretty="Healer (Legendary Level)",
+        description="(Legendary) Medic Armor",
         type="ARMOR",
         ref="characters\\cyborg_mp\\medic2",
         maxHealth=130,
@@ -68,7 +68,7 @@ ArmorList = {
         }
     },
     tankstd={
-        pretty="Tank T0",
+        pretty="Tank (Starting Level)",
         description="Standard MK 6 armor for tanks",
         type="ARMOR",
         ref="hcea\\characters\\cyborg\\spartan",
@@ -78,9 +78,9 @@ ArmorList = {
             tank=true
         }
     },
-    tanktierone={
-        pretty="Tank T1",
-        description="Tier 1 Spartan Armor",
+    tankheroic={
+        pretty="Tank (Heroic Level)",
+        description="(Heroic) Spartan Armor",
         type="ARMOR",
         ref="zteam\\objects\\characters\\spartan\\h3\\spartan1",
         maxHealth=550,
@@ -89,9 +89,9 @@ ArmorList = {
             tank=true
         }
     },
-    tanktiertwo={
-        pretty="Tank T2",
-        description="Tier 2 Spartan Armor",
+    tanklegendary={
+        pretty="Tank (Legendary Level)",
+        description="(Legendary) Spartan Armor",
         type="ARMOR",
         ref="zteam\\objects\\characters\\spartan\\h3\\spartan2",
         maxHealth=600,
@@ -101,7 +101,18 @@ ArmorList = {
         }
     },
     bandolierstd={
-        pretty="Bandolier T1",
+        pretty="Bandolier (Starting Level)",
+        description="Standard Marine armor for Bandoliers",
+        type="ARMOR",
+        ref="bourrin\\halo reach\\marine-to-spartan\\bandolier",
+        maxHealth=100,
+        defense=0,
+        classes={
+            bandolier=true
+        }
+    },
+    bandolierheroic={
+        pretty="Bandolier (Heroic Level)",
         description="Standard Marine armor for Bandoliers",
         type="ARMOR",
         ref="bourrin\\halo reach\\marine-to-spartan\\bandolier",
@@ -111,9 +122,9 @@ ArmorList = {
             bandolier=true
         }
     },
-    bandoliertiertwo={
-        pretty="Bandolier T2",
-        description="Tier 2 Bandolier Armor",
+    bandolierlegendary={
+        pretty="Bandolier (Legendary Level)",
+        description="(Legendary) Bandolier Armor",
         type="ARMOR",
         ref="bourrin\\halo reach\\marine-to-spartan\\bandolier2",
         maxHealth=130,
@@ -123,7 +134,7 @@ ArmorList = {
         }
     },
     gunslingerstd={
-        pretty="Gunslinger T0",
+        pretty="Gunslinger (Starting Level)",
         description="Standard Elite armor for Gunslingers",
         type="ARMOR",
         ref="np\\objects\\characters\\elite\\h3\\bipeds\\valiant",
@@ -133,22 +144,22 @@ ArmorList = {
             gunslinger=true
         }
     },
-    gunslingertierone={
-        pretty="Gunslinger T1",
-        description="Tier 1 Valiant Armor",
+    gunslingerheroic={
+        pretty="Gunslinger (Heroic Level)",
+        description="(Heroic) Valiant Armor",
         type="ARMOR",
-        ref="np\\objects\\characters\\elite\\hm\\bipeds\\valiant1",
+        ref="np\\objects\\characters\\elite\\hm\\bipeds\\valian(Heroic Level)",
         maxHealth=115,
         defense=0,
         classes={
             gunslinger=true
         }
     },
-    gunslingertiertwo={
-        pretty="Gunslinger T2",
-        description="Tier 2 Valiant Armor",
+    gunslingerlegendary={
+        pretty="Gunslinger (Legendary Level)",
+        description="(Legendary) Valiant Armor",
         type="ARMOR",
-        ref="np\\objects\\characters\\elite\\hm\\bipeds\\valiant2",
+        ref="np\\objects\\characters\\elite\\hm\\bipeds\\valian(Legendary Level)",
         maxHealth=130,
         defense=0,
         classes={

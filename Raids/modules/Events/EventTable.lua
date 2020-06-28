@@ -4,29 +4,34 @@
 
 
 --singleton
-EventTable = {}
+EventTable = {
+    Events={}
+}
+
+
 
 function EventTable.addEvent(self, eventKey, newEvent) 
-    EventTable[eventKey] = newEvent
+    EventTable.Events[eventKey] = newEvent
 end
 
+function EventTable.addTimedEvent(self, key, cb, time) end
+
+function EventTable.addConditionalEvent(self, key, conditional) end
+
 function EventTable.getEvent(self, eventKey)
-    return EventTable[eventKey]
+    return EventTable.Events[eventKey]
 end
 
 function EventTable.removeEvent(self, eventKey) 
-    EventTable[eventKey] = nil
+    EventTable.Events[eventKey] = nil
 end
 
 function EventTable.cycle(self) 
-    for key,_ in pairs(EventTable) do
-        if EventTable[key] ~= EventTable.addEvent 
-        and EventTable[key] ~= EventTable.removeEvent 
-        and EventTable[key] ~= EventTable.cycle
-        and EventTable[key] ~= EventTable.getEvent then
-            if EventTable[key]:isTimedOut() == true then
-                EventTable:removeEvent(key)
-            end
+    for key,_ in pairs(EventTable.Events) do
+        local e = EventTable.Events[key]
+        if e:isTimedOut() == true then
+            EventTable:removeEvent(key)
         end
     end
 end
+
